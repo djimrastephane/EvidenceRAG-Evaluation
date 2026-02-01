@@ -10,15 +10,13 @@ The scripts are designed for reproducible, page-accurate retrieval on large repo
 
 ## Project Structure
 
-- `Data/` — raw PDFs
-- `data_processed/` — per-document outputs from preprocessing and indexing
+- `Data/` — raw PDFs (ignored by git)
+- `data_processed/` — per-document outputs from preprocessing and indexing (ignored by git)
 - `preprocess_pdf_rag.py` — extract text, clean, detect sections, chunk, and write metrics
 - `build_index.py` — embed chunks and build a FAISS index
 - `retrieval_eval.py` — evaluate retrieval with an `eval_set.json`
-- `faiss_smoke.py`, `st_smoke.py`, `st_smoke_safe.py` — quick dependency checks
-- `inspect_section.py`, `make_charts.py`, `make_titles_before_after.py` — analysis/visualization helpers
-- `figures/` — charts/figures produced by analysis scripts
-- `RAG_NHS.tex`, `RAG_Poster.tex` — thesis/ poster sources and compiled outputs
+- `figures/` — charts/figures produced by analysis scripts (ignored by git)
+- `RAG_NHS.tex`, `RAG_Poster.tex` — thesis/poster sources (PDF outputs ignored by git)
 
 ## Requirements
 
@@ -56,17 +54,6 @@ Key constants to adjust before running each script:
   - Paths: `DATA_DIR`, `INDEX_PATH`, `META_PATH`, `EVAL_SET_PATH`
   - Embeddings: `EMBED_MODEL_NAME`
   - Metrics/output: `K_LIST`, `RESULTS_JSON`, `METRICS_JSON`, `SUMMARY_CSV`
-
-- `inspect_section.py`
-  - Paths: `PROJECT_ROOT`, `DOC_FOLDER`, `sections_path`, `chunks_path`
-
-- `make_charts.py`
-  - Paths: `PROJECT_ROOT`, `DOC_ID`, `DATA_DIR`, `CHUNKS_PATH`, `SECTIONS_PATH`, `FIG_DIR`
-  - Matplotlib: `MPLBACKEND`
-
-- `make_titles_before_after.py`
-  - Paths: `PROJECT_ROOT`, `DOC_ID`, `DATA_DIR`, `SECTIONS_PATH`, `FIG_DIR`, `OUT_BEFORE`, `OUT_AFTER`
-  - Title filtering: `TOP_N`, `STOP_TITLES`, `DATE_TITLE_RE`
 
 ## Quickstart
 
@@ -123,6 +110,7 @@ Outputs:
 - Paths in scripts are currently absolute; update them to match your environment.
 - If you see `fitz` import errors, uninstall the `fitz` package and install `pymupdf`.
 - The FAISS index uses inner product on L2-normalized vectors to approximate cosine similarity.
+- Git ignores `Data/`, `data_processed/`, `figures/`, and all `*.pdf` outputs by default.
 
 ## Example eval_set.json
 
@@ -145,4 +133,4 @@ Outputs:
 
 ## License
 
-Add a license if you plan to share this project publicly.
+MIT License (see `LICENSE`).
