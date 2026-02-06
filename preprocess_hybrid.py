@@ -43,12 +43,9 @@ For Camelot (table extraction):
 """
 
 import re
-import json
-import math
 from pathlib import Path
-from datetime import datetime, timezone
-from collections import Counter, defaultdict, OrderedDict
-from typing import Any, Optional
+from collections import Counter, defaultdict
+from typing import Optional
 
 try:
     import fitz  # PyMuPDF
@@ -62,51 +59,22 @@ import pdfplumber
 import pandas as pd
 
 try:
-    import tiktoken  # type: ignore
-except Exception:
-    tiktoken = None
-
-try:
     import camelot  # type: ignore
 except Exception:
     camelot = None
     print("WARNING: camelot-py not installed. Table extraction will use pdfplumber only.")
 
-import time
-
-
-class StepTimer:
-    """
-    Lightweight step-level timer for profiling pipeline stages.
-
-    Usage:
-        timer = StepTimer()
-        timer.mark("step name")
-        ...
-        timer.report()
-    """
-
-    def __init__(self):
-        self.start = time.perf_counter()
-        self.last = self.start
-        self.steps = OrderedDict()
-
-    def mark(self, label: str) -> None:
-        now = time.perf_counter()
-        self.steps[label] = {
-            "step_seconds": now - self.last,
-            "total_seconds": now - self.start,
-        }
-        self.last = now
-
-    def report(self) -> None:
-        print("\n=== PIPELINE TIMING REPORT ===")
-        for k, v in self.steps.items():
-            print(
-                f"{k:<45} "
-                f"step={v['step_seconds']:>7.3f}s  "
-                f"total={v['total_seconds']:>7.3f}s"
-            )
+from rag_pdf.chunking import chunk_text_by_tokens, count_tokens, get_encoder
+from rag_pdf.metrics import StepTimer, safe_json_dump
+from rag_pdf.schemas import build_page_list_struct, make_chunk_id_global
+from rag_pdf.text_normalize import (
+    dehyphenate_lines,
+    extract_report_metadata_from_pdf,
+    extract_report_year_from_filename,
+    normalize_line,
+    normalize_page_text,
+    now_utc_iso,
+)
 
 
 # =============================================================================
@@ -161,74 +129,8 @@ CAMELOT_LATTICE_ACCURACY_THRESHOLD = 70
 TABLE_SUMMARY_MAX_ROWS = 5
 
 # =============================================================================
-# TEXT NORMALIZATION CONSTANTS
-# =============================================================================
-LIGATURES = {
-    "\ufb00": "ff",
-    "\ufb01": "fi",
-    "\ufb02": "fl",
-    "\ufb03": "ffi",
-    "\ufb04": "ffl",
-}
-
-ZERO_WIDTH = ["\u200b", "\u200c", "\u200d", "\ufeff"]
-
-
-# =============================================================================
 # UTILITY FUNCTIONS
 # =============================================================================
-def now_utc_iso() -> str:
-    """Return current UTC time as ISO-8601 string."""
-    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
-
-
-def normalize_line(s: str) -> str:
-    """Normalize whitespace and trim a string."""
-    return re.sub(r"\s+", " ", s).strip()
-
-
-def normalize_page_text(text: str) -> str:
-    """
-    Final page-level text normalization after boilerplate removal.
-
-    Handles:
-    - Line endings
-    - Soft hyphens
-    - Zero-width characters
-    - Ligatures
-    - Non-breaking spaces
-    - Bullet points
-    """
-    s = text.replace("\r", "\n")
-    s = s.replace("\u00ad", "")
-    s = s.replace("￾", "")
-
-    for ch in ZERO_WIDTH:
-        s = s.replace(ch, "")
-
-    s = s.replace("\xa0", " ")
-
-    for k, v in LIGATURES.items():
-        s = s.replace(k, v)
-
-    s = s.replace("•", "- ").replace("▶", "- ")
-    s = re.sub(r"\s+", " ", s).strip()
-    return s
-
-
-def safe_json_dump(obj: Any, path: Path) -> None:
-    """Write JSON file safely with UTF-8 encoding."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(obj, f, indent=2, ensure_ascii=False)
-
-
-def describe_series(s: pd.Series) -> dict:
-    """Compute descriptive statistics for a pandas Series as JSON-serializable dict."""
-    d = s.describe()
-    return {k: (float(v) if hasattr(v, "item") else v) for k, v in d.to_dict().items()}
-
-
 def _join_lines_text(lines_all: list[dict]) -> str:
     """Join structured lines into single page text for quality checks."""
     return "\n".join(
@@ -259,193 +161,6 @@ def _is_bad_page_text(text: str, min_chars: int) -> tuple[bool, str]:
     if alpha / max(len(t), 1) < 0.15:
         return True, "low_alpha_ratio"
     return False, "ok"
-
-
-def _to_int_if_whole(x: Any) -> Optional[int]:
-    """
-    Convert a value to integer if it represents a whole number.
-
-    Handles type coercion from parquet readers:
-    - int → int
-    - float (2.0) → 2
-    - str ("2") → 2
-    """
-    if x is None:
-        return None
-    if isinstance(x, bool):
-        return None
-    if isinstance(x, int):
-        return x
-    if isinstance(x, float):
-        if math.isfinite(x) and float(x).is_integer():
-            return int(x)
-        return None
-    if isinstance(x, str):
-        s = x.strip()
-        if not s:
-            return None
-        if s.isdigit():
-            return int(s)
-        try:
-            f = float(s)
-            if math.isfinite(f) and f.is_integer():
-                return int(f)
-        except Exception:
-            return None
-    return None
-
-
-def build_pages_from_span(page_start: Any, page_end: Any) -> list[int]:
-    """Build canonical pages list from page_start and page_end."""
-    ps = _to_int_if_whole(page_start)
-    pe = _to_int_if_whole(page_end)
-    if ps is None or pe is None:
-        return []
-    if ps <= pe:
-        return list(range(ps, pe + 1))
-    return list(range(pe, ps + 1))
-
-
-def build_page_list_struct(pages: list[int]) -> list[dict]:
-    """Build backward-compatible structured page list."""
-    return [{"element": int(p)} for p in pages]
-
-
-def make_chunk_id_global(doc_id: str, chunk_id: str) -> str:
-    """Create globally unique chunk identifier: <doc_id>:<chunk_id>."""
-    return f"{doc_id}:{chunk_id}"
-
-
-# =============================================================================
-# REPORT METADATA EXTRACTION
-# =============================================================================
-def extract_report_year_from_filename(name: str) -> str | None:
-    """Extract year range from filename (e.g., 'Report-2022-2023.pdf' → '2022-2023')."""
-    yrs = re.findall(r"(?:19|20)\d{2}", name)
-    if len(yrs) >= 2:
-        return f"{yrs[0]}-{yrs[1]}"
-    if len(yrs) == 1:
-        return yrs[0]
-    return None
-
-
-def extract_year_range_from_text(text: str) -> str | None:
-    """
-    Extract year range from cover page text.
-
-    Patterns:
-    - 2022-23 → 2022-23
-    - 2022-2023 → 2022-2023
-    - 2022 to 2023 → 2022-2023
-    """
-    t = normalize_line(text).replace("–", "-").replace("—", "-")
-
-    # Pattern: 2022-23
-    m = re.search(r"\b((?:19|20)\d{2})\s*[-/]\s*(\d{2})\b", t)
-    if m:
-        y1 = int(m.group(1))
-        y2_2 = int(m.group(2))
-        y2 = (y1 // 100) * 100 + y2_2
-        return f"{y1}-{str(y2)[-2:]}"
-
-    # Pattern: 2022-2023
-    m = re.search(r"\b((?:19|20)\d{2})\s*-\s*((?:19|20)\d{2})\b", t)
-    if m:
-        return f"{m.group(1)}-{m.group(2)}"
-
-    # Pattern: 2022 to 2023
-    m = re.search(r"\b((?:19|20)\d{2})\s*(?:to|TO)\s*((?:19|20)\d{2})\b", t)
-    if m:
-        return f"{m.group(1)}-{m.group(2)}"
-
-    return None
-
-
-def extract_period_end_date(text: str) -> str | None:
-    """
-    Extract period end date from text.
-
-    Pattern: "period ended 31 March 2023" → "2023-03-31"
-    """
-    t = normalize_line(text)
-    m = re.search(
-        r"\bperiod\s+ended\s+(\d{1,2})\s+([A-Za-z]+)\s+((?:19|20)\d{2})\b",
-        t,
-        flags=re.IGNORECASE,
-    )
-    if not m:
-        return None
-
-    day = int(m.group(1))
-    month = m.group(2).lower()
-    year = int(m.group(3))
-
-    month_map = {
-        "january": 1, "february": 2, "march": 3, "april": 4,
-        "may": 5, "june": 6, "july": 7, "august": 8,
-        "september": 9, "october": 10, "november": 11, "december": 12,
-    }
-    if month not in month_map:
-        return None
-
-    try:
-        dt = datetime(year, month_map[month], day)
-        return dt.date().isoformat()
-    except Exception:
-        return None
-
-
-def extract_report_metadata_from_pdf(doc: fitz.Document, max_pages: int = 2) -> dict:
-    """
-    Extract report metadata from cover pages.
-
-    Args:
-        doc: PyMuPDF document
-        max_pages: Number of pages to scan for metadata
-
-    Returns:
-        {
-            "report_year_from_pdf": str or None,
-            "period_end_date": str or None (ISO format)
-        }
-    """
-    text_parts = []
-    for i in range(min(max_pages, doc.page_count)):
-        p = doc.load_page(i)
-        text_parts.append(p.get_text("text") or "")
-
-    raw = "\n".join(text_parts)
-    year_range = extract_year_range_from_text(raw)
-    period_end = extract_period_end_date(raw)
-
-    return {"report_year_from_pdf": year_range, "period_end_date": period_end}
-
-
-# =============================================================================
-# TEXT CLEANING AND HEADING SUPPORT
-# =============================================================================
-def dehyphenate_lines(lines: list[str]) -> list[str]:
-    """
-    Merge hyphenated line breaks.
-
-    Example:
-        ["develop-", "ment"] → ["development"]
-    """
-    out: list[str] = []
-    i = 0
-    while i < len(lines):
-        cur = lines[i]
-        if cur.endswith("-") and i + 1 < len(lines):
-            nxt = lines[i + 1]
-            nxt_stripped = nxt.lstrip()
-            if nxt_stripped[:1].islower():
-                merged = cur[:-1] + nxt_stripped
-                out.append(merged)
-                i += 2
-                continue
-        out.append(cur)
-        i += 1
-    return out
 
 
 def is_part_label(line: str) -> str | None:
@@ -745,84 +460,6 @@ def classify_page_content(text: str) -> dict:
         "has_numbers": contains_many_numbers(text),
         "confidence": confidence,
     }
-
-
-# =============================================================================
-# TOKENIZATION AND CHUNKING
-# =============================================================================
-def get_encoder():
-    """Get tiktoken encoder for accurate token counting."""
-    if tiktoken is None:
-        return None
-    try:
-        return tiktoken.get_encoding("cl100k_base")
-    except Exception:
-        return None
-
-
-def count_tokens(text: str, enc) -> int:
-    """
-    Count tokens in text.
-
-    Uses tiktoken if available, otherwise estimates based on word count.
-    """
-    if enc is None:
-        return max(1, int(len(text.split()) / 0.75))
-    return len(enc.encode(text))
-
-
-def chunk_text_by_tokens(
-        text: str,
-        chunk_tokens: int,
-        overlap_tokens: int,
-        enc
-) -> list[str]:
-    """
-    Split text into overlapping chunks by token count.
-
-    Args:
-        text: Text to chunk
-        chunk_tokens: Target chunk size in tokens
-        overlap_tokens: Overlap size in tokens
-        enc: Tiktoken encoder (or None for word-based estimation)
-
-    Returns:
-        List of text chunks
-    """
-    text = text.strip()
-    if not text:
-        return []
-
-    if enc is None:
-        # Word-based fallback
-        words = text.split()
-        words_per_chunk = max(50, int(chunk_tokens * 0.75))
-        words_overlap = max(10, int(overlap_tokens * 0.75))
-        chunks = []
-        start = 0
-        while start < len(words):
-            end = min(len(words), start + words_per_chunk)
-            chunk = " ".join(words[start:end]).strip()
-            if chunk:
-                chunks.append(chunk)
-            if end == len(words):
-                break
-            start = max(0, end - words_overlap)
-        return chunks
-
-    # Token-based chunking
-    toks = enc.encode(text)
-    chunks = []
-    start = 0
-    while start < len(toks):
-        end = min(len(toks), start + chunk_tokens)
-        chunk = enc.decode(toks[start:end]).strip()
-        if chunk:
-            chunks.append(chunk)
-        if end == len(toks):
-            break
-        start = max(0, end - overlap_tokens)
-    return chunks
 
 
 # =============================================================================
