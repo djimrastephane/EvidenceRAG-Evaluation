@@ -11,6 +11,7 @@ __pycache__/
 Data/
 data_processed/
 figures/
+Experiment/
 
 # LaTeX build artifacts
 *.aux
