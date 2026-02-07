@@ -41,5 +41,34 @@ class PreprocessConfig:
     CAMELOT_LATTICE_ACCURACY_THRESHOLD: int = 70
     TABLE_SUMMARY_MAX_ROWS: int = 5
 
+    OCR_MIN_ALPHA_RATIO: float = 0.3
+    OCR_MIN_DIGIT_RATIO: float = 0.6
+
+# ============================================================================
+# ROTATION HANDLING CONFIGURATION
+# ============================================================================
+
+# Boilerplate strip fractions for normal (portrait) pages
+STRIP_FRACTIONS_NORMAL = {
+    'left': 0.08,
+    'right': 0.08,
+    'top': 0.08,
+    'bottom': 0.08,
+}
+
+# Boilerplate strip fractions for rotated/landscape pages
+# (Minimal stripping to preserve full-page tables)
+STRIP_FRACTIONS_ROTATED = {
+    'left': 0.02,
+    'right': 0.02,
+    'top': 0.02,
+    'bottom': 0.02,
+}
+
+# Aspect ratio threshold for landscape detection
+LANDSCAPE_THRESHOLD_RATIO = 1.2
+
+# Text length threshold for triggering alternative extraction
+LOW_YIELD_THRESHOLD_CHARS = 100
 
 DEFAULT_CONFIG = PreprocessConfig()

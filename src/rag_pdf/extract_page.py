@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Optional
+import os
 
 try:
     import fitz  # PyMuPDF
@@ -12,8 +13,23 @@ except Exception as e:
 
 import pdfplumber  # noqa: F401
 
+try:
+    import pytesseract
+    from pdf2image import convert_from_path
+    OCR_AVAILABLE = True
+except Exception:
+    OCR_AVAILABLE = False
+
 from rag_pdf.config import DEFAULT_CONFIG
 from rag_pdf.text_normalize import dehyphenate_lines, normalize_line
+
+# Import rotation handling
+from .rotation_handler import (
+    is_rotated,
+    should_use_alternative_extractor,
+    get_rotation_metadata,
+    log_rotation_handling
+)
 
 PRIMARY_EXTRACTOR = DEFAULT_CONFIG.PRIMARY_EXTRACTOR
 FALLBACK_MIN_CHARS = DEFAULT_CONFIG.FALLBACK_MIN_CHARS
@@ -51,6 +67,37 @@ def _is_bad_page_text(text: str, min_chars: int) -> tuple[bool, str]:
     if alpha / max(len(t), 1) < 0.15:
         return True, "low_alpha_ratio"
     return False, "ok"
+
+
+def extract_page_with_ocr(pdf_path: str, page_index: int) -> str:
+    """Extract text from image-based page using OCR."""
+    if not OCR_AVAILABLE:
+        return ""
+
+    try:
+        if os.path.exists("/opt/homebrew/bin/tesseract"):
+            pytesseract.pytesseract.tesseract_cmd = "/opt/homebrew/bin/tesseract"
+        poppler_path = None
+        if os.path.exists("/opt/homebrew/bin/pdftoppm"):
+            poppler_path = "/opt/homebrew/bin"
+        images = convert_from_path(
+            pdf_path,
+            first_page=page_index + 1,
+            last_page=page_index + 1,
+            dpi=300,
+            poppler_path=poppler_path,
+        )
+
+        if not images:
+            return ""
+
+        text = pytesseract.image_to_string(images[0], lang="eng")
+        return text
+
+    except Exception as e:
+        if os.getenv("OCR_DEBUG") == "1":
+            print(f"[OCR] page {page_index + 1} failed: {type(e).__name__}: {e}")
+        return ""
 
 
 # =============================================================================
@@ -137,6 +184,14 @@ def extract_page_struct_pdfplumber(pl_page: Any) -> dict:
     page_height = float(pl_page.height)
     page_width = float(pl_page.width)
 
+    # Try to get rotation from pdfplumber (may not always be available)
+    rotation = 0
+    try:
+        # pdfplumber pages may have rotation attribute
+        rotation = int(getattr(pl_page, 'rotation', 0) or 0)
+    except (AttributeError, ValueError, TypeError):
+        rotation = 0
+
     words = pl_page.extract_words(
         use_text_flow=True,
         keep_blank_chars=False,
@@ -147,7 +202,7 @@ def extract_page_struct_pdfplumber(pl_page: Any) -> dict:
             "lines_all": [],
             "page_height": page_height,
             "page_width": page_width,
-            "rotation": 0,
+            "rotation": rotation,
             "p95_font": 0.0,
         }
 
@@ -203,21 +258,25 @@ def extract_page_struct_pdfplumber(pl_page: Any) -> dict:
         "lines_all": lines_all,
         "page_height": page_height,
         "page_width": page_width,
-        "rotation": 0,
+        "rotation": rotation,
         "p95_font": 0.0,
     }
 
 
 def extract_page_struct_hybrid(
-    doc: fitz.Document,
-    pdf_plumber: Any,
-    page_index: int,
+        doc: fitz.Document,
+        pdf_plumber: Any,
+        page_index: int,
+        pdf_path: Optional[str] = None,
 ) -> tuple[dict, str, str]:
     """
-    Hybrid page extraction with automatic fallback.
+    Hybrid page extraction with automatic fallback and rotation awareness.
 
     Uses primary extractor (PyMuPDF) by default, falls back to
     secondary (pdfplumber) if quality checks fail.
+
+    For rotated pages (90°/270°) that yield very little text with the
+    primary extractor, automatically tries the alternative extractor.
 
     Returns:
         (page_struct, extractor_used, quality_note)
@@ -244,11 +303,104 @@ def extract_page_struct_hybrid(
             return run_pdfplumber(), "pdfplumber"
         return run_pymupdf(), "pymupdf"
 
+    def maybe_use_ocr(s_base: dict, used_base: str, note_base: str) -> tuple[dict, str, str]:
+        if not (OCR_AVAILABLE and pdf_path):
+            return s_base, used_base, note_base
+
+        text_base = _join_lines_text(s_base.get("lines_all", []))
+        if len(text_base) >= 50:
+            return s_base, used_base, note_base
+
+        ocr_text = extract_page_with_ocr(pdf_path, page_index)
+        if len(ocr_text) <= 50:
+            return s_base, used_base, note_base
+
+        page_width = float(s_base.get("page_width", 0.0) or 0.0)
+        page_height = float(s_base.get("page_height", 0.0) or 0.0)
+        if page_width <= 0 or page_height <= 0:
+            try:
+                page = doc.load_page(page_index)
+                page_width = float(page.rect.width)
+                page_height = float(page.rect.height)
+            except Exception:
+                page_width = float(page_width or 0.0)
+                page_height = float(page_height or 0.0)
+
+        x0 = page_width * 0.1 if page_width > 0 else 0.0
+        x1 = page_width * 0.9 if page_width > 0 else 0.0
+        y0 = page_height * 0.5 if page_height > 0 else 0.0
+        y1 = y0
+
+        lines_all: list[dict] = []
+        for line in ocr_text.splitlines():
+            norm = normalize_line(line)
+            if not norm:
+                continue
+            lines_all.append({
+                "text": norm,
+                "x0": x0,
+                "x1": x1,
+                "y0": y0,
+                "y1": y1,
+                "max_size": 0.0,
+            })
+
+        if not lines_all:
+            return s_base, used_base, note_base
+
+        print(f"[OCR] page {page_index + 1} used")
+        return {
+            "lines_all": lines_all,
+            "page_width": page_width,
+            "page_height": page_height,
+            "rotation": 0,
+            "p95_font": 0.0,
+        }, "ocr", "primary_and_fallback_empty_used_ocr"
+
     try:
         s, used = run_primary()
 
+        # Get page metadata for rotation checks
+        rotation = s.get("rotation", 0)
+        page_width = s.get("page_width", 0)
+        page_height = s.get("page_height", 0)
+        text = _join_lines_text(s.get("lines_all", []))
+        text_length = len(text)
+
+        # Check if this is a rotated page with low text yield
+        use_alt_for_rotation, rotation_reason = should_use_alternative_extractor(
+            rotation=rotation,
+            text_length=text_length,
+            page_width=page_width,
+            page_height=page_height
+        )
+
+        # If rotated page has low yield, try alternative extractor first
+        if use_alt_for_rotation:
+            try:
+                s2, used2 = run_fallback()
+                text2 = _join_lines_text(s2.get("lines_all", []))
+
+                # Use alternative if it yields significantly more text
+                if len(text2) > len(text) * 2:  # At least 2x more text
+                    log_rotation_handling(
+                        page_number=page_index + 1,
+                        rotation=rotation,
+                        text_length_before=text_length,
+                        text_length_after=len(text2),
+                        extraction_method=used2
+                    )
+                    return maybe_use_ocr(s2, used2, f"rotated_page_alt_better:{rotation_reason}")
+                else:
+                    # Keep primary result even if short (might be genuinely sparse page)
+                    return maybe_use_ocr(s, used, f"rotated_page_low_yield:{rotation_reason}")
+
+            except Exception as e2:
+                # Fallback failed, use primary result
+                return maybe_use_ocr(s, used, f"rotated_fallback_failed:{type(e2).__name__}:{rotation_reason}")
+
+        # Standard quality-based fallback logic (existing behavior)
         if FALLBACK_ON_BAD_TEXT:
-            text = _join_lines_text(s.get("lines_all", []))
             bad, reason = _is_bad_page_text(text, FALLBACK_MIN_CHARS)
             if bad:
                 try:
@@ -257,18 +409,32 @@ def extract_page_struct_hybrid(
                     bad2, reason2 = _is_bad_page_text(text2, FALLBACK_MIN_CHARS)
 
                     if (not bad2) and bad:
-                        return s2, used2, f"fallback_used:{reason}"
+                        return maybe_use_ocr(s2, used2, f"fallback_used:{reason}")
                     if len(text2) > len(text):
-                        return s2, used2, f"fallback_used:{reason};fallback_quality:{reason2}"
-                    return s, used, f"fallback_not_better:{reason};fallback_quality:{reason2}"
+                        return maybe_use_ocr(
+                            s2, used2, f"fallback_used:{reason};fallback_quality:{reason2}"
+                        )
+                    return maybe_use_ocr(
+                        s, used, f"fallback_not_better:{reason};fallback_quality:{reason2}"
+                    )
 
                 except Exception as e2:
-                    return s, used, f"fallback_failed:{type(e2).__name__}:{reason}"
+                    return maybe_use_ocr(s, used, f"fallback_failed:{type(e2).__name__}:{reason}")
 
-        return s, used, "ok"
+        # Log rotation handling for debugging
+        if is_rotated(rotation):
+            log_rotation_handling(
+                page_number=page_index + 1,
+                rotation=rotation,
+                text_length_before=text_length,
+                text_length_after=text_length,
+                extraction_method=used
+            )
+
+        return maybe_use_ocr(s, used, "ok")
 
     except Exception as e1:
         if not FALLBACK_ON_EXCEPTION:
             raise
         s2, used2 = run_fallback()
-        return s2, used2, f"primary_failed:{type(e1).__name__}"
+        return maybe_use_ocr(s2, used2, f"primary_failed:{type(e1).__name__}")

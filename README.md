@@ -12,18 +12,19 @@ The scripts are designed for reproducible, page-accurate retrieval on large repo
 
 - `Data/` — raw PDFs (ignored by git)
 - `data_processed/` — per-document outputs from preprocessing and indexing (ignored by git)
-- `preprocess_pdf_rag.py` — extract text, clean, detect sections, chunk, and write metrics
-- `build_index.py` — embed chunks and build a FAISS index
-- `retrieval_eval.py` — evaluate retrieval with an `eval_set.json`
+- `preprocess_hybrid.py` — thin runner for the hybrid preprocessing pipeline
+- `scripts/` — core preprocessing, indexing, and evaluation scripts
+- `qa/` — validation and QA utilities for preprocessing output
 - `figures/` — charts/figures produced by analysis scripts (ignored by git)
 
 ## Requirements
 
 Python 3.10+ recommended. Core dependencies by script:
 
-- `preprocess_pdf_rag.py`: `pymupdf`, `pandas`, `pyarrow` (optional: `tiktoken`)
-- `build_index.py`: `faiss-cpu`, `sentence-transformers`, `pandas`, `pyarrow`, `numpy`
-- `retrieval_eval.py`: `faiss-cpu`, `sentence-transformers`, `pandas`, `pyarrow`, `numpy`
+- `scripts/preprocess_pdf_rag.py`: `pymupdf`, `pandas`, `pyarrow` (optional: `tiktoken`)
+- `scripts/build_index.py`: `faiss-cpu`, `sentence-transformers`, `pandas`, `pyarrow`, `numpy`
+- `scripts/retrieval_eval.py`: `faiss-cpu`, `sentence-transformers`, `pandas`, `pyarrow`, `numpy`
+- OCR fallback: `pytesseract`, `pdf2image`, system `tesseract`, and `poppler` (for `pdftoppm`)
 
 Example setup:
 
@@ -37,33 +38,36 @@ pip install pymupdf pandas pyarrow tiktoken faiss-cpu sentence-transformers nump
 
 Key constants to adjust before running each script:
 
-- `preprocess_pdf_rag.py`
+- `scripts/preprocess_pdf_rag.py`
   - Paths: `PDF_PATH`, `DOC_ID`, `OUT_ROOT`
   - Chunking: `CHUNK_SIZE_TOKENS`, `CHUNK_OVERLAP_TOKENS`
   - Header/footer removal: `TOP_STRIP_FRAC`, `BOTTOM_STRIP_FRAC`, `HEADER_FOOTER_REPEAT_FRAC`, `TOP_LINE_K`, `BOT_LINE_K`
   - Heading detection: `HEADING_MAX_CHARS`, `HEADING_MIN_CHARS`, `HEADING_FONT_BOOST_FRAC`
   - Filters: `MIN_CHUNK_WORDS`
 
-- `build_index.py`
+- `scripts/build_index.py`
   - Paths: `DATA_DIR`, `CHUNKS_PATH`, `METRICS_PATH`
   - Embeddings/index: `EMBED_MODEL_NAME`, `FAISS_INDEX_NAME`, `EMB_NPY_NAME`, `META_PARQUET_NAME`
   - Retrieval sanity check: `TOPK_DEFAULT`
 
-- `retrieval_eval.py`
+- `scripts/retrieval_eval.py`
   - Paths: `DATA_DIR`, `INDEX_PATH`, `META_PATH`, `EVAL_SET_PATH`
   - Embeddings: `EMBED_MODEL_NAME`
   - Metrics/output: `K_LIST`, `RESULTS_JSON`, `METRICS_JSON`, `SUMMARY_CSV`
+
+- `scripts/preprocess_hybrid.py`
+  - OCR thresholds: `OCR_MIN_ALPHA_RATIO`, `OCR_MIN_DIGIT_RATIO`
 
 ## Quickstart
 
 1) Point to your PDF
 
-Edit `PDF_PATH` and `OUT_ROOT` in `preprocess_pdf_rag.py`.
+Edit `PDF_PATH` and `OUT_ROOT` in `scripts/preprocess_pdf_rag.py`.
 
 2) Preprocess the PDF
 
 ```bash
-python preprocess_pdf_rag.py
+python preprocess_hybrid.py
 ```
 
 Outputs per document (under `data_processed/<DOC_ID>/`):
@@ -74,13 +78,14 @@ Outputs per document (under `data_processed/<DOC_ID>/`):
 - `metrics.json`
 - `qa_report.json`
 - `sample_chunks.md`
+- `ocr_pages.csv` (pages processed with OCR, if enabled)
 
 3) Build embeddings + FAISS index
 
-Edit `DATA_DIR` in `build_index.py` to point at the folder containing `chunks.parquet`, then run:
+Edit `DATA_DIR` in `scripts/build_index.py` to point at the folder containing `chunks.parquet`, then run:
 
 ```bash
-python build_index.py
+python scripts/build_index.py
 ```
 
 Outputs:
@@ -95,7 +100,7 @@ Outputs:
 Create an `eval_set.json` in the same `DATA_DIR` used above, then run:
 
 ```bash
-python retrieval_eval.py
+python scripts/retrieval_eval.py
 ```
 
 Outputs:
@@ -110,6 +115,8 @@ Outputs:
 - If you see `fitz` import errors, uninstall the `fitz` package and install `pymupdf`.
 - The FAISS index uses inner product on L2-normalized vectors to approximate cosine similarity.
 - Git ignores `Data/`, `data_processed/`, `figures/`, and all `*.pdf` outputs by default.
+- OCR requires `tesseract` on PATH; for Homebrew installs this is typically `/opt/homebrew/bin/tesseract`.
+- `pdf2image` requires Poppler (`pdftoppm`) on PATH; for Homebrew installs this is typically `/opt/homebrew/bin/pdftoppm`.
 
 ## Example eval_set.json
 
@@ -129,6 +136,29 @@ Outputs:
   }
 ]
 ```
+
+## OCR Setup (Optional)
+
+If you want OCR fallback for image-based pages, install the Python deps and system binaries:
+
+```bash
+pip install pytesseract pdf2image
+brew install tesseract poppler
+```
+
+`ocr_pages.csv` columns:
+
+- `page` — page number (1-based)
+- `extractor_notes` — OCR usage reason
+- `ocr_text_len` — raw OCR text length
+- `clean_text_len` — final normalized text length
+
+OCR behavior:
+
+- Trigger: `clean_text` length < 50 characters.
+- Accept: OCR result is used if normalized OCR text length >= 50.
+- Tracking: pages using OCR are tagged with `extractor=ocr`.
+- Debug: set `OCR_DEBUG=1` to print OCR errors during processing.
 
 ## License
 

@@ -26,7 +26,7 @@ if src_path.exists() and str(src_path) not in sys.path:
 from rag_pdf.boilerplate import remove_repeated_header_footer_lines, strip_by_coordinates
 from rag_pdf.chunking import chunk_text_by_tokens, count_tokens, get_encoder
 from rag_pdf.config import PreprocessConfig
-from rag_pdf.extract_page import extract_page_struct_hybrid
+from rag_pdf.extract_page import OCR_AVAILABLE, extract_page_struct_hybrid, extract_page_with_ocr
 from rag_pdf.headings import select_heading_candidates
 from rag_pdf.metrics import StepTimer, safe_json_dump
 from rag_pdf.schemas import build_page_list_struct, make_chunk_id_global
@@ -39,6 +39,20 @@ from rag_pdf.text_normalize import (
     normalize_page_text,
     now_utc_iso,
 )
+
+
+def _alpha_ratio(text: str) -> float:
+    if not text:
+        return 0.0
+    alpha = sum(c.isalpha() for c in text)
+    return alpha / max(len(text), 1)
+
+
+def _digit_ratio(text: str) -> float:
+    if not text:
+        return 0.0
+    digits = sum(c.isdigit() for c in text)
+    return digits / max(len(text), 1)
 
 
 def _apply_config_overrides(cfg: PreprocessConfig) -> None:
@@ -119,6 +133,8 @@ def main() -> None:
         TABLE_MIN_LINES=1,
         CAMELOT_LATTICE_ACCURACY_THRESHOLD=70,
         TABLE_SUMMARY_MAX_ROWS=5,
+        OCR_MIN_ALPHA_RATIO=0.3,
+        OCR_MIN_DIGIT_RATIO=0.6,
     )
 
     _apply_config_overrides(cfg)
@@ -167,13 +183,21 @@ def main() -> None:
         qa_removed_bottom = defaultdict(list)
 
         print("Extracting pages...")
+        page_structs = {}  # ← ADD THIS LINE AT THE TOP
+
         for i in range(doc.page_count):
             if (i + 1) % 20 == 0:
                 print(f"  Page {i + 1}/{doc.page_count}")
 
             page_no = i + 1
 
-            s, used, note = extract_page_struct_hybrid(doc, pdf_plumber, i)
+            s, used, note = extract_page_struct_hybrid(
+                doc,
+                pdf_plumber,
+                i,
+                pdf_path=str(cfg.PDF_PATH),
+            )
+            page_structs[page_no] = s  # ← ADD THIS LINE
             page_extractor_used[page_no] = used
             page_extractor_notes[page_no] = note
 
@@ -214,11 +238,50 @@ def main() -> None:
         pages_records = []
         text_pages = []
         table_pages = []
+        short_clean_pages = 0
+        ocr_used_pages = 0
+        ocr_attempts = 0
+        ocr_too_short = 0
+        ocr_debug_logged = 0
+        ocr_force_table = {}
 
         for i in range(doc.page_count):
             page_no = i + 1
             raw = "\n".join(pages_text_lines2.get(page_no, [])).strip()
             clean_text = normalize_page_text(raw)
+
+            ocr_clean_len = None
+            ocr_text_len = None
+            if OCR_AVAILABLE and len(clean_text) < 50:
+                short_clean_pages += 1
+                ocr_attempts += 1
+                ocr_text = extract_page_with_ocr(str(cfg.PDF_PATH), page_no - 1)
+                ocr_clean = normalize_page_text(ocr_text)
+                ocr_text_len = len(ocr_text)
+                ocr_clean_len = len(ocr_clean)
+                ocr_alpha = _alpha_ratio(ocr_clean)
+                ocr_digits = _digit_ratio(ocr_clean)
+                accept_ocr = len(ocr_clean) >= 50 and (
+                    ocr_alpha >= cfg.OCR_MIN_ALPHA_RATIO or ocr_digits > cfg.OCR_MIN_DIGIT_RATIO
+                )
+                if accept_ocr:
+                    clean_text = ocr_clean
+                    page_extractor_used[page_no] = "ocr"
+                    note = "clean_text_short_used_ocr"
+                    if ocr_digits > cfg.OCR_MIN_DIGIT_RATIO:
+                        ocr_force_table[page_no] = True
+                        note = f"{note};table_like"
+                    page_extractor_notes[page_no] = note
+                    ocr_used_pages += 1
+                    print(f"[OCR] page {page_no} used (clean_text_short)")
+                else:
+                    ocr_too_short += 1
+                    if ocr_debug_logged < 3:
+                        print(
+                            f"[OCR] page {page_no} too short: "
+                            f"ocr_len={len(ocr_text)} ocr_clean_len={len(ocr_clean)}"
+                        )
+                        ocr_debug_logged += 1
 
             # Get raw table flag from earlier detection
             page_data = pages_text_lines.get(page_no)
@@ -236,6 +299,14 @@ def main() -> None:
                 if not classification["table_type"]:
                     classification["table_type"] = detect_table_type(clean_text)
 
+            if ocr_force_table.get(page_no) and not classification["is_table"]:
+                classification["is_table"] = True
+                classification["confidence"] = "medium"
+                if not classification["table_type"]:
+                    classification["table_type"] = detect_table_type(clean_text)
+
+            s = page_structs.get(page_no, {})  # ← ADD THIS LINE
+
             pages_records.append({
                 "doc_id": doc_id,
                 "corpus_id": corpus_id,
@@ -248,9 +319,14 @@ def main() -> None:
                 "heading_candidates": page_heading_candidates.get(page_no, []),
                 "extractor": page_extractor_used.get(page_no, "unknown"),
                 "extractor_notes": page_extractor_notes.get(page_no, ""),
+                "ocr_text_len": ocr_text_len,
+                "ocr_clean_text_len": ocr_clean_len,
                 "is_table": classification["is_table"],
                 "table_type": classification["table_type"],
                 "classification_confidence": classification["confidence"],
+                "rotation": s.get("rotation", 0),  # ← ADD THIS
+                "page_width": s.get("page_width", 0.0),  # ← ADD THIS
+                "page_height": s.get("page_height", 0.0),  # ← ADD THIS
             })
 
             # Split into text vs. table pages
@@ -270,6 +346,10 @@ def main() -> None:
 
         print(f"  Text pages: {len(text_pages)}")
         print(f"  Table pages: {len(table_pages)}")
+        print(f"  OCR short pages: {short_clean_pages}")
+        print(f"  OCR used pages: {ocr_used_pages}")
+        print(f"  OCR attempts: {ocr_attempts}")
+        print(f"  OCR too short: {ocr_too_short}")
 
         timer.mark("Step 3: pages dataframe + classification")
 
@@ -383,6 +463,16 @@ def main() -> None:
         pages_df.to_parquet(out_dir / "pages.parquet", index=False)
         sections_df.to_parquet(out_dir / "sections.parquet", index=False)
         all_chunks_df.to_parquet(out_dir / "chunks.parquet", index=False)
+        ocr_pages_df = pages_df.loc[
+            pages_df["extractor"] == "ocr",
+            ["page", "extractor_notes", "ocr_text_len", "ocr_clean_text_len", "clean_text"],
+        ].copy()
+        ocr_pages_df = ocr_pages_df.rename(
+            columns={"ocr_clean_text_len": "clean_text_len"}
+        )
+        ocr_pages_df["clean_text_len"] = ocr_pages_df["clean_text"].fillna("").str.len()
+        ocr_pages_df = ocr_pages_df.drop(columns=["clean_text"])
+        ocr_pages_df.to_csv(out_dir / "ocr_pages.csv", index=False)
 
         # Write structured tables
         if len(structured_tables_df) > 0:
