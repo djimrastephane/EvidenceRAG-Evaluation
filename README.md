@@ -117,6 +117,7 @@ Outputs:
 - Git ignores `Data/`, `data_processed/`, `figures/`, and all `*.pdf` outputs by default.
 - OCR requires `tesseract` on PATH; for Homebrew installs this is typically `/opt/homebrew/bin/tesseract`.
 - `pdf2image` requires Poppler (`pdftoppm`) on PATH; for Homebrew installs this is typically `/opt/homebrew/bin/pdftoppm`.
+- When loading `sentence-transformers/all-MiniLM-L6-v2`, you may see an `UNEXPECTED embeddings.position_ids` warning; it is harmless and can be ignored.
 
 ## Example eval_set.json
 
@@ -159,6 +160,45 @@ OCR behavior:
 - Accept: OCR result is used if normalized OCR text length >= 50.
 - Tracking: pages using OCR are tagged with `extractor=ocr`.
 - Debug: set `OCR_DEBUG=1` to print OCR errors during processing.
+
+CLI + env options:
+
+- `scripts/preprocess_hybrid.py`
+  - CLI: `--pdf-path`, `--out-root`
+  - Env: `PDF_PATH`, `OUT_ROOT`
+- `scripts/build_index.py`
+  - CLI: `--data-dir`, `--model`
+  - Env: `DATA_DIR`, `EMBED_MODEL_NAME`
+- `scripts/retrieval_eval.py`
+  - CLI: `--data-dir`, `--model`, `--k-list`
+  - Env: `DATA_DIR`, `EMBED_MODEL_NAME`, `K_LIST`
+
+## Batch Processing
+
+Use the batch runner with a JSON config to process a folder of PDFs.
+
+Example config: `config/batch.json`
+
+```json
+{
+  "pdf_dir": "/path/to/pdfs",
+  "pdf_glob": "*.pdf",
+  "out_root": "/path/to/output_root",
+  "embed_model_name": "/path/to/models/all-MiniLM-L6-v2"
+}
+```
+
+Run:
+
+```bash
+.venv/bin/python scripts/run_batch.py --config config/batch.json
+```
+
+Batch runner flags + outputs:
+
+- `--force` to reprocess even if outputs already exist
+- Logs per PDF: `<out_root>/<DOC_ID>/preprocess.log`
+- Summary CSV: `<out_root>/batch_summary.csv`
 
 ## License
 

@@ -3,7 +3,10 @@ from __future__ import annotations
 # This script orchestrates the hybrid preprocessing pipeline.
 # Core logic lives in src/rag_pdf/ modules for clarity and testability.
 
+import argparse
+import os
 import sys
+import time
 from collections import defaultdict
 from pathlib import Path
 
@@ -55,6 +58,36 @@ def _digit_ratio(text: str) -> float:
     return digits / max(len(text), 1)
 
 
+def _env_or_default(name: str, default: str) -> str:
+    val = os.getenv(name)
+    return val if val else default
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Run hybrid preprocessing with optional OCR fallback."
+    )
+    parser.add_argument(
+        "--pdf-path",
+        default=_env_or_default(
+            "PDF_PATH",
+            "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/"
+            "Data/Annual Accounts NHS Grampian/Preliminary_Test/Grampian-2022-2023.pdf",
+        ),
+        help="Path to the input PDF file.",
+    )
+    parser.add_argument(
+        "--out-root",
+        default=_env_or_default(
+            "OUT_ROOT",
+            "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/"
+            "data_processed",
+        ),
+        help="Output root directory.",
+    )
+    return parser.parse_args()
+
+
 def _apply_config_overrides(cfg: PreprocessConfig) -> None:
     import rag_pdf.boilerplate as boilerplate_mod
     import rag_pdf.extract_page as extract_page_mod
@@ -103,13 +136,10 @@ def main() -> None:
        - Table pages → dual representation (summary + structured)
     7. Write outputs (parquet + CSV)
     """
+    args = parse_args()
     cfg = PreprocessConfig(
-        PDF_PATH=Path(
-            "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/Data/Annual Accounts NHS Grampian/Preliminary_Test/Grampian-2022-2023.pdf"
-        ),
-        OUT_ROOT=Path(
-            "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed"
-        ),
+        PDF_PATH=Path(args.pdf_path),
+        OUT_ROOT=Path(args.out_root),
         CORPUS_ID=None,
         CHUNK_SIZE_TOKENS=320,
         CHUNK_OVERLAP_TOKENS=90,
@@ -184,6 +214,10 @@ def main() -> None:
 
         print("Extracting pages...")
         page_structs = {}  # ← ADD THIS LINE AT THE TOP
+        time_text_extract_total = 0.0
+        time_coord_strip_total = 0.0
+        time_ocr_raw_total = 0.0
+        ocr_raw_extract_pages = 0
 
         for i in range(doc.page_count):
             if (i + 1) % 20 == 0:
@@ -191,26 +225,33 @@ def main() -> None:
 
             page_no = i + 1
 
+            t_extract_start = time.perf_counter()
             s, used, note = extract_page_struct_hybrid(
                 doc,
                 pdf_plumber,
                 i,
                 pdf_path=str(cfg.PDF_PATH),
             )
+            time_text_extract_total += time.perf_counter() - t_extract_start
             page_structs[page_no] = s  # ← ADD THIS LINE
             page_extractor_used[page_no] = used
             page_extractor_notes[page_no] = note
+            if used == "ocr":
+                time_ocr_raw_total += time.perf_counter() - t_extract_start
+                ocr_raw_extract_pages += 1
 
             # Check if raw lines look like a table (before cleanup)
             raw_lines = [ln["text"] for ln in s.get("lines_all", [])]
             is_raw_table = is_table_like_from_raw_lines(raw_lines)
 
+            t_strip_start = time.perf_counter()
             kept, rem_a, rem_b = strip_by_coordinates(
                 s["lines_all"],
                 page_height=s["page_height"],
                 page_width=s["page_width"],
                 rotation=s["rotation"],
             )
+            time_coord_strip_total += time.perf_counter() - t_strip_start
 
             pages_text_lines[page_no] = kept
             page_heading_candidates[page_no] = select_heading_candidates(
@@ -255,6 +296,7 @@ def main() -> None:
             if OCR_AVAILABLE and len(clean_text) < 50:
                 short_clean_pages += 1
                 ocr_attempts += 1
+                pre_ocr_text_len = len(clean_text)
                 ocr_text = extract_page_with_ocr(str(cfg.PDF_PATH), page_no - 1)
                 ocr_clean = normalize_page_text(ocr_text)
                 ocr_text_len = len(ocr_text)
@@ -273,7 +315,11 @@ def main() -> None:
                         note = f"{note};table_like"
                     page_extractor_notes[page_no] = note
                     ocr_used_pages += 1
-                    print(f"[OCR] page {page_no} used (clean_text_short)")
+                    print(
+                        f"[OCR] page {page_no} used (clean_text_short) "
+                        f"pre_ocr_text_len={pre_ocr_text_len} "
+                        f"post_ocr_text_len={ocr_clean_len}"
+                    )
                 else:
                     ocr_too_short += 1
                     if ocr_debug_logged < 3:
@@ -496,6 +542,18 @@ def main() -> None:
                 "chunks_text": len(text_chunks_df),
                 "chunks_table": len(table_chunks_df),
                 "tables_extracted": len(structured_tables_df),
+                "ocr_raw_extract_pages": ocr_raw_extract_pages,
+                "ocr_clean_text_pages": ocr_used_pages,
+            },
+            "derived": {
+                "ocr_raw_extract_fraction": (
+                    ocr_raw_extract_pages / max(len(pages_df), 1)
+                ),
+            },
+            "timing": {
+                "time_text_extract_total": round(time_text_extract_total, 6),
+                "time_coord_strip_total": round(time_coord_strip_total, 6),
+                "time_ocr_raw_total": round(time_ocr_raw_total, 6),
             },
             "params": {
                 "chunk_size_tokens": cfg.CHUNK_SIZE_TOKENS,

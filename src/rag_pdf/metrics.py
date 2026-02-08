@@ -24,6 +24,7 @@ class StepTimer:
         self.start = time.perf_counter()
         self.last = self.start
         self.steps = OrderedDict()
+        self.extra_lines: list[tuple[str, float, float]] = []
 
     def mark(self, label: str) -> None:
         now = time.perf_counter()
@@ -41,6 +42,15 @@ class StepTimer:
                 f"step={v['step_seconds']:>7.3f}s  "
                 f"total={v['total_seconds']:>7.3f}s"
             )
+        for label, step_seconds, total_seconds in self.extra_lines:
+            print(
+                f"{label:<45} "
+                f"step={step_seconds:>7.3f}s  "
+                f"total={total_seconds:>7.3f}s"
+            )
+
+    def add_extra(self, label: str, step_seconds: float, total_seconds: float) -> None:
+        self.extra_lines.append((label, step_seconds, total_seconds))
 
 
 def safe_json_dump(obj: Any, path: Path) -> None:

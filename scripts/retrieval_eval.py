@@ -47,7 +47,9 @@ Implementation details:
 
 from __future__ import annotations
 
+import argparse
 import json
+import os
 import re
 from pathlib import Path
 from datetime import datetime, timezone
@@ -66,6 +68,7 @@ except Exception as e:
     ) from e
 
 try:
+    from transformers import logging as hf_logging
     from sentence_transformers import SentenceTransformer
 except Exception as e:
     raise RuntimeError(
@@ -142,6 +145,48 @@ def write_json(path: Path, obj: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(obj, f, indent=2, ensure_ascii=False)
+
+
+def _env_or_default(name: str, default: str) -> str:
+    val = os.getenv(name)
+    return val if val else default
+
+
+def parse_k_list(val: str) -> list[int]:
+    parts = [p.strip() for p in val.split(",") if p.strip()]
+    return [int(p) for p in parts]
+
+
+def refresh_paths() -> None:
+    global INDEX_PATH, META_PATH, EVAL_SET_PATH, RESULTS_JSON, METRICS_JSON, SUMMARY_CSV
+    INDEX_PATH = DATA_DIR / "faiss.index"
+    META_PATH = DATA_DIR / "chunk_meta.parquet"
+    EVAL_SET_PATH = DATA_DIR / "eval_set.json"
+    RESULTS_JSON = DATA_DIR / "retrieval_results.json"
+    METRICS_JSON = DATA_DIR / "retrieval_metrics.json"
+    SUMMARY_CSV = DATA_DIR / "retrieval_summary.csv"
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Evaluate retrieval using FAISS index and eval_set.json."
+    )
+    parser.add_argument(
+        "--data-dir",
+        default=_env_or_default("DATA_DIR", str(DATA_DIR)),
+        help="Directory containing faiss.index, chunk_meta.parquet, eval_set.json.",
+    )
+    parser.add_argument(
+        "--model",
+        default=_env_or_default("EMBED_MODEL_NAME", EMBED_MODEL_NAME),
+        help="Sentence-transformers model name or local path.",
+    )
+    parser.add_argument(
+        "--k-list",
+        default=_env_or_default("K_LIST", ",".join(str(k) for k in K_LIST)),
+        help="Comma-separated list of k values (e.g. 1,3,5,10).",
+    )
+    return parser.parse_args()
 
 
 def l2_normalize(x: np.ndarray, eps: float = 1e-12) -> np.ndarray:
@@ -415,6 +460,13 @@ def attribute_retrieval_failure(page_recall: float, gold_exists: bool) -> str:
 # MAIN
 # =============================================================================
 def main():
+    hf_logging.set_verbosity_error()
+    args = parse_args()
+    global DATA_DIR, EMBED_MODEL_NAME, K_LIST
+    DATA_DIR = Path(args.data_dir)
+    EMBED_MODEL_NAME = args.model
+    K_LIST = parse_k_list(args.k_list)
+    refresh_paths()
     if not INDEX_PATH.exists():
         raise FileNotFoundError(f"Missing FAISS index: {INDEX_PATH}")
     if not META_PATH.exists():

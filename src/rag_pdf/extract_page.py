@@ -348,7 +348,7 @@ def extract_page_struct_hybrid(
         if not lines_all:
             return s_base, used_base, note_base
 
-        print(f"[OCR] page {page_index + 1} used")
+        print(f"[OCR-RAW] page {page_index + 1} used in extraction")
         return {
             "lines_all": lines_all,
             "page_width": page_width,

@@ -12,6 +12,8 @@ Data/
 data_processed/
 figures/
 Experiment/
+models/
+config/batch.json
 
 # LaTeX build artifacts
 *.aux

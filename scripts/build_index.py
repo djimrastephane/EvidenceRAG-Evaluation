@@ -31,9 +31,11 @@ Outputs used later
 
 from __future__ import annotations
 
+import argparse
 import json
-import re
 import math
+import os
+import re
 from pathlib import Path
 from datetime import datetime, timezone
 from typing import Any, Optional
@@ -42,6 +44,7 @@ import numpy as np
 import pandas as pd
 
 import faiss
+from transformers import logging as hf_logging
 from sentence_transformers import SentenceTransformer
 
 
@@ -117,6 +120,28 @@ def read_json(path: Path) -> dict:
         return {}
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
+
+
+def _env_or_default(name: str, default: str) -> str:
+    val = os.getenv(name)
+    return val if val else default
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Build embeddings + FAISS index from chunks.parquet."
+    )
+    parser.add_argument(
+        "--data-dir",
+        default=_env_or_default("DATA_DIR", str(BASE_DATA_DIR)),
+        help="Base directory containing per-document folders.",
+    )
+    parser.add_argument(
+        "--model",
+        default=_env_or_default("EMBED_MODEL_NAME", EMBED_MODEL_NAME),
+        help="Sentence-transformers model name or local path.",
+    )
+    return parser.parse_args()
 
 
 def describe_array(x: np.ndarray) -> dict[str, Any]:
@@ -535,6 +560,11 @@ def build_index_for_doc(doc_dir: Path, model: SentenceTransformer) -> None:
 # MAIN
 # =============================================================================
 def main():
+    hf_logging.set_verbosity_error()
+    args = parse_args()
+    global BASE_DATA_DIR, EMBED_MODEL_NAME
+    BASE_DATA_DIR = Path(args.data_dir)
+    EMBED_MODEL_NAME = args.model
     doc_dirs = iter_document_dirs(BASE_DATA_DIR)
     if not doc_dirs:
         print("No document folders found under:", BASE_DATA_DIR)
