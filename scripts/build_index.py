@@ -56,6 +56,7 @@ BASE_DATA_DIR = Path(
 )
 
 EMBED_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
+EMBED_WITH_SUBSECTION = os.getenv("EMBED_WITH_SUBSECTION", "1") != "0"
 
 FAISS_INDEX_NAME = "faiss.index"
 EMB_NPY_NAME = "embeddings.npy"
@@ -174,6 +175,32 @@ def find_text_artifacts(text: str) -> dict[str, int]:
         "zero_width_total": sum(text.count(ch) for ch in ZERO_WIDTH),
         "ligature_total": sum(text.count(ch) for ch in LIGATURE_GLYPHS),
     }
+
+
+def _clean_heading_value(val: Any) -> str:
+    if val is None:
+        return ""
+    if isinstance(val, float) and pd.isna(val):
+        return ""
+    s = str(val).strip()
+    if not s or s.lower() == "unknown":
+        return ""
+    return s
+
+
+def build_embedding_text(row: pd.Series) -> str:
+    section = _clean_heading_value(row.get("section_title"))
+    subsection = _clean_heading_value(row.get("subsection_title"))
+    chunk_text = str(row.get("chunk_text", "") or "")
+    is_table = bool(row.get("is_table", False))
+
+    parts: list[str] = []
+    if section:
+        parts.append(section)
+    if EMBED_WITH_SUBSECTION and not is_table and subsection:
+        parts.append(subsection)
+    parts.append(chunk_text)
+    return "\n".join(parts)
 
 
 def _to_int_if_whole(x: Any) -> Optional[int]:
@@ -325,6 +352,7 @@ def build_meta_table(chunks: pd.DataFrame) -> pd.DataFrame:
         "run_date_utc",
         "part",
         "section_title",
+        "subsection_title",
         "page_start",
         "page_end",
         "pages",
@@ -461,7 +489,7 @@ def build_index_for_doc(doc_dir: Path, model: SentenceTransformer) -> None:
     if missing:
         raise ValueError(f"{doc_dir.name}: chunks.parquet missing columns: {missing}")
 
-    texts = chunks["chunk_text"].fillna("").astype(str).tolist()
+    texts = [build_embedding_text(row) for _, row in chunks.iterrows()]
     if not texts or all(len(t.strip()) == 0 for t in texts):
         raise ValueError(f"{doc_dir.name}: No chunk_text found to embed.")
 

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+
 from rag_pdf.config import DEFAULT_CONFIG
 from rag_pdf.text_normalize import normalize_line
 
@@ -20,7 +22,8 @@ def is_table_like(text: str) -> bool:
     lines = [l for l in text.splitlines() if l.strip()]
     if len(lines) < TABLE_MIN_LINES:
         return False
-    digit_ratio = sum(ch.isdigit() for ch in text) / max(1, len(text))
+    non_space_chars = sum(1 for ch in text if not ch.isspace())
+    digit_ratio = sum(ch.isdigit() for ch in text) / max(1, non_space_chars)
     many_spaces = sum(l.count("  ") for l in lines) / max(1, len(lines))
     return digit_ratio > TABLE_DIGIT_RATIO and many_spaces > TABLE_SPACE_RATIO
 
@@ -43,18 +46,24 @@ def is_table_like_from_raw_lines(lines: list[str]) -> bool:
     text = "\n".join(lines)
 
     # Check digit ratio
-    digit_ratio = sum(ch.isdigit() for ch in text) / max(1, len(text))
+    non_space_chars = sum(1 for ch in text if not ch.isspace())
+    digit_ratio = sum(ch.isdigit() for ch in text) / max(1, non_space_chars)
     if digit_ratio < 0.15:
         return False
 
     # Check for financial table keywords
     text_lower = text.lower()
     table_keywords = [
-        "note", "£", "£000", "£'000", "2022/23", "2021/22",
+        "note", "£", "£000", "£'000",
         "total", "balance", "expenditure", "income", "assets",
         "liabilities", "depreciation", "impairment",
     ]
+    table_keyword_patterns = [
+        re.compile(r"\b20\d{2}/\d{2}\b"),  # Year pattern like 2022/23
+        re.compile(r"£\s?[\d,]+(?:\.\d+)?"),  # Currency amounts like £1,000
+    ]
     keyword_hits = sum(1 for kw in table_keywords if kw in text_lower)
+    keyword_hits += sum(1 for pat in table_keyword_patterns if pat.search(text_lower))
 
     # Strong signal: multiple keywords + high digits
     if keyword_hits >= 2 and digit_ratio > 0.15:
@@ -74,7 +83,8 @@ def is_table_like_from_raw_lines(lines: list[str]) -> bool:
 def contains_many_numbers(text: str) -> bool:
     """Check if text has high numeric content (>10% digits)."""
     digits = sum(ch.isdigit() for ch in text)
-    return digits / max(1, len(text)) > 0.10
+    non_space_chars = sum(1 for ch in text if not ch.isspace())
+    return digits / max(1, non_space_chars) > 0.10
 
 
 # =============================================================================

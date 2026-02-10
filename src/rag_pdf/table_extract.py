@@ -74,17 +74,37 @@ def extract_table_camelot(pdf_path: Path, page_no: int) -> pd.DataFrame | None:
     if camelot is None:
         return None
 
+    def _best_camelot_df(tables) -> pd.DataFrame | None:
+        if not tables:
+            return None
+        candidates = []
+        for t in tables:
+            try:
+                df = t.df
+                rows, cols = df.shape
+                if rows == 0 or cols == 0:
+                    continue
+                candidates.append((rows * cols, cols, t.accuracy, df))
+            except Exception:
+                continue
+        if not candidates:
+            return None
+        candidates.sort(reverse=True)
+        return candidates[0][3]
+
     try:
         # Try lattice method first (works for bordered tables)
         tables = camelot.read_pdf(
             str(pdf_path),
             pages=str(page_no),
-            flavor='lattice',
-            strip_text='\n'
+            flavor="lattice",
+            strip_text="\n",
         )
 
         if len(tables) > 0 and tables[0].accuracy >= CAMELOT_LATTICE_ACCURACY_THRESHOLD:
-            return tables[0].df
+            best = _best_camelot_df(tables)
+            if best is not None:
+                return best
     except Exception:
         pass
 
@@ -93,11 +113,13 @@ def extract_table_camelot(pdf_path: Path, page_no: int) -> pd.DataFrame | None:
         tables = camelot.read_pdf(
             str(pdf_path),
             pages=str(page_no),
-            flavor='stream'
+            flavor="stream",
         )
 
         if len(tables) > 0:
-            return tables[0].df
+            best = _best_camelot_df(tables)
+            if best is not None:
+                return best
     except Exception:
         pass
 
@@ -118,11 +140,21 @@ def extract_table_pdfplumber(pdf_plumber, page_no: int) -> pd.DataFrame | None:
     try:
         page_idx = page_no - 1
         page = pdf_plumber.pages[page_idx]
-        table = page.extract_table()
-
-        if table and len(table) > 1:
-            df = pd.DataFrame(table[1:], columns=table[0])
-            return df
+        tables = page.extract_tables()
+        if not tables:
+            return None
+        candidates = []
+        for table in tables:
+            if table and len(table) > 1:
+                df = pd.DataFrame(table[1:], columns=table[0])
+                rows, cols = df.shape
+                if rows == 0 or cols == 0:
+                    continue
+                candidates.append((rows * cols, cols, df))
+        if not candidates:
+            return None
+        candidates.sort(reverse=True)
+        return candidates[0][2]
     except Exception:
         pass
 
@@ -303,6 +335,7 @@ def process_table_pages(
                 "chunk_id_global": make_chunk_id_global(doc_id, chunk_id_local),
                 "part": "Unknown",  # Tables don't have part classification
                 "section_title": "Financial Tables",
+                "subsection_title": None,
                 "page_start": page_no,
                 "page_end": page_no,
                 "pages": pages,

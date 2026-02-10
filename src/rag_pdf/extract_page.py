@@ -313,7 +313,7 @@ def extract_page_struct_hybrid(
 
         ocr_text = extract_page_with_ocr(pdf_path, page_index)
         if len(ocr_text) <= 50:
-            return s_base, used_base, note_base
+            return s_base, used_base, f"{note_base};ocr_raw_attempted;ocr_raw_too_short"
 
         page_width = float(s_base.get("page_width", 0.0) or 0.0)
         page_height = float(s_base.get("page_height", 0.0) or 0.0)
@@ -346,7 +346,7 @@ def extract_page_struct_hybrid(
             })
 
         if not lines_all:
-            return s_base, used_base, note_base
+            return s_base, used_base, f"{note_base};ocr_raw_attempted;ocr_raw_too_short"
 
         print(f"[OCR-RAW] page {page_index + 1} used in extraction")
         return {
@@ -355,7 +355,7 @@ def extract_page_struct_hybrid(
             "page_height": page_height,
             "rotation": 0,
             "p95_font": 0.0,
-        }, "ocr", "primary_and_fallback_empty_used_ocr"
+        }, "ocr", f"{note_base};ocr_raw_attempted;ocr_raw_used"
 
     try:
         s, used = run_primary()

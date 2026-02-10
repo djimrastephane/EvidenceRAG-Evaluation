@@ -57,6 +57,10 @@ Key constants to adjust before running each script:
 
 - `scripts/preprocess_hybrid.py`
   - OCR thresholds: `OCR_MIN_ALPHA_RATIO`, `OCR_MIN_DIGIT_RATIO`
+- `scripts/report_retrieval_metrics.py`
+  - Outputs: `retrieval_report.csv`, `retrieval_queries_report.csv`, `retrieval_failure_summary.csv`
+- `scripts/run_full_pipeline.py`
+  - Full pipeline: preprocess -> build index -> retrieval eval -> reports
 
 ## Quickstart
 
@@ -109,11 +113,36 @@ Outputs:
 - `retrieval_metrics.json`
 - `retrieval_summary.csv`
 
+5) Build reports (including failure summary)
+
+```bash
+.venv/bin/python scripts/report_retrieval_metrics.py
+```
+
+Outputs:
+
+- `retrieval_report.csv` (metrics by doc/k)
+- `retrieval_queries_report.csv` (per-query details)
+- `retrieval_failure_summary.csv` (one-row failure counts)
+
+## Full Pipeline Runner
+
+Runs preprocess -> build index -> retrieval eval -> reports in one command.
+
+```bash
+.venv/bin/python scripts/run_full_pipeline.py \
+  --pdf-dir "/path/to/pdfs" \
+  --out-root data_processed \
+  --model models/all-MiniLM-L6-v2
+```
+
 ## Notes
 
 - Paths in scripts are currently absolute; update them to match your environment.
 - If you see `fitz` import errors, uninstall the `fitz` package and install `pymupdf`.
 - The FAISS index uses inner product on L2-normalized vectors to approximate cosine similarity.
+- If `scripts/build_index.py` or `scripts/retrieval_eval.py` crashes with a SIGSEGV, run with:
+  `OMP_NUM_THREADS=1 FAISS_NO_AVX2=1`.
 - Git ignores `Data/`, `data_processed/`, `figures/`, and all `*.pdf` outputs by default.
 - OCR requires `tesseract` on PATH; for Homebrew installs this is typically `/opt/homebrew/bin/tesseract`.
 - `pdf2image` requires Poppler (`pdftoppm`) on PATH; for Homebrew installs this is typically `/opt/homebrew/bin/pdftoppm`.
@@ -160,6 +189,27 @@ OCR behavior:
 - Accept: OCR result is used if normalized OCR text length >= 50.
 - Tracking: pages using OCR are tagged with `extractor=ocr`.
 - Debug: set `OCR_DEBUG=1` to print OCR errors during processing.
+
+OCR metrics (metrics.json):
+
+- `counts.ocr_raw_pages_detected` — OCR attempted in raw extraction stage
+- `counts.ocr_raw_pages_accepted` — raw OCR accepted and used in extraction
+- `counts.ocr_short_pages_triggered` — clean_text < 50 triggered OCR
+- `counts.ocr_short_pages_accepted` — clean_text OCR accepted
+- `derived.ocr_raw_acceptance_rate` — accepted / detected (raw OCR)
+- `derived.ocr_short_acceptance_rate` — accepted / triggered (short-page OCR)
+- `counts.sections_detected` — total sections inferred
+
+Provenance fields (metrics.json):
+
+- `run_utc` — ISO-8601 UTC timestamp for the run
+- `git_commit_short` — short git commit hash, if available
+- `embedding_model` — model name/path if provided in environment
+
+Derived fields (metrics.json):
+
+- `derived.chunks_per_page`
+- `derived.tables_per_100_pages`
 
 CLI + env options:
 

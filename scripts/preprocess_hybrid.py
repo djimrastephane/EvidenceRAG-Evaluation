@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import subprocess
 import sys
 import time
 from collections import defaultdict
@@ -30,7 +31,13 @@ from rag_pdf.boilerplate import remove_repeated_header_footer_lines, strip_by_co
 from rag_pdf.chunking import chunk_text_by_tokens, count_tokens, get_encoder
 from rag_pdf.config import PreprocessConfig
 from rag_pdf.extract_page import OCR_AVAILABLE, extract_page_struct_hybrid, extract_page_with_ocr
-from rag_pdf.headings import select_heading_candidates
+from rag_pdf.headings import (
+    is_part_label,
+    is_section_anchor_line,
+    looks_like_heading_text_only,
+    looks_like_lettered_subsection,
+    select_heading_candidates,
+)
 from rag_pdf.metrics import StepTimer, safe_json_dump
 from rag_pdf.schemas import build_page_list_struct, make_chunk_id_global
 from rag_pdf.sections import build_sections_from_pages, find_section_for_page
@@ -39,6 +46,7 @@ from rag_pdf.table_extract import process_table_pages
 from rag_pdf.text_normalize import (
     extract_report_metadata_from_pdf,
     extract_report_year_from_filename,
+    normalize_line,
     normalize_page_text,
     now_utc_iso,
 )
@@ -61,6 +69,28 @@ def _digit_ratio(text: str) -> float:
 def _env_or_default(name: str, default: str) -> str:
     val = os.getenv(name)
     return val if val else default
+
+
+def _extract_top_lines(lines_all: list[dict], k: int) -> list[dict]:
+    if not lines_all:
+        return []
+    sorted_lines = sorted(
+        lines_all,
+        key=lambda l: (float(l.get("y0", 0.0)), float(l.get("x0", 0.0))),
+    )
+    top: list[dict] = []
+    for ln in sorted_lines[:k]:
+        txt = str(ln.get("text", "")).strip()
+        if not txt:
+            continue
+        top.append(
+            {
+                "text": txt,
+                "y0": float(ln.get("y0", 0.0)),
+                "y1": float(ln.get("y1", 0.0)),
+            }
+        )
+    return top
 
 
 def parse_args() -> argparse.Namespace:
@@ -170,12 +200,14 @@ def main() -> None:
     _apply_config_overrides(cfg)
 
     timer = StepTimer()
+    t_doc_start = time.perf_counter()
 
     if not cfg.PDF_PATH.exists():
         raise FileNotFoundError(f"PDF not found: {cfg.PDF_PATH}")
 
     doc_id = cfg.PDF_PATH.stem
     run_date_utc = now_utc_iso()
+    run_utc = run_date_utc
     enc = get_encoder()
     corpus_id = cfg.CORPUS_ID or doc_id
 
@@ -206,6 +238,7 @@ def main() -> None:
         # Extract all pages
         pages_text_lines = {}
         page_heading_candidates = {}
+        page_top_lines = {}
         page_extractor_used = {}
         page_extractor_notes = {}
 
@@ -217,7 +250,8 @@ def main() -> None:
         time_text_extract_total = 0.0
         time_coord_strip_total = 0.0
         time_ocr_raw_total = 0.0
-        ocr_raw_extract_pages = 0
+        ocr_raw_pages_detected = 0
+        ocr_raw_pages_accepted = 0
 
         for i in range(doc.page_count):
             if (i + 1) % 20 == 0:
@@ -236,9 +270,11 @@ def main() -> None:
             page_structs[page_no] = s  # ← ADD THIS LINE
             page_extractor_used[page_no] = used
             page_extractor_notes[page_no] = note
+            if "ocr_raw_attempted" in note:
+                ocr_raw_pages_detected += 1
             if used == "ocr":
                 time_ocr_raw_total += time.perf_counter() - t_extract_start
-                ocr_raw_extract_pages += 1
+                ocr_raw_pages_accepted += 1
 
             # Check if raw lines look like a table (before cleanup)
             raw_lines = [ln["text"] for ln in s.get("lines_all", [])]
@@ -257,6 +293,9 @@ def main() -> None:
             page_heading_candidates[page_no] = select_heading_candidates(
                 s["lines_all"], s["p95_font"]
             )
+            page_top_lines[page_no] = _extract_top_lines(
+                s["lines_all"], k=max(cfg.TOP_LINE_K, 10)
+            )
 
             # Store raw table flag for later use
             pages_text_lines[page_no] = (kept, is_raw_table)
@@ -273,14 +312,49 @@ def main() -> None:
             pages_text_only
         )
         timer.mark("Step 2: repeated header/footer strip")
+        for page_no, lines in page_top_lines.items():
+            filtered: list[dict] = []
+            for ln in lines:
+                txt = normalize_line(str(ln.get("text", "")))
+                if not txt:
+                    continue
+                if (txt in common_header or txt in common_footer) and not is_section_anchor_line(txt):
+                    continue
+                filtered.append(ln)
+            page_top_lines[page_no] = filtered
+        for page_no in range(1, doc.page_count + 1):
+            cleaned_lines = pages_text_lines2.get(page_no, [])
+            cleaned_set = {
+                normalize_line(l) for l in cleaned_lines if normalize_line(l)
+            }
+            raw_cands = page_heading_candidates.get(page_no, [])
+            filtered: list[str] = []
+            for cand in raw_cands:
+                norm = normalize_line(str(cand))
+                if not norm:
+                    continue
+                if (norm in common_header or norm in common_footer) and not is_section_anchor_line(norm):
+                    continue
+                if cleaned_set and norm not in cleaned_set:
+                    continue
+                filtered.append(cand)
+            if not filtered:
+                for line in cleaned_lines[:25]:
+                    if (
+                        looks_like_heading_text_only(line)
+                        or looks_like_lettered_subsection(line)
+                    ) and not is_part_label(line):
+                        filtered = [line]
+                        break
+            page_heading_candidates[page_no] = filtered
 
         # Build pages dataframe with classification
         print("\nClassifying pages...")
         pages_records = []
         text_pages = []
         table_pages = []
-        short_clean_pages = 0
-        ocr_used_pages = 0
+        ocr_short_pages_triggered = 0
+        ocr_short_pages_accepted = 0
         ocr_attempts = 0
         ocr_too_short = 0
         ocr_debug_logged = 0
@@ -294,7 +368,7 @@ def main() -> None:
             ocr_clean_len = None
             ocr_text_len = None
             if OCR_AVAILABLE and len(clean_text) < 50:
-                short_clean_pages += 1
+                ocr_short_pages_triggered += 1
                 ocr_attempts += 1
                 pre_ocr_text_len = len(clean_text)
                 ocr_text = extract_page_with_ocr(str(cfg.PDF_PATH), page_no - 1)
@@ -314,7 +388,7 @@ def main() -> None:
                         ocr_force_table[page_no] = True
                         note = f"{note};table_like"
                     page_extractor_notes[page_no] = note
-                    ocr_used_pages += 1
+                    ocr_short_pages_accepted += 1
                     print(
                         f"[OCR] page {page_no} used (clean_text_short) "
                         f"pre_ocr_text_len={pre_ocr_text_len} "
@@ -363,6 +437,7 @@ def main() -> None:
                 "page": page_no,
                 "clean_text": clean_text,
                 "heading_candidates": page_heading_candidates.get(page_no, []),
+                "top_lines": page_top_lines.get(page_no, []),
                 "extractor": page_extractor_used.get(page_no, "unknown"),
                 "extractor_notes": page_extractor_notes.get(page_no, ""),
                 "ocr_text_len": ocr_text_len,
@@ -392,8 +467,8 @@ def main() -> None:
 
         print(f"  Text pages: {len(text_pages)}")
         print(f"  Table pages: {len(table_pages)}")
-        print(f"  OCR short pages: {short_clean_pages}")
-        print(f"  OCR used pages: {ocr_used_pages}")
+        print(f"  OCR short pages: {ocr_short_pages_triggered}")
+        print(f"  OCR used pages: {ocr_short_pages_accepted}")
         print(f"  OCR attempts: {ocr_attempts}")
         print(f"  OCR too short: {ocr_too_short}")
 
@@ -413,7 +488,7 @@ def main() -> None:
             if not text:
                 continue
 
-            part, section = find_section_for_page(sections_df, page_no)
+            part, section, subsection = find_section_for_page(sections_df, page_no)
             page_chunks = chunk_text_by_tokens(
                 text,
                 cfg.CHUNK_SIZE_TOKENS,
@@ -441,6 +516,7 @@ def main() -> None:
                     "chunk_id_global": make_chunk_id_global(doc_id, chunk_id_local),
                     "part": part,
                     "section_title": section,
+                    "subsection_title": subsection,
                     "page_start": page_no,
                     "page_end": page_no,
                     "pages": pages,
@@ -475,6 +551,16 @@ def main() -> None:
             enc,
         )
 
+        if len(table_chunks_df) > 0:
+            mapped = [
+                find_section_for_page(sections_df, int(p))
+                for p in table_chunks_df["page_start"].tolist()
+            ]
+            parts, sections, subsections = zip(*mapped)
+            table_chunks_df["part"] = list(parts)
+            table_chunks_df["section_title"] = list(sections)
+            table_chunks_df["subsection_title"] = list(subsections)
+
         print(f"  Extracted {len(structured_tables_df)} tables")
         print(f"  Created {len(table_chunks_df)} table summary chunks")
 
@@ -508,6 +594,7 @@ def main() -> None:
 
         pages_df.to_parquet(out_dir / "pages.parquet", index=False)
         sections_df.to_parquet(out_dir / "sections.parquet", index=False)
+        sections_df.to_csv(out_dir / "sections.csv", index=False)
         all_chunks_df.to_parquet(out_dir / "chunks.parquet", index=False)
         ocr_pages_df = pages_df.loc[
             pages_df["extractor"] == "ocr",
@@ -527,33 +614,61 @@ def main() -> None:
         timer.mark("Step 8: parquet writes")
 
         # Generate metrics
+        git_commit_short = None
+        try:
+            git_commit_short = subprocess.check_output(
+                ["git", "rev-parse", "--short", "HEAD"],
+                cwd=str(repo_root),
+                stderr=subprocess.DEVNULL,
+                text=True,
+            ).strip()
+        except Exception:
+            git_commit_short = None
+        embedding_model = os.getenv("EMBED_MODEL_NAME") or "sentence-transformers/all-MiniLM-L6-v2"
+        time_total_wall = time.perf_counter() - t_doc_start
         metrics = {
             "schema_version": "3.0_hybrid",
             "doc_id": doc_id,
             "corpus_id": corpus_id,
             "report_year": report_year,
             "period_end_date": period_end_date,
+            "run_utc": run_utc,
+            "git_commit_short": git_commit_short,
+            "embedding_model": embedding_model,
             "counts": {
                 "pages_total": len(pages_df),
                 "pages_text": len(text_pages),
                 "pages_table": len(table_pages),
-                "sections": len(sections_df),
+                "sections_detected": len(sections_df),
                 "chunks_total": len(all_chunks_df),
                 "chunks_text": len(text_chunks_df),
                 "chunks_table": len(table_chunks_df),
                 "tables_extracted": len(structured_tables_df),
-                "ocr_raw_extract_pages": ocr_raw_extract_pages,
-                "ocr_clean_text_pages": ocr_used_pages,
+                "ocr_raw_pages_detected": ocr_raw_pages_detected,
+                "ocr_raw_pages_accepted": ocr_raw_pages_accepted,
+                "ocr_short_pages_triggered": ocr_short_pages_triggered,
+                "ocr_short_pages_accepted": ocr_short_pages_accepted,
             },
             "derived": {
-                "ocr_raw_extract_fraction": (
-                    ocr_raw_extract_pages / max(len(pages_df), 1)
+                "chunks_per_page": (
+                    len(all_chunks_df) / max(len(pages_df), 1)
+                ),
+                "tables_per_100_pages": (
+                    len(structured_tables_df) / max(len(pages_df), 1) * 100.0
+                ),
+                "ocr_raw_acceptance_rate": (
+                    ocr_raw_pages_accepted / max(ocr_raw_pages_detected, 1)
+                ),
+                "ocr_short_acceptance_rate": (
+                    ocr_short_pages_accepted / max(ocr_short_pages_triggered, 1)
                 ),
             },
             "timing": {
+                "time_unit": "seconds",
                 "time_text_extract_total": round(time_text_extract_total, 6),
                 "time_coord_strip_total": round(time_coord_strip_total, 6),
                 "time_ocr_raw_total": round(time_ocr_raw_total, 6),
+                "time_total_wall": round(time_total_wall, 6),
             },
             "params": {
                 "chunk_size_tokens": cfg.CHUNK_SIZE_TOKENS,

@@ -59,6 +59,22 @@ def looks_like_heading_text_only(line: str) -> bool:
     return few_punct and (cap_count >= max(2, len(words) // 2) or looks_like_numbered_heading(line))
 
 
+def looks_like_lettered_subsection(line: str) -> bool:
+    """
+    Detect lettered subsection labels (e.g., 'A Title', 'B Management Report').
+    """
+    line = line.strip()
+    if len(line) < HEADING_MIN_CHARS or len(line) > HEADING_MAX_CHARS:
+        return False
+    if not re.match(r"^[A-Z](?:[.)])?\s+.+", line):
+        return False
+    if re.search(r"[•\u2022]", line):
+        return False
+    if re.search(r"\bpage\s+\d+\b", line, flags=re.IGNORECASE):
+        return False
+    return True
+
+
 def is_section_anchor_line(line: str) -> bool:
     """
     Detect semantic section anchor lines (report bands).
@@ -123,6 +139,27 @@ def is_section_anchor_line(line: str) -> bool:
     return True
 
 
+def is_global_boilerplate_heading(line: str) -> bool:
+    """
+    Detect global boilerplate headings (organization or report-wide headers).
+    """
+    if not isinstance(line, str):
+        return False
+    s = re.sub(r"\s+", " ", line).strip()
+    if not s:
+        return False
+    words = re.findall(r"[A-Za-z]+", s.upper())
+    if not words:
+        return False
+    hard_exclude = {
+        "ANNUAL", "ACCOUNTS", "YEAR", "ENDED",
+        "NHS", "BOARD", "SCOTLAND", "GRAMPIAN",
+    }
+    if any(w in hard_exclude for w in words):
+        return True
+    return False
+
+
 def select_heading_candidates(lines_all: list[dict], page_p95_size: float) -> list[str]:
     """
     Select potential heading lines using font size and text heuristics.
@@ -132,13 +169,32 @@ def select_heading_candidates(lines_all: list[dict], page_p95_size: float) -> li
     size_thr = page_p95_size * HEADING_FONT_BOOST_FRAC if page_p95_size else 0.0
     cands: list[str] = []
 
-    for ln in lines_all[:30]:
+    i = 0
+    while i < min(30, len(lines_all)):
+        ln = lines_all[i]
         txt = ln["text"]
         if not txt:
+            i += 1
             continue
         if is_part_label(txt):
+            i += 1
+            continue
+
+        txt_norm = txt.strip()
+        if re.match(r"^[A-Z][.)]?$", txt_norm) and i + 1 < len(lines_all):
+            nxt = lines_all[i + 1].get("text", "")
+            combined = f"{txt_norm[0]} {nxt.strip()}"
+            if looks_like_lettered_subsection(combined):
+                cands.append(combined)
+                i += 2
+                continue
+
+        if looks_like_lettered_subsection(txt):
+            cands.append(txt)
+            i += 1
             continue
         if looks_like_heading_text_only(txt) and float(ln.get("max_size", 0.0)) >= size_thr:
             cands.append(txt)
+        i += 1
 
     return cands

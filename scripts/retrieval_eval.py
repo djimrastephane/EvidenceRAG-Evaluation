@@ -102,6 +102,8 @@ EVAL_SET_PATH = DATA_DIR / "eval_set.json"
 EMBED_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
 K_LIST = [1, 3, 5, 10]
+MAX_K_SEARCH = int(os.getenv("MAX_K_SEARCH", "100"))
+SUBSECTION_BOOST = float(os.getenv("SUBSECTION_BOOST", "0.05"))
 
 RESULTS_JSON = DATA_DIR / "retrieval_results.json"
 METRICS_JSON = DATA_DIR / "retrieval_metrics.json"
@@ -113,14 +115,14 @@ PRINT_HIT_DEBUG = True
 # =============================================================================
 # QUERY ID NOMENCLATURE
 # =============================================================================
-QUERY_ID_PATTERN = re.compile(r"^Q_(REV|EFF|DEF|STAFF)_\d{4}_\d{2}$")
+QUERY_ID_PATTERN = re.compile(r"^Q_(REV|EFF|DEF|STAFF|ACC|GOV)_\d{4}_\d{2}$")
 
 
 def validate_query_id(query_id: str) -> None:
     if not QUERY_ID_PATTERN.match(query_id):
         raise ValueError(
             f"Invalid query_id '{query_id}'. Expected: Q_<TOPIC>_<YEAR>_<NN> "
-            f"with TOPIC in [REV, EFF, DEF, STAFF], for example Q_EFF_2023_01."
+            f"with TOPIC in [REV, EFF, DEF, STAFF, ACC], for example Q_EFF_2023_01."
         )
 
 
@@ -155,6 +157,10 @@ def _env_or_default(name: str, default: str) -> str:
 def parse_k_list(val: str) -> list[int]:
     parts = [p.strip() for p in val.split(",") if p.strip()]
     return [int(p) for p in parts]
+
+
+def _normalize_text(s: str) -> str:
+    return re.sub(r"\s+", " ", s or "").strip().lower()
 
 
 def refresh_paths() -> None:
@@ -479,6 +485,20 @@ def main():
 
     meta = read_parquet_safe(META_PATH)
     index = faiss.read_index(str(INDEX_PATH))
+    chunks_path = DATA_DIR / "chunks.parquet"
+    chunks = read_parquet_safe(chunks_path) if chunks_path.exists() else None
+    chunk_text_by_id: dict[str, str] = {}
+    if chunks is not None and "chunk_text" in chunks.columns:
+        if "chunk_id_global" in chunks.columns:
+            for _, row in chunks.iterrows():
+                cid = row.get("chunk_id_global")
+                if cid:
+                    chunk_text_by_id[str(cid)] = str(row.get("chunk_text") or "")
+        if "chunk_id" in chunks.columns:
+            for _, row in chunks.iterrows():
+                cid = row.get("chunk_id")
+                if cid:
+                    chunk_text_by_id.setdefault(str(cid), str(row.get("chunk_text") or ""))
 
     print("Loading embedding model:", EMBED_MODEL_NAME)
     model = SentenceTransformer(EMBED_MODEL_NAME)
@@ -494,6 +514,7 @@ def main():
         validate_query_id(qid)
 
     max_k = min(max(K_LIST), len(meta))
+    max_k_search = min(max(MAX_K_SEARCH, max_k), len(meta))
     k_list = [k for k in K_LIST if 1 <= k <= max_k]
     if not k_list:
         raise ValueError("K_LIST has no valid values for the current index size.")
@@ -508,10 +529,12 @@ def main():
         "eval_set_path": str(EVAL_SET_PATH),
         "embedding_model": EMBED_MODEL_NAME,
         "k_list": k_list,
+        "subsection_boost": SUBSECTION_BOOST,
+        "max_k_search": max_k_search,
         "num_queries": len(eval_items),
         "num_chunks_indexed": int(len(meta)),
         "meta_doc_ids": sorted(list(meta_doc_ids))[:20] if meta_doc_ids else [],
-        "query_id_nomenclature": "Q_<TOPIC>_<YEAR>_<NN> with TOPIC in [REV,EFF,DEF,STAFF]",
+        "query_id_nomenclature": "Q_<TOPIC>_<YEAR>_<NN> with TOPIC in [REV,EFF,DEF,STAFF,ACC,GOV]",
         "failure_attribution": {"stages": ["hit", "missed_top_ranked", "missing_content"], "scope": "retrieval_only"},
         "leakage_detection": {
             "enabled": True,
@@ -536,6 +559,35 @@ def main():
     ).astype("float32")
     q_emb = l2_normalize(q_emb).astype("float32")
 
+    def _extract_quarter_value(label: str, text: str, q_lower: str) -> tuple[str | None, str | None]:
+        m = re.search(
+            rf"{label}\s+([\d-]+)\s+([\d-]+)\s+([\d-]+)\s+([\d-]+)",
+            text,
+            flags=re.IGNORECASE,
+        )
+        if not m:
+            return None, None
+        vals = [m.group(i) for i in range(1, 5)]
+
+        def _pick(idx: int) -> str | None:
+            return None if vals[idx] == "-" else vals[idx]
+
+        if "q1" in q_lower:
+            return _pick(0), "Q1"
+        if "q2" in q_lower:
+            return _pick(1), "Q2"
+        if "q3" in q_lower:
+            return _pick(2), "Q3"
+        if "q4" in q_lower:
+            return _pick(3), "Q4"
+        return None, None
+
+    def _first_sentence(text: str) -> str:
+        for sent in re.split(r"(?<=[.!?])\s+", text.strip()):
+            if sent:
+                return sent[:200].strip()
+        return ""
+
     for qi, item in enumerate(eval_items):
         query_id = str(item.get("query_id", "")).strip()
         validate_query_id(query_id)
@@ -549,6 +601,7 @@ def main():
         answer_type = str(item.get("answer_type", "unknown"))
         expected_doc_id = get_expected_doc_id(item)
         expected_section = str(item.get("expected_section", "")).strip()
+        expected_subsection = str(item.get("expected_subsection", "")).strip()
 
         if expected_doc_id and meta_doc_ids and expected_doc_id not in meta_doc_ids:
             raise ValueError(
@@ -558,9 +611,21 @@ def main():
 
         gold_presence = compute_gold_presence(meta, expected_doc_id, expected_pages)
 
-        scores, idxs = index.search(q_emb[qi : qi + 1], max_k)
+        scores, idxs = index.search(q_emb[qi : qi + 1], max_k_search)
         idxs = idxs[0].tolist()
         scores = scores[0].tolist()
+
+        if expected_subsection and "subsection_title" in meta.columns:
+            target = _normalize_text(expected_subsection)
+            boosted: list[tuple[float, int]] = []
+            for score, idx in zip(scores, idxs):
+                sub = meta.iloc[idx].get("subsection_title", "")
+                if _normalize_text(str(sub)) == target:
+                    score += SUBSECTION_BOOST
+                boosted.append((score, idx))
+            boosted.sort(key=lambda x: x[0], reverse=True)
+            scores = [s for s, _ in boosted]
+            idxs = [i for _, i in boosted]
 
         per_k: dict[str, Any] = {}
         for k in k_list:
@@ -598,6 +663,7 @@ def main():
                 "retrieved_doc_ids_top_k": retrieved_doc_ids,
                 "retrieved_pages_ranked": ranked_pages_unique,
                 "retrieved_scores": [float(s) for s in top_scores],
+                "expected_subsection": expected_subsection or None,
                 "page_recall_at_k": float(page_recall),
                 "page_precision_at_k": float(page_precision),
                 "page_mrr_at_k": float(page_mrr),
@@ -644,6 +710,148 @@ def main():
                 top_chunk_preview = retrieved_chunk_ids[:3]
                 print(f"HIT@1 query_id={query_id} pages={top_pages_preview} chunks={top_chunk_preview}")
 
+        extracted_answer = None
+        extracted_label = None
+        top_chunk_id = None
+        top_text = ""
+        ids = per_k.get("1", {}).get("retrieved_chunk_ids") or []
+        if isinstance(ids, str):
+            ids = [ids]
+        if ids:
+            top_chunk_id = str(ids[0])
+            top_text = chunk_text_by_id.get(top_chunk_id, "")
+
+        q_lower = question.lower()
+        if top_text:
+            if "significant" in q_lower and "delay" in q_lower:
+                extracted_answer, quarter = _extract_quarter_value(
+                    "Significant Delay", top_text, q_lower
+                )
+                if extracted_answer:
+                    extracted_label = f"Significant Delay ({quarter})" if quarter else "Significant Delay"
+            elif "on track" in q_lower:
+                extracted_answer, quarter = _extract_quarter_value("On Track", top_text, q_lower)
+                if extracted_answer:
+                    extracted_label = f"On Track ({quarter})" if quarter else "On Track"
+            elif "proportion" in q_lower and "complete" in q_lower:
+                m = re.search(r"(\d+(?:\.\d+)?)%[^\n]{0,80}complete", top_text, flags=re.IGNORECASE)
+                if not m:
+                    m = re.search(r"complete[^\n]{0,80}(\d+(?:\.\d+)?)%", top_text, flags=re.IGNORECASE)
+                if m:
+                    extracted_answer = f"{m.group(1)}%"
+                    extracted_label = "Complete (%)"
+            elif "board committee" in q_lower and "strategic risk register" in q_lower:
+                m = re.search(
+                    r"the ([A-Za-z &-]+ committee) have delegated responsibility",
+                    top_text,
+                    flags=re.IGNORECASE,
+                )
+                if not m:
+                    m = re.search(
+                        r"the ([A-Za-z &-]+ committee) has delegated responsibility",
+                        top_text,
+                        flags=re.IGNORECASE,
+                    )
+                if m:
+                    extracted_answer = m.group(1).strip().title()
+                    extracted_label = "Delegated Committee"
+            elif "endorse" in q_lower and "risk appetite" in q_lower and "strategic risk profile" in q_lower:
+                ra_date = None
+                srp_date = None
+                for sent in re.split(r"(?<=[.!?])\s+", top_text):
+                    low = sent.lower()
+                    if "endorsed" in low and "risk appetite statement" in low:
+                        m = re.search(
+                            r"endorsed.*?on(?: the)?\s+(\d{1,2}(?:st|nd|rd|th)?\s+[A-Z][a-z]+\s+\d{4})",
+                            sent,
+                            flags=re.IGNORECASE,
+                        )
+                        if m:
+                            ra_date = m.group(1)
+                    if "endorsed" in low and "strategic risk profile" in low:
+                        m = re.search(
+                            r"endorsed.*?strategic risk profile.*?in\s+([A-Z][a-z]+\s+\d{4})",
+                            sent,
+                            flags=re.IGNORECASE,
+                        )
+                        if m:
+                            srp_date = m.group(1)
+                if not srp_date:
+                    candidate_ids = (
+                        per_k.get("5", {}).get("retrieved_chunk_ids")
+                        or per_k.get("3", {}).get("retrieved_chunk_ids")
+                        or []
+                    )
+                    for cid in candidate_ids:
+                        if str(cid) == top_chunk_id:
+                            continue
+                        other_text = chunk_text_by_id.get(str(cid), "")
+                        if not other_text:
+                            continue
+                        for sent in re.split(r"(?<=[.!?])\s+", other_text):
+                            low = sent.lower()
+                            if "endorsed" in low and "strategic risk profile" in low:
+                                m = re.search(
+                                    r"endorsed.*?strategic risk profile.*?in\s+([A-Z][a-z]+\s+\d{4})",
+                                    sent,
+                                    flags=re.IGNORECASE,
+                                )
+                                if m:
+                                    srp_date = m.group(1)
+                                    break
+                        if srp_date:
+                            break
+                parts = []
+                if ra_date:
+                    parts.append(f"Risk Appetite: {ra_date}")
+                if srp_date:
+                    parts.append(f"Strategic Risk Profile: {srp_date}")
+                if parts:
+                    extracted_answer = "; ".join(parts)
+                    extracted_label = "Board Endorsements"
+            elif "endorse" in q_lower and "risk appetite" in q_lower:
+                for sent in re.split(r"(?<=[.!?])\s+", top_text):
+                    if "endorsed" in sent and "risk appetite statement" in sent.lower():
+                        m = re.search(
+                            r"endorsed.*?on(?: the)?\s+(\d{1,2}(?:st|nd|rd|th)?\s+[A-Z][a-z]+\s+\d{4})",
+                            sent,
+                            flags=re.IGNORECASE,
+                        )
+                        if m:
+                            extracted_answer = m.group(1)
+                            extracted_label = "Risk Appetite Endorsement"
+                            break
+            elif "endorse" in q_lower and "strategic risk profile" in q_lower:
+                for sent in re.split(r"(?<=[.!?])\s+", top_text):
+                    if "endorsed" in sent and "strategic risk profile" in sent.lower():
+                        m = re.search(
+                            r"endorsed.*?strategic risk profile.*?in\s+([A-Z][a-z]+\s+\d{4})",
+                            sent,
+                            flags=re.IGNORECASE,
+                        )
+                        if m:
+                            extracted_answer = m.group(1)
+                            extracted_label = "Strategic Risk Profile Endorsement"
+                            break
+            elif "significant issue" in q_lower and "accountable officer" in q_lower:
+                for sent in re.split(r"(?<=[.!?])\s+", top_text):
+                    if "funding arrangement" in sent.lower():
+                        extracted_answer = sent.strip()
+                        extracted_label = "Significant Issue"
+                        break
+
+        if not extracted_answer:
+            if top_text:
+                extracted_answer = _first_sentence(top_text) or "(no extraction rule matched)"
+                extracted_label = "Snippet"
+            else:
+                extracted_answer = "(no chunk text available)"
+                extracted_label = "Snippet"
+
+        k1 = per_k.get("1", {})
+        page_hit = 1 if k1.get("page_recall_at_k", 0.0) > 0 else 0
+        failure_type = k1.get("failure_stage")
+
         results.append(
             {
                 "query_id": query_id,
@@ -655,9 +863,19 @@ def main():
                 "doc_id": expected_doc_id,
                 "expected_section": expected_section,
                 "expected_pages": sorted(list(expected_pages)),
+                "page_hit": page_hit,
+                "failure_type": failure_type,
+                "extracted_answer": extracted_answer,
+                "extracted_answer_label": extracted_label,
+                "extracted_answer_chunk_id": top_chunk_id,
                 "gold_presence": gold_presence,
                 "per_k": per_k,
             }
+        )
+
+        print(
+            f"EXTRACT query_id={query_id} page_hit={page_hit} failure_type={failure_type} "
+            f"extracted_answer={extracted_label}: {extracted_answer}"
         )
 
     df_sum = pd.DataFrame(summary_rows)

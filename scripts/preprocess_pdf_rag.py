@@ -509,6 +509,41 @@ def looks_like_heading_text_only(line: str) -> bool:
     return few_punct and (cap_count >= max(2, len(words) // 2) or looks_like_numbered_heading(line))
 
 
+def looks_like_lettered_subsection(line: str) -> bool:
+    line = line.strip()
+    if len(line) < HEADING_MIN_CHARS or len(line) > HEADING_MAX_CHARS:
+        return False
+    if not re.match(r"^[A-Z](?:[.)])?\s+.+", line):
+        return False
+    if re.search(r"[•\u2022]", line):
+        return False
+    if re.search(r"\bpage\s+\d+\b", line, flags=re.IGNORECASE):
+        return False
+    return True
+
+
+def extract_top_lines(lines_all: list[dict], k: int) -> list[dict]:
+    if not lines_all:
+        return []
+    sorted_lines = sorted(
+        lines_all,
+        key=lambda l: (float(l.get("y0", 0.0)), float(l.get("x0", 0.0))),
+    )
+    top: list[dict] = []
+    for ln in sorted_lines[:k]:
+        txt = str(ln.get("text", "")).strip()
+        if not txt:
+            continue
+        top.append(
+            {
+                "text": txt,
+                "y0": float(ln.get("y0", 0.0)),
+                "y1": float(ln.get("y1", 0.0)),
+            }
+        )
+    return top
+
+
 def is_table_like(text: str) -> bool:
     lines = [l for l in text.splitlines() if l.strip()]
     if len(lines) < 4:
@@ -599,6 +634,24 @@ def is_section_anchor_line(line: str) -> bool:
         return False
 
     return True
+
+
+def is_global_boilerplate_heading(line: str) -> bool:
+    if not isinstance(line, str):
+        return False
+    s = re.sub(r"\s+", " ", line).strip()
+    if not s:
+        return False
+    words = re.findall(r"[A-Za-z]+", s.upper())
+    if not words:
+        return False
+    hard_exclude = {
+        "ANNUAL", "ACCOUNTS", "YEAR", "ENDED",
+        "NHS", "BOARD", "SCOTLAND", "GRAMPIAN",
+    }
+    if any(w in hard_exclude for w in words):
+        return True
+    return False
 
 # =============================================================================
 # TOKENISATION AND CHUNKING
@@ -955,9 +1008,9 @@ def remove_repeated_header_footer_lines(
         norm = [normalize_line(x) for x in ls if normalize_line(x)]
         out: list[str] = []
         for i, l in enumerate(norm):
-            if i < TOP_LINE_K and l in common_header:
+            if i < TOP_LINE_K and l in common_header and not is_section_anchor_line(l):
                 continue
-            if i >= len(norm) - BOT_LINE_K and l in common_footer:
+            if i >= len(norm) - BOT_LINE_K and l in common_footer and not is_section_anchor_line(l):
                 continue
             out.append(l)
         cleaned[pno] = out
@@ -969,14 +1022,33 @@ def select_heading_candidates(lines_all: list[dict], page_p95_size: float) -> li
     size_thr = page_p95_size * HEADING_FONT_BOOST_FRAC if page_p95_size else 0.0
     cands: list[str] = []
 
-    for ln in lines_all[:30]:
+    i = 0
+    while i < min(30, len(lines_all)):
+        ln = lines_all[i]
         txt = ln["text"]
         if not txt:
+            i += 1
             continue
         if is_part_label(txt):
+            i += 1
+            continue
+
+        txt_norm = txt.strip()
+        if re.match(r"^[A-Z][.)]?$", txt_norm) and i + 1 < len(lines_all):
+            nxt = lines_all[i + 1].get("text", "")
+            combined = f"{txt_norm[0]} {nxt.strip()}"
+            if looks_like_lettered_subsection(combined):
+                cands.append(combined)
+                i += 2
+                continue
+
+        if looks_like_lettered_subsection(txt):
+            cands.append(txt)
+            i += 1
             continue
         if looks_like_heading_text_only(txt) and float(ln.get("max_size", 0.0)) >= size_thr:
             cands.append(txt)
+        i += 1
 
     return cands
 
@@ -988,6 +1060,7 @@ def build_sections_from_pages(pages_df: pd.DataFrame) -> pd.DataFrame:
     sections = []
     current_part = None
     current_section = "Unknown"
+    current_subsection = None
     current_pages: list[int] = []
     current_texts: list[str] = []
 
@@ -1003,6 +1076,7 @@ def build_sections_from_pages(pages_df: pd.DataFrame) -> pd.DataFrame:
                 "run_date_utc": pages_df["run_date_utc"].iloc[0],
                 "part": current_part or "Unknown",
                 "section_title": current_section or "Unknown",
+                "subsection_title": current_subsection or "Unknown",
                 "page_start": int(min(current_pages)),
                 "page_end": int(max(current_pages)),
                 "section_text": "\n".join(current_texts).strip(),
@@ -1016,26 +1090,95 @@ def build_sections_from_pages(pages_df: pd.DataFrame) -> pd.DataFrame:
         text = str(row["clean_text"] or "")
         lines = [normalize_line(x) for x in text.splitlines() if normalize_line(x)]
 
-        for l in lines[:25]:
+        raw_top = row.get("top_lines", [])
+        top_lines: list[str] = []
+        if isinstance(raw_top, (list, tuple)):
+            for item in raw_top:
+                if isinstance(item, dict):
+                    txt = str(item.get("text", ""))
+                else:
+                    txt = str(item)
+                norm = normalize_line(txt)
+                if norm:
+                    top_lines.append(norm)
+
+        for l in top_lines or lines[:25]:
             p = is_part_label(l)
             if p:
                 current_part = p
                 break
 
-        heading_candidates = row.get("heading_candidates", [])
-        heading_found = None
+        raw_candidates = row.get("heading_candidates", [])
+        if raw_candidates is None or raw_candidates is False:
+            heading_candidates = []
+        elif isinstance(raw_candidates, str):
+            heading_candidates = []
+        elif isinstance(raw_candidates, (list, tuple)):
+            heading_candidates = list(raw_candidates)
+        elif hasattr(raw_candidates, "__iter__"):
+            heading_candidates = list(raw_candidates)
+        else:
+            heading_candidates = []
+        section_found = None
+        subsection_found = None
 
-        if isinstance(heading_candidates, list) and heading_candidates:
-            heading_found = heading_candidates[0]
+        if top_lines:
+            for i, line in enumerate(top_lines):
+                if is_part_label(line):
+                    continue
+                if (
+                    re.match(r"^[A-Z][.)]?$", line)
+                    and i + 1 < len(top_lines)
+                    and subsection_found is None
+                ):
+                    combined = f"{line[0]} {top_lines[i + 1]}"
+                    if looks_like_lettered_subsection(combined):
+                        subsection_found = combined
+                        continue
+                if subsection_found is None and looks_like_lettered_subsection(line):
+                    subsection_found = line
+                    continue
+                if section_found is None and (
+                    is_section_anchor_line(line)
+                    or (looks_like_heading_text_only(line) and not is_global_boilerplate_heading(line))
+                ):
+                    section_found = line
+                if section_found and subsection_found:
+                    break
+        elif heading_candidates:
+            for cand in heading_candidates:
+                if subsection_found is None and looks_like_lettered_subsection(cand):
+                    subsection_found = cand
+                    continue
+                if section_found is None and looks_like_heading_text_only(cand):
+                    section_found = cand
+                if section_found and subsection_found:
+                    break
         else:
             for l in lines[:25]:
-                if looks_like_heading_text_only(l) and not is_part_label(l):
-                    heading_found = l
+                if not is_part_label(l):
+                    if subsection_found is None and looks_like_lettered_subsection(l):
+                        subsection_found = l
+                        continue
+                    if section_found is None and looks_like_heading_text_only(l):
+                        section_found = l
+                if section_found and subsection_found:
                     break
 
-        if heading_found and current_texts:
+        if subsection_found is None and text:
+            m = re.search(r"\b([A-Z])[.)]?\s+([A-Z][A-Z ]{3,})\b", text)
+            if m:
+                candidate = f"{m.group(1)} {normalize_line(m.group(2))}"
+                if looks_like_lettered_subsection(candidate):
+                    subsection_found = candidate
+
+        if (section_found or subsection_found) and current_texts:
             flush()
-            current_section = heading_found
+            if section_found:
+                current_section = section_found
+                current_subsection = None
+            if subsection_found:
+                current_subsection = subsection_found
 
         current_pages.append(page_no)
         current_texts.append(text)
@@ -1049,15 +1192,15 @@ def build_sections_from_pages(pages_df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def find_section_for_page(sections_df: pd.DataFrame, page_no: int) -> tuple[str, str]:
+def find_section_for_page(sections_df: pd.DataFrame, page_no: int) -> tuple[str, str, str]:
     if len(sections_df) == 0:
-        return "Unknown", "Unknown"
+        return "Unknown", "Unknown", "Unknown"
 
     m = sections_df[(sections_df["page_start"] <= page_no) & (sections_df["page_end"] >= page_no)]
     if len(m) == 0:
-        return "Unknown", "Unknown"
+        return "Unknown", "Unknown", "Unknown"
     r = m.iloc[-1]
-    return str(r["part"]), str(r["section_title"])
+    return str(r["part"]), str(r["section_title"]), str(r.get("subsection_title", "Unknown"))
 
 
 # =============================================================================
@@ -1100,6 +1243,7 @@ def main():
 
         pages_text_lines = {}
         page_heading_candidates = {}
+        page_top_lines = {}
         page_extractor_used = {}
         page_extractor_notes = {}
 
@@ -1122,6 +1266,7 @@ def main():
 
             pages_text_lines[page_no] = kept
             page_heading_candidates[page_no] = select_heading_candidates(s["lines_all"], s["p95_font"])
+            page_top_lines[page_no] = extract_top_lines(s["lines_all"], k=max(TOP_LINE_K, 10))
 
             qa_removed_top[page_no] = rem_a
             qa_removed_bottom[page_no] = rem_b
@@ -1133,6 +1278,16 @@ def main():
         )
 
         timer.mark("Step 2: repeated header/footer strip")
+        for page_no, lines in page_top_lines.items():
+            filtered: list[dict] = []
+            for ln in lines:
+                txt = normalize_line(str(ln.get("text", "")))
+                if not txt:
+                    continue
+                if (txt in common_header or txt in common_footer) and not is_section_anchor_line(txt):
+                    continue
+                filtered.append(ln)
+            page_top_lines[page_no] = filtered
 
         pages_records = []
         for i in range(doc.page_count):
@@ -1151,6 +1306,7 @@ def main():
                     "page": page_no,
                     "clean_text": clean_text,
                     "heading_candidates": page_heading_candidates.get(page_no, []),
+                    "top_lines": page_top_lines.get(page_no, []),
                     "extractor": page_extractor_used.get(page_no, "unknown"),
                     "extractor_notes": page_extractor_notes.get(page_no, ""),
                 }
@@ -1170,7 +1326,7 @@ def main():
             if not text:
                 continue
 
-            part, section = find_section_for_page(sections_df, page_no)
+            part, section, subsection = find_section_for_page(sections_df, page_no)
             page_chunks = chunk_text_by_tokens(
                 text,
                 CHUNK_SIZE_TOKENS,
@@ -1202,6 +1358,7 @@ def main():
                         "chunk_id_global": make_chunk_id_global(DOC_ID, chunk_id_local),
                         "part": part,
                         "section_title": section,
+                        "subsection_title": subsection,
                         "page_start": page_start,
                         "page_end": page_end,
                         "pages": pages,

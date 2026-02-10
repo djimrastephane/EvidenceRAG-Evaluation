@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import Counter
 
 from rag_pdf.config import DEFAULT_CONFIG
+from rag_pdf.headings import is_section_anchor_line
 from rag_pdf.text_normalize import normalize_line
 
 from .rotation_handler import get_strip_fractions_for_rotation
@@ -128,9 +129,9 @@ def remove_repeated_header_footer_lines(
         norm = [normalize_line(x) for x in ls if normalize_line(x)]
         out: list[str] = []
         for i, l in enumerate(norm):
-            if i < TOP_LINE_K and l in common_header:
+            if i < TOP_LINE_K and l in common_header and not is_section_anchor_line(l):
                 continue
-            if i >= len(norm) - BOT_LINE_K and l in common_footer:
+            if i >= len(norm) - BOT_LINE_K and l in common_footer and not is_section_anchor_line(l):
                 continue
             out.append(l)
         cleaned[pno] = out
