@@ -28,7 +28,12 @@ if src_path.exists() and str(src_path) not in sys.path:
     sys.path.insert(0, str(src_path))
 
 from rag_pdf.boilerplate import remove_repeated_header_footer_lines, strip_by_coordinates
-from rag_pdf.chunking import chunk_text_by_tokens, count_tokens, get_encoder
+from rag_pdf.chunking import (
+    chunk_text_by_tokens,
+    count_tokens,
+    get_encoder,
+    split_text_for_segment_aware_chunking,
+)
 from rag_pdf.config import PreprocessConfig
 from rag_pdf.extract_page import OCR_AVAILABLE, extract_page_struct_hybrid, extract_page_with_ocr
 from rag_pdf.headings import (
@@ -41,7 +46,14 @@ from rag_pdf.headings import (
 from rag_pdf.metrics import StepTimer, safe_json_dump
 from rag_pdf.schemas import build_page_list_struct, make_chunk_id_global
 from rag_pdf.sections import build_sections_from_pages, find_section_for_page
-from rag_pdf.table_detect import classify_page_content, contains_many_numbers, detect_table_type, is_table_like_from_raw_lines
+from rag_pdf.table_detect import (
+    classify_page_content,
+    contains_many_numbers,
+    detect_table_type,
+    is_table_like_from_raw_lines,
+    is_graphics_table_like,
+    is_column_alignment_table_like,
+)
 from rag_pdf.table_extract import process_table_pages
 from rag_pdf.text_normalize import (
     extract_report_metadata_from_pdf,
@@ -115,6 +127,24 @@ def parse_args() -> argparse.Namespace:
         ),
         help="Output root directory.",
     )
+    parser.add_argument(
+        "--chunk-size-tokens",
+        type=int,
+        default=int(_env_or_default("CHUNK_SIZE_TOKENS", "320")),
+        help="Target chunk size in tokens for text chunking.",
+    )
+    parser.add_argument(
+        "--chunk-overlap-tokens",
+        type=int,
+        default=int(_env_or_default("CHUNK_OVERLAP_TOKENS", "90")),
+        help="Chunk overlap in tokens for text chunking.",
+    )
+    parser.add_argument(
+        "--segment-aware-chunking",
+        action="store_true",
+        default=_env_or_default("SEGMENT_AWARE_CHUNKING", "0").strip().lower() in {"1", "true", "yes", "y", "on"},
+        help="Enable segment-aware splitting before token chunking.",
+    )
     return parser.parse_args()
 
 
@@ -147,6 +177,13 @@ def _apply_config_overrides(cfg: PreprocessConfig) -> None:
     table_detect_mod.TABLE_MIN_LINES = cfg.TABLE_MIN_LINES
 
     table_extract_mod.CAMELOT_LATTICE_ACCURACY_THRESHOLD = cfg.CAMELOT_LATTICE_ACCURACY_THRESHOLD
+    table_extract_mod.CAMELOT_LATTICE_WHITESPACE_MAX = cfg.CAMELOT_LATTICE_WHITESPACE_MAX
+    table_extract_mod.CAMELOT_HYBRID_ACCURACY_THRESHOLD = cfg.CAMELOT_HYBRID_ACCURACY_THRESHOLD
+    table_extract_mod.CAMELOT_HYBRID_WHITESPACE_MAX = cfg.CAMELOT_HYBRID_WHITESPACE_MAX
+    table_extract_mod.CAMELOT_LINE_SCALE = cfg.CAMELOT_LINE_SCALE
+    table_extract_mod.CAMELOT_RESOLUTION = cfg.CAMELOT_RESOLUTION
+    table_extract_mod.CAMELOT_STREAM_ROW_TOL = cfg.CAMELOT_STREAM_ROW_TOL
+    table_extract_mod.CAMELOT_STREAM_EDGE_TOL = cfg.CAMELOT_STREAM_EDGE_TOL
     table_extract_mod.TABLE_SUMMARY_MAX_ROWS = cfg.TABLE_SUMMARY_MAX_ROWS
 
 
@@ -171,8 +208,9 @@ def main() -> None:
         PDF_PATH=Path(args.pdf_path),
         OUT_ROOT=Path(args.out_root),
         CORPUS_ID=None,
-        CHUNK_SIZE_TOKENS=320,
-        CHUNK_OVERLAP_TOKENS=90,
+        CHUNK_SIZE_TOKENS=int(args.chunk_size_tokens),
+        CHUNK_OVERLAP_TOKENS=int(args.chunk_overlap_tokens),
+        SEGMENT_AWARE_CHUNKING=bool(args.segment_aware_chunking),
         TOP_STRIP_FRAC=0.08,
         BOTTOM_STRIP_FRAC=0.08,
         LEFT_STRIP_FRAC=0.08,
@@ -279,6 +317,14 @@ def main() -> None:
             # Check if raw lines look like a table (before cleanup)
             raw_lines = [ln["text"] for ln in s.get("lines_all", [])]
             is_raw_table = is_table_like_from_raw_lines(raw_lines)
+            try:
+                drawings = doc.load_page(i).get_drawings()
+            except Exception:
+                drawings = []
+            if is_graphics_table_like(drawings):
+                is_raw_table = True
+            if is_column_alignment_table_like(s.get("lines_all", [])):
+                is_raw_table = True
 
             t_strip_start = time.perf_counter()
             kept, rem_a, rem_b = strip_by_coordinates(
@@ -364,6 +410,7 @@ def main() -> None:
             page_no = i + 1
             raw = "\n".join(pages_text_lines2.get(page_no, [])).strip()
             clean_text = normalize_page_text(raw)
+            raw_text_for_table = raw
 
             ocr_clean_len = None
             ocr_text_len = None
@@ -371,7 +418,12 @@ def main() -> None:
                 ocr_short_pages_triggered += 1
                 ocr_attempts += 1
                 pre_ocr_text_len = len(clean_text)
-                ocr_text = extract_page_with_ocr(str(cfg.PDF_PATH), page_no - 1)
+                s_for_ocr = page_structs.get(page_no, {}) or {}
+                ocr_text = extract_page_with_ocr(
+                    str(cfg.PDF_PATH),
+                    page_no - 1,
+                    int(s_for_ocr.get("rotation", 0) or 0),
+                )
                 ocr_clean = normalize_page_text(ocr_text)
                 ocr_text_len = len(ocr_text)
                 ocr_clean_len = len(ocr_clean)
@@ -382,6 +434,7 @@ def main() -> None:
                 )
                 if accept_ocr:
                     clean_text = ocr_clean
+                    raw_text_for_table = ocr_text
                     page_extractor_used[page_no] = "ocr"
                     note = "clean_text_short_used_ocr"
                     if ocr_digits > cfg.OCR_MIN_DIGIT_RATIO:
@@ -455,7 +508,11 @@ def main() -> None:
                 table_pages.append({
                     "page": page_no,
                     "text": clean_text,
+                    "raw_text": raw_text_for_table,
                     "table_type": classification["table_type"],
+                    "extractor": page_extractor_used.get(page_no, "unknown"),
+                    "rotation": int(s.get("rotation", 0) or 0),
+                    "is_table": True,
                 })
             else:
                 text_pages.append({
@@ -481,6 +538,7 @@ def main() -> None:
         # Process TEXT pages → standard chunking
         print("\nChunking text pages...")
         text_chunks = []
+        segment_aware_applied_pages = 0
 
         for tpage in text_pages:
             page_no = tpage["page"]
@@ -489,14 +547,25 @@ def main() -> None:
                 continue
 
             part, section, subsection = find_section_for_page(sections_df, page_no)
-            page_chunks = chunk_text_by_tokens(
-                text,
-                cfg.CHUNK_SIZE_TOKENS,
-                cfg.CHUNK_OVERLAP_TOKENS,
-                enc,
-            )
+            if cfg.SEGMENT_AWARE_CHUNKING:
+                segments = split_text_for_segment_aware_chunking(text)
+                if len(segments) > 1:
+                    segment_aware_applied_pages += 1
+            else:
+                segments = [("segment_000", text)]
 
-            for j, ctext in enumerate(page_chunks):
+            page_chunks: list[tuple[int, str, str]] = []
+            for seg_idx, (segment_title, segment_text) in enumerate(segments):
+                seg_chunks = chunk_text_by_tokens(
+                    segment_text,
+                    cfg.CHUNK_SIZE_TOKENS,
+                    cfg.CHUNK_OVERLAP_TOKENS,
+                    enc,
+                )
+                for c in seg_chunks:
+                    page_chunks.append((seg_idx, segment_title, c))
+
+            for j, (seg_idx, seg_title, ctext) in enumerate(page_chunks):
                 wc = len(ctext.split())
                 if wc < cfg.MIN_CHUNK_WORDS:
                     continue
@@ -524,6 +593,9 @@ def main() -> None:
                     "chunk_text": ctext,
                     "chunk_tokens": count_tokens(ctext, enc),
                     "word_count": wc,
+                    "segment_title": seg_title,
+                    "segment_id": f"s{seg_idx:02d}",
+                    "segment_aware": bool(cfg.SEGMENT_AWARE_CHUNKING),
                     "is_table_like": False,
                     "many_numbers": contains_many_numbers(ctext),
                     "is_table": False,
@@ -533,12 +605,14 @@ def main() -> None:
 
         text_chunks_df = pd.DataFrame(text_chunks)
         print(f"  Created {len(text_chunks_df)} text chunks")
+        if cfg.SEGMENT_AWARE_CHUNKING:
+            print(f"  Segment-aware pages (multi-segment): {segment_aware_applied_pages}")
 
         timer.mark("Step 5: text chunking")
 
         # Process TABLE pages → dual representation
         print("\nExtracting tables...")
-        table_chunks_df, structured_tables_df = process_table_pages(
+        table_chunks_df, structured_tables_df, table_facts_df, rejected_ocr_table_pages = process_table_pages(
             table_pages,
             cfg.PDF_PATH,
             pdf_plumber,
@@ -550,6 +624,69 @@ def main() -> None:
             run_date_utc,
             enc,
         )
+
+        # OCR-table pages that failed fallback acceptance should be handled as normal text.
+        if rejected_ocr_table_pages:
+            print(f"  OCR-table fallback rejected {len(rejected_ocr_table_pages)} page(s); chunking as text")
+            for tpage in rejected_ocr_table_pages:
+                page_no = tpage["page"]
+                text = tpage["text"]
+                if not text:
+                    continue
+
+                part, section, subsection = find_section_for_page(sections_df, page_no)
+                if cfg.SEGMENT_AWARE_CHUNKING:
+                    segments = split_text_for_segment_aware_chunking(text)
+                else:
+                    segments = [("segment_000", text)]
+
+                page_chunks: list[tuple[int, str, str]] = []
+                for seg_idx, (segment_title, segment_text) in enumerate(segments):
+                    seg_chunks = chunk_text_by_tokens(
+                        segment_text,
+                        cfg.CHUNK_SIZE_TOKENS,
+                        cfg.CHUNK_OVERLAP_TOKENS,
+                        enc,
+                    )
+                    for c in seg_chunks:
+                        page_chunks.append((seg_idx, segment_title, c))
+
+                for j, (seg_idx, seg_title, ctext) in enumerate(page_chunks):
+                    wc = len(ctext.split())
+                    if wc < cfg.MIN_CHUNK_WORDS:
+                        continue
+                    chunk_id_local = f"p{page_no:04d}_{j:03d}"
+                    pages = [page_no]
+                    page_list_struct = build_page_list_struct(pages)
+                    text_chunks.append({
+                        "doc_id": doc_id,
+                        "corpus_id": corpus_id,
+                        "report_year": report_year,
+                        "report_year_source": report_year_source,
+                        "period_end_date": period_end_date,
+                        "run_date_utc": run_date_utc,
+                        "chunk_id": chunk_id_local,
+                        "chunk_id_global": make_chunk_id_global(doc_id, chunk_id_local),
+                        "part": part,
+                        "section_title": section,
+                        "subsection_title": subsection,
+                        "page_start": page_no,
+                        "page_end": page_no,
+                        "pages": pages,
+                        "page_list": page_list_struct,
+                        "chunk_text": ctext,
+                        "chunk_tokens": count_tokens(ctext, enc),
+                        "word_count": wc,
+                        "segment_title": seg_title,
+                        "segment_id": f"s{seg_idx:02d}",
+                        "segment_aware": bool(cfg.SEGMENT_AWARE_CHUNKING),
+                        "is_table_like": False,
+                        "many_numbers": contains_many_numbers(ctext),
+                        "is_table": False,
+                        "table_type": None,
+                        "table_ref": None,
+                    })
+            text_chunks_df = pd.DataFrame(text_chunks)
 
         if len(table_chunks_df) > 0:
             mapped = [
@@ -610,6 +747,8 @@ def main() -> None:
         # Write structured tables
         if len(structured_tables_df) > 0:
             structured_tables_df.to_parquet(out_dir / "tables_structured.parquet", index=False)
+        if len(table_facts_df) > 0:
+            table_facts_df.to_parquet(out_dir / "table_facts.parquet", index=False)
 
         timer.mark("Step 8: parquet writes")
 
@@ -644,6 +783,7 @@ def main() -> None:
                 "chunks_text": len(text_chunks_df),
                 "chunks_table": len(table_chunks_df),
                 "tables_extracted": len(structured_tables_df),
+                "table_facts": len(table_facts_df),
                 "ocr_raw_pages_detected": ocr_raw_pages_detected,
                 "ocr_raw_pages_accepted": ocr_raw_pages_accepted,
                 "ocr_short_pages_triggered": ocr_short_pages_triggered,
@@ -680,6 +820,7 @@ def main() -> None:
                 "header_footer_repeat_frac": cfg.HEADER_FOOTER_REPEAT_FRAC,
                 "min_chunk_words": cfg.MIN_CHUNK_WORDS,
                 "primary_extractor": cfg.PRIMARY_EXTRACTOR,
+                "segment_aware_chunking": bool(cfg.SEGMENT_AWARE_CHUNKING),
             },
             "table_types_detected": (
                 structured_tables_df["table_type"].value_counts().to_dict()
@@ -699,6 +840,8 @@ def main() -> None:
         print(f"  - chunks.parquet: {len(all_chunks_df)} chunks (text + table summaries)")
         if len(structured_tables_df) > 0:
             print(f"  - tables_structured.parquet: {len(structured_tables_df)} tables")
+        if len(table_facts_df) > 0:
+            print(f"  - table_facts.parquet: {len(table_facts_df)} facts")
         print("  - metrics.json: Pipeline statistics")
 
         timer.mark("Step 9: metrics + completion")

@@ -10,6 +10,9 @@ __pycache__/
 # Data and outputs
 Data/
 data_processed/
+data_processed_ui/
+data_processed_ablation/
+data_processed/ablation/
 figures/
 Experiment/
 models/

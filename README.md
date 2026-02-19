@@ -24,6 +24,7 @@ Python 3.10+ recommended. Core dependencies by script:
 - `scripts/preprocess_pdf_rag.py`: `pymupdf`, `pandas`, `pyarrow` (optional: `tiktoken`)
 - `scripts/build_index.py`: `faiss-cpu`, `sentence-transformers`, `pandas`, `pyarrow`, `numpy`
 - `scripts/retrieval_eval.py`: `faiss-cpu`, `sentence-transformers`, `pandas`, `pyarrow`, `numpy`
+- `scripts/benchmark_table_extractors.py`: `pymupdf`, `pdfplumber`, `pandas` (optional: `docling`, benchmark-only)
 - OCR fallback: `pytesseract`, `pdf2image`, system `tesseract`, and `poppler` (for `pdftoppm`)
 
 Example setup:
@@ -33,6 +34,11 @@ python -m venv .venv
 source .venv/bin/activate
 pip install pymupdf pandas pyarrow tiktoken faiss-cpu sentence-transformers numpy
 ```
+
+Core runtime policy:
+
+- The active pipeline does not require Docling.
+- Docling is used only for optional A/B benchmarking in `scripts/benchmark_table_extractors.py`.
 
 ## Configuration
 
@@ -83,6 +89,8 @@ Outputs per document (under `data_processed/<DOC_ID>/`):
 - `qa_report.json`
 - `sample_chunks.md`
 - `ocr_pages.csv` (pages processed with OCR, if enabled)
+- Table chunks include a Markdown rendering of detected tables to preserve structure for retrieval.
+- `table_facts.parquet` (canonical row/column/value facts derived from extracted tables)
 
 3) Build embeddings + FAISS index
 
@@ -113,6 +121,13 @@ Outputs:
 - `retrieval_metrics.json`
 - `retrieval_summary.csv`
 
+When `eval_set.json` includes `expected_answer`, `retrieval_results.json` now also includes:
+
+- `answer_correct` (true/false/null when not scored)
+- `answer_status` (`correct`, `partial`, `incorrect`, `not_scored`)
+
+And `retrieval_metrics.json` includes an `answer_scoring` block with aggregate answer accuracy.
+
 5) Build reports (including failure summary)
 
 ```bash
@@ -124,6 +139,23 @@ Outputs:
 - `retrieval_report.csv` (metrics by doc/k)
 - `retrieval_queries_report.csv` (per-query details)
 - `retrieval_failure_summary.csv` (one-row failure counts)
+
+## Failure Taxonomy (Evaluation)
+
+The pipeline tags each query with a single failure type at k=1 to separate retrieval vs generation errors:
+
+Retrieval-stage failures (FP1–FP3):
+- `FP1_MISSING_CONTENT` — expected pages are not present in the index.
+- `FP2_MISSED_TOP_RANK` — expected pages exist but are not retrieved at k=1.
+- `FP3_NOT_IN_CONTEXT` — expected pages are retrieved, but the expected answer is not found in the retrieved context.
+
+Generation-stage failures (FP4–FP7):
+- `FP4_NOT_EXTRACTED` — answer appears in context but extraction returns nothing useful.
+- `FP5_WRONG_FORMAT` — extracted answer does not match the required type (number/date/list).
+- `FP6_INCORRECT_SPECIFICITY` — extracted answer is the wrong value despite the right context.
+- `FP7_INCOMPLETE` — extracted answer partially matches the expected answer.
+
+Success cases are labeled `HIT`. The per-query report includes both `failure_type` and `failure_stage`.
 
 ## Full Pipeline Runner
 
@@ -223,6 +255,97 @@ CLI + env options:
   - CLI: `--data-dir`, `--model`, `--k-list`
   - Env: `DATA_DIR`, `EMBED_MODEL_NAME`, `K_LIST`
 
+## Table Extractor A/B Benchmark
+
+Benchmark the current extractor (Camelot/pdfplumber path) against Docling on detected table-like pages.
+
+```bash
+.venv/bin/python scripts/benchmark_table_extractors.py \
+  --pdf-path "Data/Annual Accounts NHS Grampian/Preliminary_Test/Grampian-2022-2023.pdf" \
+  --max-table-pages 12
+```
+
+Outputs are written to `data_processed/benchmarks/`:
+
+- `table_extract_benchmark_per_page_<timestamp>.csv`
+- `table_extract_benchmark_summary_<timestamp>.csv`
+- `table_extract_benchmark_run_<timestamp>.json`
+
+Notes:
+
+- Docling is benchmark-only and not part of the core pipeline/runtime requirements.
+- If Docling is not installed, the script still runs and records `docling_not_available`.
+- To enable Docling comparison only for this benchmark, install it in your environment before running:
+
+```bash
+pip install docling
+```
+
+## Table Facts Backfill
+
+For existing processed folders that already have `tables_structured.parquet`, you can generate canonical facts without rerunning full preprocessing:
+
+```bash
+.venv/bin/python scripts/backfill_table_facts.py --data-dir data_processed/Grampian-2024-2025
+```
+
+## Question Router (Modular QA)
+
+`scripts/retrieval_eval.py` now uses an intent router to dispatch extraction:
+
+- Router module: `src/rag_pdf/question_router.py`
+- Current routed families:
+  - `table_metric_*` (uses `table_facts.parquet` first)
+    - includes milestone metrics, `staff_costs`, and `emissions` intents
+  - governance intents (legacy regex path)
+  - `unknown` fallback
+
+To add new question classes later:
+
+1. Add a new intent in `route_question(...)` in `src/rag_pdf/question_router.py`.
+2. Add/extend extraction logic in `scripts/retrieval_eval.py` for that intent.
+3. Re-run eval and inspect `route_intent` / `route_confidence` in `retrieval_results.json`.
+
+## Retrieval Tuning / A-B Ablation
+
+Use the ablation runner to compare:
+
+- top-k settings
+- chunking settings (optional rebuild mode)
+- lexical/table rerank weights
+- deterministic query rewrites
+
+Config file:
+
+- `configs/retrieval_tuning.yaml`
+
+Run all configured experiments:
+
+```bash
+.venv/bin/python scripts/run_retrieval_ablation.py --config configs/retrieval_tuning.yaml
+```
+
+Run only selected experiments:
+
+```bash
+.venv/bin/python scripts/run_retrieval_ablation.py \
+  --config configs/retrieval_tuning.yaml \
+  --only baseline_current,baseline_rerank,rewrite_rerank
+```
+
+Outputs:
+
+- `data_processed/ablation/retrieval_ablation_summary.csv`
+- `data_processed/ablation/retrieval_ablation_best_by_k.csv`
+- `data_processed/ablation/retrieval_ablation_summary.json`
+
+Optional markdown report:
+
+```bash
+.venv/bin/python scripts/report_retrieval_ablation.py \
+  --summary-csv data_processed/ablation/retrieval_ablation_summary.csv
+```
+
 ## Batch Processing
 
 Use the batch runner with a JSON config to process a folder of PDFs.
@@ -249,6 +372,14 @@ Batch runner flags + outputs:
 - `--force` to reprocess even if outputs already exist
 - Logs per PDF: `<out_root>/<DOC_ID>/preprocess.log`
 - Summary CSV: `<out_root>/batch_summary.csv`
+
+## Minimal Retrieval UI
+
+A minimal upload/search interface is available in:
+
+- API: `app/api/main.py`
+- Streamlit UI: `app/ui/streamlit_app.py`
+- Setup/run guide: `README_UI.md`
 
 ## License
 

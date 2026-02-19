@@ -22,6 +22,7 @@ except Exception:
 
 from rag_pdf.config import DEFAULT_CONFIG
 from rag_pdf.text_normalize import dehyphenate_lines, normalize_line
+from rag_pdf.ocr_table_fallback import normalize_for_ocr
 
 # Import rotation handling
 from .rotation_handler import (
@@ -69,7 +70,7 @@ def _is_bad_page_text(text: str, min_chars: int) -> tuple[bool, str]:
     return False, "ok"
 
 
-def extract_page_with_ocr(pdf_path: str, page_index: int) -> str:
+def extract_page_with_ocr(pdf_path: str, page_index: int, rotation_deg: int = 0) -> str:
     """Extract text from image-based page using OCR."""
     if not OCR_AVAILABLE:
         return ""
@@ -91,7 +92,20 @@ def extract_page_with_ocr(pdf_path: str, page_index: int) -> str:
         if not images:
             return ""
 
-        text = pytesseract.image_to_string(images[0], lang="eng")
+        # Normalize using known PDF rotation first.
+        img = normalize_for_ocr(images[0], rotation_deg)
+        # Then try OSD-based correction for scan irregularities.
+        try:
+            osd = pytesseract.image_to_osd(img, output_type=pytesseract.Output.DICT)
+            rotate_deg = int(osd.get("rotate", 0) or 0)
+            if rotate_deg in (90, 180, 270):
+                # PIL rotates counter-clockwise; negate to deskew to upright text.
+                img = img.rotate(-rotate_deg, expand=True)
+        except Exception:
+            # OSD may fail on noisy pages; continue with original image.
+            pass
+
+        text = pytesseract.image_to_string(img, lang="eng")
         return text
 
     except Exception as e:
@@ -311,7 +325,11 @@ def extract_page_struct_hybrid(
         if len(text_base) >= 50:
             return s_base, used_base, note_base
 
-        ocr_text = extract_page_with_ocr(pdf_path, page_index)
+        ocr_text = extract_page_with_ocr(
+            pdf_path,
+            page_index,
+            int(s_base.get("rotation", 0) or 0),
+        )
         if len(ocr_text) <= 50:
             return s_base, used_base, f"{note_base};ocr_raw_attempted;ocr_raw_too_short"
 
@@ -353,7 +371,9 @@ def extract_page_struct_hybrid(
             "lines_all": lines_all,
             "page_width": page_width,
             "page_height": page_height,
-            "rotation": 0,
+            # Preserve source page rotation so downstream strip/classification
+            # keeps rotated-page handling instead of reverting to portrait mode.
+            "rotation": int(s_base.get("rotation", 0) or 0),
             "p95_font": 0.0,
         }, "ocr", f"{note_base};ocr_raw_attempted;ocr_raw_used"
 

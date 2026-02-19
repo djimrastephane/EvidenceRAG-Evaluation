@@ -13,7 +13,7 @@ Outputs (written to the same DATA_DIR):
 
 Notes
 - Enforces query_id nomenclature: Q_<TOPIC>_<YEAR>_<NN>
-  Allowed TOPIC values: REV, EFF, DEF, STAFF
+  Allowed TOPIC values: REV, EFF, DEF, STAFF, ACC, GOV, TABLE
   Examples:
     Q_REV_2023_01
     Q_EFF_2023_01
@@ -24,8 +24,19 @@ Notes
   Page precision can drop as k increases because extra chunks add extra pages.
   Chunk metrics are often easier to interpret for retrieval ranking.
 
-FAILURE ATTRIBUTION (RETRIEVAL STAGE ONLY)
-This evaluator assigns a deterministic retrieval failure stage per query at each k:
+FAILURE ATTRIBUTION (RETRIEVAL + GENERATION)
+This evaluator assigns a deterministic failure type per query at k=1:
+Retrieval-stage failures:
+- FP1_MISSING_CONTENT
+- FP2_MISSED_TOP_RANK
+- FP3_NOT_IN_CONTEXT
+Generation-stage failures:
+- FP4_NOT_EXTRACTED
+- FP5_WRONG_FORMAT
+- FP6_INCORRECT_SPECIFICITY
+- FP7_INCOMPLETE
+
+Per-k retrieval-only failure stages are still reported:
 - missing_content
 - missed_top_ranked
 - hit
@@ -51,6 +62,7 @@ import argparse
 import json
 import os
 import re
+import sys
 from pathlib import Path
 from datetime import datetime, timezone
 from typing import Any
@@ -86,6 +98,19 @@ except Exception as e:
         "  pip install pyarrow\n"
     ) from e
 
+repo_root = Path(__file__).resolve().parents[1]
+src_path = repo_root / "src"
+if src_path.exists() and str(src_path) not in sys.path:
+    sys.path.insert(0, str(src_path))
+
+from rag_pdf.question_router import QueryRoute, route_question
+from rag_pdf.retrieval.rerank import (
+    RerankConfig,
+    numeric_density_boost,
+    query_overlap_boost,
+    table_priority_boost,
+)
+
 
 # =============================================================================
 # CONFIG
@@ -104,10 +129,18 @@ EMBED_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 K_LIST = [1, 3, 5, 10]
 MAX_K_SEARCH = int(os.getenv("MAX_K_SEARCH", "100"))
 SUBSECTION_BOOST = float(os.getenv("SUBSECTION_BOOST", "0.05"))
+TABLE_CHUNK_BOOST = float(os.getenv("TABLE_CHUNK_BOOST", "0.08"))
+MILESTONE_TEXT_BOOST = float(os.getenv("MILESTONE_TEXT_BOOST", "0.08"))
+ENTITY_MATCH_BOOST = float(os.getenv("ENTITY_MATCH_BOOST", "0.04"))
+NUMERIC_DENSITY_BOOST = float(os.getenv("NUMERIC_DENSITY_BOOST", "0.03"))
+MAX_ENTITY_MATCHES = int(os.getenv("MAX_ENTITY_MATCHES", "4"))
+ENABLE_LEXICAL_RERANK = os.getenv("ENABLE_LEXICAL_RERANK", "1") != "0"
+ENABLE_SUBSECTION_BOOST = os.getenv("ENABLE_SUBSECTION_BOOST", "1") != "0"
 
 RESULTS_JSON = DATA_DIR / "retrieval_results.json"
 METRICS_JSON = DATA_DIR / "retrieval_metrics.json"
 SUMMARY_CSV = DATA_DIR / "retrieval_summary.csv"
+TABLE_FACTS_PATH = DATA_DIR / "table_facts.parquet"
 
 PRINT_HIT_DEBUG = True
 
@@ -115,20 +148,39 @@ PRINT_HIT_DEBUG = True
 # =============================================================================
 # QUERY ID NOMENCLATURE
 # =============================================================================
-QUERY_ID_PATTERN = re.compile(r"^Q_(REV|EFF|DEF|STAFF|ACC|GOV)_\d{4}_\d{2}$")
+QUERY_ID_PATTERN_V1 = re.compile(r"^Q_(REV|EFF|DEF|STAFF|ACC|GOV|TABLE)_\d{4}_\d{2}$")
+QUERY_ID_PATTERN_V2 = re.compile(r"^Q_(\d{4})_([A-Z]+)_(\d{2}|P\d+)$")
 
 
 def validate_query_id(query_id: str) -> None:
-    if not QUERY_ID_PATTERN.match(query_id):
+    if QUERY_ID_PATTERN_V1.match(query_id) or QUERY_ID_PATTERN_V2.match(query_id):
+        return
+    if not (query_id.startswith("Q_") and len(query_id) >= 6):
+        # Keep compatibility with historical datasets that used custom IDs.
         raise ValueError(
             f"Invalid query_id '{query_id}'. Expected: Q_<TOPIC>_<YEAR>_<NN> "
-            f"with TOPIC in [REV, EFF, DEF, STAFF, ACC], for example Q_EFF_2023_01."
+            f"with TOPIC in [REV, EFF, DEF, STAFF, ACC, GOV, TABLE], "
+            "for example Q_EFF_2023_01."
         )
 
 
 def parse_query_id(query_id: str) -> dict[str, Any]:
-    _, topic, year, seq = query_id.split("_")
-    return {"topic": topic, "year": int(year), "sequence": int(seq)}
+    parts = query_id.split("_")
+    if len(parts) >= 4 and parts[1].isdigit():
+        year = int(parts[1])
+        topic = parts[2]
+        seq_raw = parts[3]
+        if seq_raw.isdigit():
+            seq: Any = int(seq_raw)
+        else:
+            seq = seq_raw
+        return {"topic": topic, "year": year, "sequence": seq}
+    _, topic, year, seq = parts[:4]
+    if str(seq).isdigit():
+        seq_val: Any = int(seq)
+    else:
+        seq_val = seq
+    return {"topic": topic, "year": int(year), "sequence": seq_val}
 
 
 # =============================================================================
@@ -163,14 +215,201 @@ def _normalize_text(s: str) -> str:
     return re.sub(r"\s+", " ", s or "").strip().lower()
 
 
+def _normalize_key(s: str) -> str:
+    """Normalize free text into snake_case key format for robust matching."""
+    t = _normalize_text(s).replace("&", " and ")
+    t = re.sub(r"[^a-z0-9]+", "_", t)
+    t = re.sub(r"_+", "_", t).strip("_")
+    return t
+
+
+def is_table_metric_route(route: QueryRoute) -> bool:
+    """Return True when routed intent belongs to table-metric extraction family."""
+    return route.intent.startswith("table_metric_")
+
+
+def _format_numeric_answer(value: float, is_percent: bool) -> str:
+    """Format numeric answer string with optional percent suffix."""
+    if float(value).is_integer():
+        txt = str(int(value))
+    else:
+        txt = f"{value:.2f}".rstrip("0").rstrip(".")
+    return f"{txt}%" if is_percent else txt
+
+
+def _milestone_text_relevance_boost(route: QueryRoute, question: str, chunk_text: str) -> float:
+    """
+    Compute lexical rerank boost for routed table-metric questions.
+
+    This boost is only active for table-metric intents and is intended to lift
+    milestone/deliverable tables in top-k ranking.
+    """
+    if not is_table_metric_route(route):
+        return 0.0
+    q = _normalize_text(question)
+    t = _normalize_text(chunk_text)
+    if not t:
+        return 0.0
+    boost = 0.0
+    if route.intent in {
+        "table_metric_significant_delay",
+        "table_metric_on_track",
+        "table_metric_complete_ratio",
+    }:
+        if any(k in t for k in ("milestone", "milestones", "deliverable", "deliverables")):
+            boost += MILESTONE_TEXT_BOOST
+        if "deliverable" in q and "complete" in q and any(k in t for k in ("milestone", "deliverable")) and "complete" in t:
+            boost += 0.18
+        if "on track" in q and "on track" in t:
+            boost += 0.05
+        if "significant" in q and "delay" in q and "significant delay" in t:
+            boost += 0.05
+        if "proportion" in q and "complete" in q and "complete" in t:
+            boost += 0.04
+        if "q1" in q and "q1" in t:
+            boost += 0.03
+        if "q2" in q and "q2" in t:
+            boost += 0.03
+        if "q3" in q and "q3" in t:
+            boost += 0.03
+        if "q4" in q and "q4" in t:
+            boost += 0.03
+    elif route.intent == "table_metric_staff_costs":
+        if any(k in t for k in ("staff cost", "staff costs", "employee benefit", "remuneration", "pension")):
+            boost += MILESTONE_TEXT_BOOST
+        if "pension" in q and "pension" in t:
+            boost += 0.06
+        if "remuneration" in q and "remuneration" in t:
+            boost += 0.06
+        if "total" in q and "staff" in q and "cost" in q and "total" in t:
+            boost += 0.04
+    elif route.intent == "table_metric_emissions":
+        if any(k in t for k in ("emission", "greenhouse gas", "co2", "carbon", "target emissions")):
+            boost += MILESTONE_TEXT_BOOST
+        if "target" in q and "target emissions" in t:
+            boost += 0.06
+        if "percentage change" in q and "percentage change" in t:
+            boost += 0.06
+    return boost
+
+
+def extract_answer_from_table_facts(
+    route: QueryRoute,
+    table_facts_df: pd.DataFrame,
+    candidate_pages: list[int],
+    expected_doc_id: str | None,
+) -> tuple[str | None, str | None]:
+    """
+    Attempt deterministic answer extraction from canonical table facts.
+
+    Returns:
+        (answer, label) if matched, else (None, None)
+    """
+    if table_facts_df is None or table_facts_df.empty:
+        return None, None
+
+    if not is_table_metric_route(route):
+        return None, None
+    row_terms = [str(x) for x in route.slots.get("row_terms", [])]
+    quarter = route.slots.get("quarter")
+    prefer_percent = bool(route.slots.get("prefer_percent", False))
+    column_terms = [str(x) for x in route.slots.get("column_terms", [])]
+    table_type_hint = str(route.slots.get("table_type_hint") or "").strip().lower()
+    if not row_terms:
+        return None, None
+
+    facts = table_facts_df.copy()
+    if expected_doc_id and "doc_id" in facts.columns:
+        facts = facts[facts["doc_id"].astype(str) == str(expected_doc_id)]
+    if candidate_pages:
+        facts = facts[facts["page"].isin(candidate_pages)]
+    if table_type_hint and "table_type" in facts.columns:
+        typed = facts[facts["table_type"].astype(str).str.lower() == table_type_hint]
+        if not typed.empty:
+            facts = typed
+    if facts.empty:
+        return None, None
+
+    facts["row_label_norm"] = facts["row_label_norm"].astype(str).map(_normalize_key)
+    mask = pd.Series(False, index=facts.index)
+    for term in row_terms:
+        mask = mask | facts["row_label_norm"].str.contains(term, na=False)
+    facts = facts[mask]
+    if facts.empty:
+        return None, None
+
+    if column_terms and "column_header_norm" in facts.columns:
+        facts["column_header_norm"] = facts["column_header_norm"].astype(str).map(_normalize_key)
+        cmask = pd.Series(False, index=facts.index)
+        for cterm in column_terms:
+            cterm_norm = _normalize_key(cterm)
+            cmask = cmask | facts["column_header_norm"].str.contains(cterm_norm, na=False)
+        cfiltered = facts[cmask]
+        if not cfiltered.empty:
+            facts = cfiltered
+
+    if quarter:
+        qfacts = facts[facts["quarter"].astype(str).str.lower() == quarter]
+        if not qfacts.empty:
+            facts = qfacts
+
+    if prefer_percent:
+        pfacts = facts[facts["is_percent"] == True]  # noqa: E712
+        if not pfacts.empty:
+            facts = pfacts
+
+    if facts.empty:
+        return None, None
+
+    if not quarter and "quarter" in facts.columns and facts["quarter"].notna().any():
+        facts = facts.copy()
+        rank = {"q1": 1, "q2": 2, "q3": 3, "q4": 4}
+        facts["q_rank"] = facts["quarter"].astype(str).str.lower().map(rank).fillna(0)
+        facts = facts.sort_values(["q_rank", "value_num"], ascending=[False, False])
+    else:
+        facts = facts.sort_values(["value_num"], ascending=[False])
+
+    top = facts.iloc[0]
+    answer = _format_numeric_answer(float(top["value_num"]), bool(top.get("is_percent", False)))
+    row_label = str(top.get("row_label_raw", "")).strip() or str(top.get("row_label_norm", "")).strip()
+    col_label = str(top.get("column_header_raw", "")).strip()
+    label = f"TableFact ({row_label} | {col_label})"
+    return answer, label
+
+
+def score_answer_correctness(
+    expected_answer: Any,
+    answer_type: str,
+    extracted_answer: str | None,
+) -> tuple[bool | None, str]:
+    """
+    Score extracted answer correctness independently of retrieval-stage failures.
+
+    Returns:
+        (is_correct, status)
+        - is_correct: True / False / None (None when expected answer is not provided)
+        - status: "correct", "partial", "incorrect", or "not_scored"
+    """
+    if expected_answer is None or expected_answer == "" or expected_answer == []:
+        return None, "not_scored"
+    ext = extracted_answer or ""
+    matches, partial = _compare_expected_to_extracted(expected_answer, ext, answer_type)
+    if matches:
+        return True, "correct"
+    if partial:
+        return False, "partial"
+    return False, "incorrect"
+
+
 def refresh_paths() -> None:
-    global INDEX_PATH, META_PATH, EVAL_SET_PATH, RESULTS_JSON, METRICS_JSON, SUMMARY_CSV
+    global INDEX_PATH, META_PATH, EVAL_SET_PATH, RESULTS_JSON, METRICS_JSON, SUMMARY_CSV, TABLE_FACTS_PATH
     INDEX_PATH = DATA_DIR / "faiss.index"
     META_PATH = DATA_DIR / "chunk_meta.parquet"
     EVAL_SET_PATH = DATA_DIR / "eval_set.json"
     RESULTS_JSON = DATA_DIR / "retrieval_results.json"
     METRICS_JSON = DATA_DIR / "retrieval_metrics.json"
     SUMMARY_CSV = DATA_DIR / "retrieval_summary.csv"
+    TABLE_FACTS_PATH = DATA_DIR / "table_facts.parquet"
 
 
 def parse_args() -> argparse.Namespace:
@@ -191,6 +430,16 @@ def parse_args() -> argparse.Namespace:
         "--k-list",
         default=_env_or_default("K_LIST", ",".join(str(k) for k in K_LIST)),
         help="Comma-separated list of k values (e.g. 1,3,5,10).",
+    )
+    parser.add_argument(
+        "--no-lexical-rerank",
+        action="store_true",
+        help="Disable lexical rerank boosts for pure dense retrieval.",
+    )
+    parser.add_argument(
+        "--no-subsection-boost",
+        action="store_true",
+        help="Disable expected_subsection rerank boost.",
     )
     return parser.parse_args()
 
@@ -462,6 +711,118 @@ def attribute_retrieval_failure(page_recall: float, gold_exists: bool) -> str:
     return "missed_top_ranked" if gold_exists else "missing_content"
 
 
+FAILURE_TYPES = {
+    "FP1_MISSING_CONTENT": "retrieval",
+    "FP2_MISSED_TOP_RANK": "retrieval",
+    "FP3_NOT_IN_CONTEXT": "retrieval",
+    "FP4_NOT_EXTRACTED": "generation",
+    "FP5_WRONG_FORMAT": "generation",
+    "FP6_INCORRECT_SPECIFICITY": "generation",
+    "FP7_INCOMPLETE": "generation",
+    "HIT": "none",
+}
+
+
+def _normalize_answer_text(val: str) -> str:
+    text = re.sub(r"[£$]", "", str(val or "").lower())
+    text = re.sub(r"[\s,]+", " ", text)
+    text = re.sub(r"[^a-z0-9% ]+", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _extract_numbers(val: str) -> list[str]:
+    return re.findall(r"\d+(?:\.\d+)?", str(val or ""))
+
+
+def _is_missing_extraction(extracted_answer: str | None) -> bool:
+    if not extracted_answer:
+        return True
+    lowered = str(extracted_answer).strip().lower()
+    return lowered in {"(no chunk text available)", "(no extraction rule matched)"}
+
+
+def _expected_in_context(expected_answer: Any, context_text: str, answer_type: str) -> bool:
+    if expected_answer is None or expected_answer == "":
+        return False
+    ctx_norm = _normalize_answer_text(context_text)
+    if isinstance(expected_answer, list):
+        expected_items = [_normalize_answer_text(v) for v in expected_answer]
+        return any(item and item in ctx_norm for item in expected_items)
+    expected_norm = _normalize_answer_text(expected_answer)
+    if answer_type == "number":
+        expected_nums = _extract_numbers(expected_answer)
+        ctx_nums = _extract_numbers(context_text)
+        return any(n in ctx_nums for n in expected_nums)
+    return expected_norm in ctx_norm if expected_norm else False
+
+
+def _format_matches(answer_type: str, extracted_answer: str) -> bool:
+    if answer_type == "number":
+        return bool(_extract_numbers(extracted_answer))
+    if answer_type == "date":
+        patterns = [
+            r"\b\d{4}-\d{2}-\d{2}\b",
+            r"\b\d{1,2}/\d{1,2}/\d{2,4}\b",
+            r"\b\d{1,2}\s+[A-Z][a-z]+\s+\d{4}\b",
+        ]
+        return any(re.search(p, extracted_answer) for p in patterns)
+    if answer_type == "list":
+        return any(token in extracted_answer for token in [",", ";", "\n", " and "])
+    return True
+
+
+def _compare_expected_to_extracted(
+    expected_answer: Any, extracted_answer: str, answer_type: str
+) -> tuple[bool, bool]:
+    if expected_answer is None or expected_answer == "":
+        return True, False
+    extracted_norm = _normalize_answer_text(extracted_answer)
+    if isinstance(expected_answer, list):
+        expected_items = [_normalize_answer_text(v) for v in expected_answer]
+        matched = [item for item in expected_items if item and item in extracted_norm]
+        return len(matched) == len(expected_items), 0 < len(matched) < len(expected_items)
+    expected_norm = _normalize_answer_text(expected_answer)
+    if answer_type == "number":
+        expected_nums = _extract_numbers(expected_answer)
+        extracted_nums = _extract_numbers(extracted_answer)
+        matched = [n for n in expected_nums if n in extracted_nums]
+        return len(matched) == len(expected_nums) and len(expected_nums) > 0, 0 < len(matched) < len(expected_nums)
+    if expected_norm and expected_norm in extracted_norm:
+        return True, False
+    expected_tokens = {t for t in expected_norm.split() if len(t) > 3}
+    extracted_tokens = set(extracted_norm.split())
+    overlap = expected_tokens.intersection(extracted_tokens)
+    return False, bool(overlap)
+
+
+def categorize_failure_type(
+    page_hit: int,
+    gold_exists: bool,
+    expected_answer: Any,
+    answer_type: str,
+    context_text: str,
+    extracted_answer: str | None,
+) -> str:
+    if not gold_exists:
+        return "FP1_MISSING_CONTENT"
+    if page_hit == 0:
+        return "FP2_MISSED_TOP_RANK"
+    if expected_answer is None or expected_answer == "" or expected_answer == []:
+        return "HIT"
+    if expected_answer and not _expected_in_context(expected_answer, context_text, answer_type):
+        return "FP3_NOT_IN_CONTEXT"
+    if _is_missing_extraction(extracted_answer):
+        return "FP4_NOT_EXTRACTED"
+    if not _format_matches(answer_type, extracted_answer or ""):
+        return "FP5_WRONG_FORMAT"
+    matches, partial = _compare_expected_to_extracted(expected_answer, extracted_answer or "", answer_type)
+    if matches:
+        return "HIT"
+    if partial:
+        return "FP7_INCOMPLETE"
+    return "FP6_INCORRECT_SPECIFICITY"
+
+
 # =============================================================================
 # MAIN
 # =============================================================================
@@ -487,6 +848,7 @@ def main():
     index = faiss.read_index(str(INDEX_PATH))
     chunks_path = DATA_DIR / "chunks.parquet"
     chunks = read_parquet_safe(chunks_path) if chunks_path.exists() else None
+    table_facts_df = read_parquet_safe(TABLE_FACTS_PATH) if TABLE_FACTS_PATH.exists() else pd.DataFrame()
     chunk_text_by_id: dict[str, str] = {}
     if chunks is not None and "chunk_text" in chunks.columns:
         if "chunk_id_global" in chunks.columns:
@@ -503,9 +865,15 @@ def main():
     print("Loading embedding model:", EMBED_MODEL_NAME)
     model = SentenceTransformer(EMBED_MODEL_NAME)
 
-    eval_items = read_json(EVAL_SET_PATH)
-    if not isinstance(eval_items, list) or len(eval_items) == 0:
-        raise ValueError("eval_set.json must be a non-empty list of query objects.")
+    eval_obj = read_json(EVAL_SET_PATH)
+    if isinstance(eval_obj, list):
+        eval_items = eval_obj
+    elif isinstance(eval_obj, dict) and isinstance(eval_obj.get("queries"), list):
+        eval_items = eval_obj.get("queries", [])
+    else:
+        eval_items = []
+    if len(eval_items) == 0:
+        raise ValueError("eval_set.json must be a non-empty list of query objects (or {'queries': [...]}).")
 
     for i, item in enumerate(eval_items):
         qid = str(item.get("query_id", "")).strip()
@@ -516,6 +884,8 @@ def main():
     max_k = min(max(K_LIST), len(meta))
     max_k_search = min(max(MAX_K_SEARCH, max_k), len(meta))
     k_list = [k for k in K_LIST if 1 <= k <= max_k]
+    enable_lexical_rerank = ENABLE_LEXICAL_RERANK and (not args.no_lexical_rerank)
+    enable_subsection_boost = ENABLE_SUBSECTION_BOOST and (not args.no_subsection_boost)
     if not k_list:
         raise ValueError("K_LIST has no valid values for the current index size.")
 
@@ -526,16 +896,29 @@ def main():
         "data_dir": str(DATA_DIR),
         "index_path": str(INDEX_PATH),
         "meta_path": str(META_PATH),
+        "table_facts_path": str(TABLE_FACTS_PATH),
         "eval_set_path": str(EVAL_SET_PATH),
         "embedding_model": EMBED_MODEL_NAME,
         "k_list": k_list,
         "subsection_boost": SUBSECTION_BOOST,
+        "table_chunk_boost": TABLE_CHUNK_BOOST,
+        "milestone_text_boost": MILESTONE_TEXT_BOOST,
+        "entity_match_boost": ENTITY_MATCH_BOOST,
+        "numeric_density_boost": NUMERIC_DENSITY_BOOST,
+        "max_entity_matches": MAX_ENTITY_MATCHES,
+        "enable_lexical_rerank": enable_lexical_rerank,
+        "enable_subsection_boost": enable_subsection_boost,
         "max_k_search": max_k_search,
         "num_queries": len(eval_items),
         "num_chunks_indexed": int(len(meta)),
+        "num_table_facts": int(len(table_facts_df)),
         "meta_doc_ids": sorted(list(meta_doc_ids))[:20] if meta_doc_ids else [],
-        "query_id_nomenclature": "Q_<TOPIC>_<YEAR>_<NN> with TOPIC in [REV,EFF,DEF,STAFF,ACC,GOV]",
-        "failure_attribution": {"stages": ["hit", "missed_top_ranked", "missing_content"], "scope": "retrieval_only"},
+        "query_id_nomenclature": "Q_<TOPIC>_<YEAR>_<NN> with TOPIC in [REV,EFF,DEF,STAFF,ACC,GOV,TABLE]",
+        "failure_attribution": {
+            "retrieval_stages": ["hit", "missed_top_ranked", "missing_content"],
+            "failure_types": list(FAILURE_TYPES.keys()),
+            "scope": "retrieval_and_generation",
+        },
         "leakage_detection": {
             "enabled": True,
             "requires_expected_doc_id": True,
@@ -558,6 +941,12 @@ def main():
         show_progress_bar=True,
     ).astype("float32")
     q_emb = l2_normalize(q_emb).astype("float32")
+    rerank_cfg = RerankConfig(
+        table_chunk_boost=TABLE_CHUNK_BOOST,
+        entity_match_boost=ENTITY_MATCH_BOOST,
+        numeric_density_boost=NUMERIC_DENSITY_BOOST,
+        max_entity_matches=MAX_ENTITY_MATCHES,
+    )
 
     def _extract_quarter_value(label: str, text: str, q_lower: str) -> tuple[str | None, str | None]:
         m = re.search(
@@ -594,6 +983,7 @@ def main():
         qid_parts = parse_query_id(query_id)
 
         question = questions[qi]
+        route = route_question(question)
 
         expected = item.get("expected_pages", [])
         expected_pages = set(int(x) for x in expected) if isinstance(expected, list) else set()
@@ -615,7 +1005,30 @@ def main():
         idxs = idxs[0].tolist()
         scores = scores[0].tolist()
 
-        if expected_subsection and "subsection_title" in meta.columns:
+        if enable_lexical_rerank:
+            boosted: list[tuple[float, int]] = []
+            for score, idx in zip(scores, idxs):
+                is_table_chunk = bool(meta.iloc[idx].get("is_table", False))
+                cid = (
+                    meta.iloc[idx].get("chunk_id_global")
+                    if "chunk_id_global" in meta.columns
+                    else meta.iloc[idx].get("chunk_id")
+                )
+                ctext = chunk_text_by_id.get(str(cid), "")
+                score += table_priority_boost(
+                    is_table_chunk=is_table_chunk,
+                    route_intent=route.intent,
+                    config=rerank_cfg,
+                )
+                score += query_overlap_boost(question=question, chunk_text=ctext, config=rerank_cfg)
+                score += numeric_density_boost(question=question, chunk_text=ctext, config=rerank_cfg)
+                score += _milestone_text_relevance_boost(route, question, ctext)
+                boosted.append((score, idx))
+            boosted.sort(key=lambda x: x[0], reverse=True)
+            scores = [s for s, _ in boosted]
+            idxs = [i for _, i in boosted]
+
+        if enable_subsection_boost and expected_subsection and "subsection_title" in meta.columns:
             target = _normalize_text(expected_subsection)
             boosted: list[tuple[float, int]] = []
             for score, idx in zip(scores, idxs):
@@ -686,6 +1099,8 @@ def main():
                     "doc_id": expected_doc_id,
                     "expected_section": expected_section,
                     "expected_pages": sorted(list(expected_pages)),
+                    "route_intent": route.intent,
+                    "route_confidence": route.confidence,
                     "gold_exists": bool(gold_presence.get("gold_exists", False)),
                     "gold_chunk_count": int(gold_presence.get("gold_chunk_count", 0)),
                     "gold_pages_found": gold_presence.get("gold_pages_found", []),
@@ -722,8 +1137,25 @@ def main():
             top_text = chunk_text_by_id.get(top_chunk_id, "")
 
         q_lower = question.lower()
-        if top_text:
-            if "significant" in q_lower and "delay" in q_lower:
+        k3_pages = per_k.get("3", {}).get("retrieved_pages_ranked", []) or []
+        k1_pages = per_k.get("1", {}).get("retrieved_pages_ranked", []) or []
+        candidate_page_source = k3_pages if k3_pages else k1_pages
+        candidate_pages = [int(p) for p in candidate_page_source[:8] if str(p).isdigit()]
+        fact_answer, fact_label = extract_answer_from_table_facts(
+            route=route,
+            table_facts_df=table_facts_df,
+            candidate_pages=candidate_pages,
+            expected_doc_id=expected_doc_id,
+        )
+        if fact_answer:
+            extracted_answer = fact_answer
+            extracted_label = fact_label
+
+        if top_text and not extracted_answer:
+            if is_table_metric_route(route):
+                extracted_answer = _first_sentence(top_text) or "(no extraction rule matched)"
+                extracted_label = "Snippet"
+            elif "significant" in q_lower and "delay" in q_lower:
                 extracted_answer, quarter = _extract_quarter_value(
                     "Significant Delay", top_text, q_lower
                 )
@@ -850,7 +1282,32 @@ def main():
 
         k1 = per_k.get("1", {})
         page_hit = 1 if k1.get("page_recall_at_k", 0.0) > 0 else 0
-        failure_type = k1.get("failure_stage")
+        context_chunk_ids = (
+            per_k.get("3", {}).get("retrieved_chunk_ids")
+            or per_k.get("1", {}).get("retrieved_chunk_ids")
+            or []
+        )
+        if isinstance(context_chunk_ids, str):
+            context_chunk_ids = [context_chunk_ids]
+        context_text = "\n".join(
+            chunk_text_by_id.get(str(cid), "")
+            for cid in context_chunk_ids
+            if chunk_text_by_id.get(str(cid), "")
+        )
+
+        failure_type = categorize_failure_type(
+            page_hit=page_hit,
+            gold_exists=bool(gold_presence.get("gold_exists", False)),
+            expected_answer=item.get("expected_answer"),
+            answer_type=answer_type,
+            context_text=context_text,
+            extracted_answer=extracted_answer,
+        )
+        answer_correct, answer_status = score_answer_correctness(
+            expected_answer=item.get("expected_answer"),
+            answer_type=answer_type,
+            extracted_answer=extracted_answer,
+        )
 
         results.append(
             {
@@ -863,10 +1320,16 @@ def main():
                 "doc_id": expected_doc_id,
                 "expected_section": expected_section,
                 "expected_pages": sorted(list(expected_pages)),
+                "route_intent": route.intent,
+                "route_confidence": route.confidence,
                 "page_hit": page_hit,
                 "failure_type": failure_type,
+                "failure_stage": FAILURE_TYPES.get(failure_type, "unknown"),
+                "expected_answer": item.get("expected_answer"),
                 "extracted_answer": extracted_answer,
                 "extracted_answer_label": extracted_label,
+                "answer_correct": answer_correct,
+                "answer_status": answer_status,
                 "extracted_answer_chunk_id": top_chunk_id,
                 "gold_presence": gold_presence,
                 "per_k": per_k,
@@ -879,6 +1342,7 @@ def main():
         )
 
     df_sum = pd.DataFrame(summary_rows)
+    df_results = pd.DataFrame(results)
 
     metrics: dict[str, Any] = {"run_info": run_info, "metrics_by_k": {}, "failure_counts_by_k": {}, "leakage_counts_by_k": {}}
 
@@ -907,6 +1371,15 @@ def main():
         }
 
     write_json(RESULTS_JSON, {"run_info": run_info, "results": results})
+
+    scored = df_results[df_results["answer_correct"].notna()] if len(df_results) else pd.DataFrame()
+    metrics["answer_scoring"] = {
+        "num_queries_total": int(len(df_results)),
+        "num_queries_scored": int(len(scored)) if len(df_results) else 0,
+        "answer_accuracy": float(scored["answer_correct"].mean()) if len(scored) else None,
+        "answer_status_counts": scored["answer_status"].value_counts(dropna=False).to_dict() if len(scored) else {},
+    }
+
     write_json(METRICS_JSON, metrics)
     df_sum.to_csv(SUMMARY_CSV, index=False)
 
@@ -929,6 +1402,15 @@ def main():
             f"failures={fc}  "
             f"any_leakage_rate={lc.get('any_leakage_rate_at_k', 0.0):.3f}  "
             f"mean_leakage_rate={lc.get('mean_leakage_rate_at_k', 0.0):.3f}"
+        )
+
+    a = metrics.get("answer_scoring", {})
+    if a.get("num_queries_scored", 0):
+        print(
+            "answer_scoring "
+            f"scored={a.get('num_queries_scored')} "
+            f"accuracy={a.get('answer_accuracy'):.3f} "
+            f"status_counts={a.get('answer_status_counts')}"
         )
 
 

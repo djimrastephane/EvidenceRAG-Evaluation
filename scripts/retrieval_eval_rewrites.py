@@ -43,7 +43,9 @@ eval_set_rewrites.json schema (example)
 
 from __future__ import annotations
 
+import argparse
 import json
+import os
 import re
 from pathlib import Path
 from datetime import datetime, timezone
@@ -116,6 +118,58 @@ def write_json(path: Path, obj: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(obj, f, indent=2, ensure_ascii=False)
+
+
+def _env_or_default(name: str, default: str) -> str:
+    """Return environment value when present, otherwise the provided default."""
+    val = os.getenv(name)
+    return val if val else default
+
+
+def parse_k_list(val: str) -> list[int]:
+    """Parse comma-separated k list into integers."""
+    parts = [p.strip() for p in val.split(",") if p.strip()]
+    return [int(p) for p in parts]
+
+
+def refresh_paths() -> None:
+    """Refresh file paths derived from current DATA_DIR."""
+    global INDEX_PATH, META_PATH, EVAL_SET_PATH, RESULTS_JSON, METRICS_JSON, SUMMARY_CSV
+    INDEX_PATH = DATA_DIR / "faiss.index"
+    META_PATH = DATA_DIR / "chunk_meta.parquet"
+    EVAL_SET_PATH = DATA_DIR / "eval_set_rewrites.json"
+    RESULTS_JSON = DATA_DIR / "retrieval_results_rewrites.json"
+    METRICS_JSON = DATA_DIR / "retrieval_metrics_rewrites.json"
+    SUMMARY_CSV = DATA_DIR / "retrieval_summary_rewrites.csv"
+
+
+def parse_args() -> argparse.Namespace:
+    """Parse CLI arguments for rewrite-based retrieval evaluation."""
+    parser = argparse.ArgumentParser(
+        description="Evaluate retrieval with deterministic query rewrites."
+    )
+    parser.add_argument(
+        "--data-dir",
+        default=_env_or_default("DATA_DIR", str(DATA_DIR)),
+        help="Directory containing faiss.index, chunk_meta.parquet, eval_set_rewrites.json.",
+    )
+    parser.add_argument(
+        "--model",
+        default=_env_or_default("EMBED_MODEL_NAME", EMBED_MODEL_NAME),
+        help="Sentence-transformers model name or local path.",
+    )
+    parser.add_argument(
+        "--k-list",
+        default=_env_or_default("K_LIST", ",".join(str(k) for k in K_LIST)),
+        help="Comma-separated list of k values (e.g. 1,3,5,10).",
+    )
+    parser.add_argument(
+        "--max-k-per-variant",
+        type=int,
+        default=int(_env_or_default("MAX_K_PER_VARIANT", str(MAX_K_PER_VARIANT))),
+        help="Top candidates retrieved per variant before merge.",
+    )
+    return parser.parse_args()
 
 
 def l2_normalize(x: np.ndarray, eps: float = 1e-12) -> np.ndarray:
@@ -257,6 +311,14 @@ def normalise_query_variants(question: str, rewrites: Any) -> list[str]:
 # MAIN
 # =============================================================================
 def main():
+    args = parse_args()
+    global DATA_DIR, EMBED_MODEL_NAME, K_LIST, MAX_K_PER_VARIANT
+    DATA_DIR = Path(args.data_dir)
+    EMBED_MODEL_NAME = args.model
+    K_LIST = parse_k_list(args.k_list)
+    MAX_K_PER_VARIANT = int(args.max_k_per_variant)
+    refresh_paths()
+
     if not INDEX_PATH.exists():
         raise FileNotFoundError(f"Missing FAISS index: {INDEX_PATH}")
     if not META_PATH.exists():
