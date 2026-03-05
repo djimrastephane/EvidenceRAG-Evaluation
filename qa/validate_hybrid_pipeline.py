@@ -13,7 +13,8 @@ import pandas as pd
 import json
 
 DOC_ID = "Grampian-2022-2023"
-OUT_ROOT = Path("/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed")
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+OUT_ROOT = PROJECT_ROOT / "data_processed"
 
 
 def load_and_validate():
@@ -34,10 +35,10 @@ def load_and_validate():
 
     print("1. FILE EXISTENCE CHECK")
     print("-" * 70)
-    for fname in expected_files:
-        fpath = doc_dir / fname
-        status = "✓" if fpath.exists() else "✗ MISSING"
-        print(f"  {status} {fname}")
+    for file_name in expected_files:
+        file_path = doc_dir / file_name
+        status = "✓" if file_path.exists() else "✗ MISSING"
+        print(f"  {status} {file_name}")
 
     # Check optional table file
     tables_file = doc_dir / "tables_structured.parquet"
@@ -66,8 +67,8 @@ def load_and_validate():
     if "table_types_detected" in metrics and metrics["table_types_detected"]:
         print("3. TABLE TYPES DETECTED")
         print("-" * 70)
-        for ttype, count in metrics["table_types_detected"].items():
-            print(f"  {ttype:<30} {count:>3} tables")
+        for table_type, count in metrics["table_types_detected"].items():
+            print(f"  {table_type:<30} {count:>3} tables")
         print()
 
     # Load chunks for validation

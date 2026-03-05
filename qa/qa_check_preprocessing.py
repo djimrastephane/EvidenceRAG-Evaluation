@@ -4,12 +4,11 @@ from pathlib import Path
 import json
 
 
-base = Path(
-    "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed"
-)
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+base = PROJECT_ROOT / "data_processed"
 
 
-def final_norm_flag(data: dict) -> bool:
+def final_norm_flag(metrics_data: dict) -> bool:
     """
     Determine whether final text normalization was applied.
 
@@ -20,12 +19,12 @@ def final_norm_flag(data: dict) -> bool:
       embedding.preprocess_trace.final_text_normalization
     """
     v = (
-        data.get("embedding", {})
+        metrics_data.get("embedding", {})
         .get("preprocess_trace", {})
         .get("final_text_normalization", None)
     )
     if v is None:
-        v = data.get("params", {}).get("final_text_normalization", None)
+        v = metrics_data.get("params", {}).get("final_text_normalization", None)
 
     if isinstance(v, dict):
         return True
@@ -40,7 +39,7 @@ def _parse_schema_version(v) -> tuple[int, int]:
     Returns (0, 0) when parsing fails.
     """
     if v is None:
-        return (0, 0)
+        return 0, 0
     if isinstance(v, (int, float)):
         s = str(v)
     else:
@@ -49,12 +48,12 @@ def _parse_schema_version(v) -> tuple[int, int]:
     try:
         major = int(m[0])
         minor = int(m[1]) if len(m) > 1 else 0
-        return (major, minor)
+        return major, minor
     except Exception:
-        return (0, 0)
+        return 0, 0
 
 
-def preprocessing_param_assertions(data: dict, run_name: str) -> None:
+def preprocessing_param_assertions(metrics_data: dict, run_name: str) -> None:
     """
     Validate preprocessing parameters recorded in metrics.json.
 
@@ -64,8 +63,8 @@ def preprocessing_param_assertions(data: dict, run_name: str) -> None:
 
     It does not inspect pages.parquet content, it only checks metadata.
     """
-    params = data.get("params", {})
-    sv = _parse_schema_version(data.get("schema_version"))
+    params = metrics_data.get("params", {})
+    sv = _parse_schema_version(metrics_data.get("schema_version"))
 
     # Always expected in your pipeline
     required = [
@@ -122,14 +121,14 @@ def preprocessing_param_assertions(data: dict, run_name: str) -> None:
     assert 0.0 <= r <= 1.0, f"{run_name}: header_footer_repeat_frac out of range"
 
 
-def embedding_qa_assertions(data: dict, run_name: str) -> None:
+def embedding_qa_assertions(metrics_data: dict, run_name: str) -> None:
     """
     Validate embedding stage metadata when present.
 
     Some runs may not write 'embedding' yet. In that case, this function
     should be skipped by the caller.
     """
-    emb = data.get("embedding", {})
+    emb = metrics_data.get("embedding", {})
     summary = emb.get("embedding_summary", {})
 
     chunks_embedded = emb.get("chunks_embedded")
@@ -156,45 +155,45 @@ def embedding_qa_assertions(data: dict, run_name: str) -> None:
     )
 
 
-for d in sorted(base.iterdir()):
-    if not d.is_dir():
+for run_dir in sorted(base.iterdir()):
+    if not run_dir.is_dir():
         continue
 
-    m = d / "metrics.json"
-    if not m.exists():
-        print(d.name, "MISSING metrics.json")
+    metrics_path = run_dir / "metrics.json"
+    if not metrics_path.exists():
+        print(run_dir.name, "MISSING metrics.json")
         continue
 
-    data = json.loads(m.read_text(encoding="utf-8"))
+    metrics_data = json.loads(metrics_path.read_text(encoding="utf-8"))
 
     # Preprocessing QA (based on metrics.json params)
     try:
-        preprocessing_param_assertions(data, d.name)
+        preprocessing_param_assertions(metrics_data, run_dir.name)
         prep_status = "OK"
     except AssertionError as e:
         prep_status = f"FAIL ({e})"
 
     # Embedding QA (only if embedding block exists)
-    if "embedding" in data and isinstance(data.get("embedding"), dict) and data.get("embedding"):
+    if "embedding" in metrics_data and isinstance(metrics_data.get("embedding"), dict) and metrics_data.get("embedding"):
         try:
-            embedding_qa_assertions(data, d.name)
+            embedding_qa_assertions(metrics_data, run_dir.name)
             emb_status = "OK"
         except AssertionError as e:
             emb_status = f"FAIL ({e})"
     else:
         emb_status = "SKIP (no embedding block)"
 
-    params = data.get("params", {})
-    left = params.get("left_strip_frac", None)
-    right = params.get("right_strip_frac", None)
+    run_params = metrics_data.get("params", {})
+    left = run_params.get("left_strip_frac", None)
+    right = run_params.get("right_strip_frac", None)
 
     print(
-        d.name,
+        run_dir.name,
         "schema:",
-        data.get("schema_version"),
+        metrics_data.get("schema_version"),
         "final_norm:",
-        final_norm_flag(data),
-        "preproc_QA:",
+        final_norm_flag(metrics_data),
+        "preprocessing_QA:",
         prep_status,
         "embedding_QA:",
         emb_status,

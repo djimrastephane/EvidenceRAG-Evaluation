@@ -94,10 +94,13 @@ def split_text_for_segment_aware_chunking(text: str) -> list[tuple[str, str]]:
         return []
 
     # Add synthetic boundaries for flattened OCR text where headings/entities appear inline.
+    # This reduces mixed-entity chunks (e.g., multiple IJB entities in one chunk).
     for patt in (
         r"(\b\d+\.\d+\.\d+\.\d+\b)",
-        r"(\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3}\s+Integration Joint Board\s*\(IJB\)\b)",
-        r"(\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3}\s+IJB\b)",
+        r"(?i)(\b[A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+){0,3}\s+Integration Joint Board\s*\(IJB\)\b)",
+        r"(?i)(\b[A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+){0,3}\s+IJB\b)",
+        r"(?i)(\b[A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+){0,3}\s+IJB\s+reported\b)",
+        r"(?i)(\b[A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+){0,3}\s+Integration Joint Board\s*\(IJB\)\s+reported\b)",
     ):
         t = re.sub(patt, r"\n\1", t)
 
@@ -107,6 +110,10 @@ def split_text_for_segment_aware_chunking(text: str) -> list[tuple[str, str]]:
 
     section_number = re.compile(r"^\d+(?:\.\d+){1,5}\b")
     ijb_heading = re.compile(r"(?i)\b(?:integration\s+joint\s+board|ijb)\b")
+    ijb_entity_clause = re.compile(
+        r"(?i)^[A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+){0,3}\s+"
+        r"(?:integration\s+joint\s+board\s*\(ijb\)|ijb)\b"
+    )
     uppercase_heading = re.compile(r"^[A-Z][A-Z0-9 ,/&()\-]{8,}$")
 
     segments: list[tuple[str, list[str]]] = []
@@ -127,6 +134,8 @@ def split_text_for_segment_aware_chunking(text: str) -> list[tuple[str, str]]:
         if section_number.match(ln):
             is_boundary = True
         elif ijb_heading.search(ln):
+            is_boundary = True
+        elif ijb_entity_clause.match(ln):
             is_boundary = True
         elif uppercase_heading.match(ln) and len(ln.split()) <= 14:
             is_boundary = True

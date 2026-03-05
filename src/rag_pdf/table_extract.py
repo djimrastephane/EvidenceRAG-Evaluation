@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Optional, Union
+
 from pathlib import Path
 import re
 from dataclasses import dataclass
@@ -38,7 +40,7 @@ class TableResult:
     page_no: int
     flavor: str
     dataframe: pd.DataFrame
-    parsing_report: dict[str, float | int | str]
+    parsing_report: dict[str, Union[float, int, str]]
     logs: list[str]
 
 
@@ -49,7 +51,7 @@ def _to_float(v: object, default: float = 0.0) -> float:
         return default
 
 
-def _extract_parsing_report(table_obj: object) -> dict[str, float | int | str]:
+def _extract_parsing_report(table_obj: object) -> dict[str, Union[float, int, str]]:
     report = {}
     raw = getattr(table_obj, "parsing_report", None)
     if isinstance(raw, dict):
@@ -62,7 +64,7 @@ def _extract_parsing_report(table_obj: object) -> dict[str, float | int | str]:
     }
 
 
-def _best_camelot_table(tables) -> object | None:
+def _best_camelot_table(tables) -> Optional[object]:
     if not tables:
         return None
     candidates = []
@@ -82,7 +84,7 @@ def _best_camelot_table(tables) -> object | None:
     return candidates[0][3]
 
 
-def extract_tables_for_page(pdf_path: Path, page_no: int, config: dict | None = None) -> list[TableResult]:
+def extract_tables_for_page(pdf_path: Path, page_no: int, config: Optional[dict] = None) -> list[TableResult]:
     """
     Extract table(s) for one page with Camelot passes:
     1) lattice with strict gate
@@ -226,7 +228,7 @@ def extract_tables_for_page(pdf_path: Path, page_no: int, config: dict | None = 
     return []
 
 
-def clean_table_dataframe(df: pd.DataFrame, table_type: str | None) -> pd.DataFrame:
+def clean_table_dataframe(df: pd.DataFrame, table_type: Optional[str]) -> pd.DataFrame:
     """
     Clean extracted table dataframe.
 
@@ -268,7 +270,7 @@ def clean_table_dataframe(df: pd.DataFrame, table_type: str | None) -> pd.DataFr
     return df
 
 
-def extract_table_camelot(pdf_path: Path, page_no: int) -> pd.DataFrame | None:
+def extract_table_camelot(pdf_path: Path, page_no: int) -> pd.Optional[DataFrame]:
     """
     Extract table using Camelot (lattice then stream methods).
 
@@ -282,7 +284,7 @@ def extract_table_camelot(pdf_path: Path, page_no: int) -> pd.DataFrame | None:
     if camelot is None:
         return None
 
-    def _best_camelot_df(tables) -> pd.DataFrame | None:
+    def _best_camelot_df(tables) -> pd.Optional[DataFrame]:
         if not tables:
             return None
         candidates = []
@@ -334,7 +336,7 @@ def extract_table_camelot(pdf_path: Path, page_no: int) -> pd.DataFrame | None:
     return None
 
 
-def extract_table_pdfplumber(pdf_plumber, page_no: int) -> pd.DataFrame | None:
+def extract_table_pdfplumber(pdf_plumber, page_no: int) -> pd.Optional[DataFrame]:
     """
     Extract table using pdfplumber (fallback method).
 
@@ -373,8 +375,8 @@ def extract_table_cells(
     pdf_path: Path,
     pdf_plumber,
     page_no: int,
-    table_type: str | None,
-) -> pd.DataFrame | None:
+    table_type: Optional[str],
+) -> pd.Optional[DataFrame]:
     """
     Multi-method table extraction with validation.
 
@@ -422,7 +424,7 @@ def extract_table_cells(
 
 def generate_table_summary(
     df: pd.DataFrame,
-    table_type: str | None,
+    table_type: Optional[str],
     page_no: int,
 ) -> str:
     """
@@ -820,17 +822,142 @@ def _self_test_staff_costs() -> None:
         print(ln)
 
 
+def _norm_ws(s: object) -> str:
+    return re.sub(r"\s+", " ", str(s or "")).strip()
+
+
+def _table_caption_from_summary(table_summary: str) -> str:
+    line = _norm_ws(str(table_summary or "").splitlines()[0] if str(table_summary or "").splitlines() else "")
+    if not line:
+        return "Unknown"
+    return line[:120]
+
+
+def _table_headers_from_df(df: pd.DataFrame) -> list[str]:
+    headers = [_norm_ws(h) for h in list(df.columns)]
+    if any(headers):
+        return [h if h else "-" for h in headers]
+    return [f"col_{i+1}" for i in range(len(df.columns))]
+
+
+def _table_rows_from_df(df: pd.DataFrame) -> list[str]:
+    out: list[str] = []
+    for _, row in df.iterrows():
+        vals = [_norm_ws(v) for v in row.tolist()]
+        vals = [v if v else "-" for v in vals]
+        out.append(" | ".join(vals))
+    return out
+
+
+def _pack_lines_by_token_budget(
+    lines: list[str],
+    *,
+    prefix_lines: list[str],
+    chunk_size_tokens: int,
+    enc,
+) -> list[str]:
+    chunks: list[str] = []
+    cur: list[str] = []
+    prefix_text = "\n".join([ln for ln in prefix_lines if _norm_ws(ln)])
+    prefix_tokens = count_tokens(prefix_text, enc) if prefix_text else 0
+    budget = max(40, int(chunk_size_tokens))
+
+    for ln in lines:
+        candidate = "\n".join(cur + [ln]).strip()
+        candidate_tokens = count_tokens(candidate, enc) + prefix_tokens
+        if cur and candidate_tokens > budget:
+            body = "\n".join(cur).strip()
+            if body:
+                chunk = f"{prefix_text}\n{body}".strip() if prefix_text else body
+                chunks.append(chunk)
+            cur = [ln]
+        else:
+            cur.append(ln)
+
+    if cur:
+        body = "\n".join(cur).strip()
+        if body:
+            chunk = f"{prefix_text}\n{body}".strip() if prefix_text else body
+            chunks.append(chunk)
+    return chunks
+
+
+def _build_table_chunk_texts(
+    *,
+    strategy: str,
+    page_no: int,
+    table_summary: str,
+    raw_table: pd.DataFrame,
+    header_injected_facts: str,
+    table_markdown: str,
+    chunk_size_tokens: int,
+    enc,
+) -> list[str]:
+    # Baseline: preserve current behavior exactly.
+    if strategy == "baseline":
+        parts = [table_summary]
+        if header_injected_facts:
+            parts.append("Table (header-injected facts):")
+            parts.append(header_injected_facts)
+        if table_markdown:
+            parts.append("Table (markdown):")
+            parts.append(table_markdown)
+        return ["\n\n".join(parts).strip()]
+
+    caption = _table_caption_from_summary(table_summary)
+    table_prefix = f"TABLE | page={page_no} | {caption}"
+    headers = _table_headers_from_df(raw_table)
+    header_line = " | ".join(headers)
+    row_lines = _table_rows_from_df(raw_table)
+
+    if strategy == "row_preserving":
+        prefix_lines = [table_prefix, f"COLUMNS: {header_line}"]
+        return _pack_lines_by_token_budget(
+            row_lines,
+            prefix_lines=prefix_lines,
+            chunk_size_tokens=chunk_size_tokens,
+            enc=enc,
+        )
+
+    # two_stage
+    first_rows = row_lines[: min(5, len(row_lines))]
+    units_line = ""
+    year_line = ""
+    for ln in first_rows:
+        if not units_line and any(tok in ln for tok in ("£", "%", "000", "million", "m ")):
+            units_line = ln
+        if not year_line and re.search(r"\b(19|20)\d{2}(?:/\d{2,4})?\b", ln):
+            year_line = ln
+    header_chunk_lines = [table_prefix, f"COLUMNS: {header_line}"]
+    if units_line:
+        header_chunk_lines.append(f"UNITS: {units_line}")
+    if year_line:
+        header_chunk_lines.append(f"YEAR_LABELS: {year_line}")
+    header_chunk = "\n".join(header_chunk_lines).strip()
+
+    body_prefix = [table_prefix, f"COLUMNS: {header_line}"]
+    body_chunks = _pack_lines_by_token_budget(
+        row_lines,
+        prefix_lines=body_prefix,
+        chunk_size_tokens=chunk_size_tokens,
+        enc=enc,
+    )
+    return [header_chunk] + body_chunks
+
+
 def process_table_pages(
     table_pages: list[dict],
     pdf_path: Path,
     pdf_plumber,
     doc_id: str,
     corpus_id: str,
-    report_year: str | None,
-    period_end_date: str | None,
-    report_year_source: str | None,
+    report_year: Optional[str],
+    period_end_date: Optional[str],
+    report_year_source: Optional[str],
     run_date_utc: str,
     enc,
+    chunk_size_tokens: int = 280,
+    table_chunking_strategy: str = "baseline",
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, list[dict]]:
     """
     Extract tables and create dual representation.
@@ -1018,45 +1145,46 @@ def process_table_pages(
                 )
             )
 
-            # Create searchable text summary
-            chunk_text_parts = [table_summary]
-            if header_injected_facts:
-                chunk_text_parts.append("Table (header-injected facts):")
-                chunk_text_parts.append(header_injected_facts)
-            if table_markdown:
-                chunk_text_parts.append("Table (markdown):")
-                chunk_text_parts.append(table_markdown)
-            summary = "\n\n".join(chunk_text_parts)
-
-            chunk_id_local = f"table_p{page_no:04d}" if len(table_results) == 1 else f"table_p{page_no:04d}_{idx:02d}"
-            pages = [page_no]
-            page_list_struct = build_page_list_struct(pages)
-
-            text_chunks.append({
-                "doc_id": doc_id,
-                "corpus_id": corpus_id,
-                "report_year": report_year,
-                "report_year_source": report_year_source,
-                "period_end_date": period_end_date,
-                "run_date_utc": run_date_utc,
-                "chunk_id": chunk_id_local,
-                "chunk_id_global": make_chunk_id_global(doc_id, chunk_id_local),
-                "part": "Unknown",  # Tables don't have part classification
-                "section_title": "Financial Tables",
-                "subsection_title": None,
-                "page_start": page_no,
-                "page_end": page_no,
-                "pages": pages,
-                "page_list": page_list_struct,
-                "chunk_text": summary,
-                "chunk_tokens": count_tokens(summary, enc),
-                "word_count": len(summary.split()),
-                "is_table_like": True,
-                "many_numbers": True,
-                "is_table": True,  # NEW FLAG
-                "table_type": table_type,  # NEW
-                "table_ref": table_id,  # NEW: Link to structured data
-            })
+            chunk_texts = _build_table_chunk_texts(
+                strategy=str(table_chunking_strategy or "baseline"),
+                page_no=page_no,
+                table_summary=table_summary,
+                raw_table=raw_table,
+                header_injected_facts=header_injected_facts,
+                table_markdown=table_markdown,
+                chunk_size_tokens=int(chunk_size_tokens),
+                enc=enc,
+            )
+            for cidx, summary in enumerate(chunk_texts):
+                base_id = f"table_p{page_no:04d}" if len(table_results) == 1 else f"table_p{page_no:04d}_{idx:02d}"
+                chunk_id_local = base_id if len(chunk_texts) == 1 else f"{base_id}_s{cidx:02d}"
+                pages = [page_no]
+                page_list_struct = build_page_list_struct(pages)
+                text_chunks.append({
+                    "doc_id": doc_id,
+                    "corpus_id": corpus_id,
+                    "report_year": report_year,
+                    "report_year_source": report_year_source,
+                    "period_end_date": period_end_date,
+                    "run_date_utc": run_date_utc,
+                    "chunk_id": chunk_id_local,
+                    "chunk_id_global": make_chunk_id_global(doc_id, chunk_id_local),
+                    "part": "Unknown",  # Tables don't have part classification
+                    "section_title": "Financial Tables",
+                    "subsection_title": None,
+                    "page_start": page_no,
+                    "page_end": page_no,
+                    "pages": pages,
+                    "page_list": page_list_struct,
+                    "chunk_text": summary,
+                    "chunk_tokens": count_tokens(summary, enc),
+                    "word_count": len(summary.split()),
+                    "is_table_like": True,
+                    "many_numbers": True,
+                    "is_table": True,
+                    "table_type": table_type,
+                    "table_ref": table_id,
+                })
 
     return (
         pd.DataFrame(text_chunks),

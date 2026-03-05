@@ -4,7 +4,7 @@ from typing import Any, Optional
 import os
 
 try:
-    import fitz  # PyMuPDF
+    import pymupdf as fitz  # PyMuPDF
 except Exception as e:
     raise RuntimeError(
         "Failed to import PyMuPDF.\n"
@@ -21,6 +21,7 @@ except Exception:
     OCR_AVAILABLE = False
 
 from rag_pdf.config import DEFAULT_CONFIG
+from rag_pdf.ocr_quality import evaluate_ocr_quality
 from rag_pdf.text_normalize import dehyphenate_lines, normalize_line
 from rag_pdf.ocr_table_fallback import normalize_for_ocr
 
@@ -225,7 +226,7 @@ def extract_page_struct_pdfplumber(pl_page: Any) -> dict:
 
     grouped: list[list[dict]] = []
     cur: list[dict] = []
-    cur_y: float | None = None
+    cur_y: Optional[float] = None
 
     for w in words_sorted:
         y = float(w.get("top", 0.0))
@@ -332,6 +333,20 @@ def extract_page_struct_hybrid(
         )
         if len(ocr_text) <= 50:
             return s_base, used_base, f"{note_base};ocr_raw_attempted;ocr_raw_too_short"
+
+        quality = evaluate_ocr_quality(
+            ocr_text,
+            min_chars=int(DEFAULT_CONFIG.OCR_QUALITY_MIN_CHARS),
+            min_alpha_words=int(DEFAULT_CONFIG.OCR_QUALITY_MIN_ALPHA_WORDS),
+            max_symbol_ratio=float(DEFAULT_CONFIG.OCR_QUALITY_MAX_SYMBOL_RATIO),
+            repeat_token_max_count=int(DEFAULT_CONFIG.OCR_QUALITY_REPEAT_TOKEN_MAX_COUNT),
+            repeat_token_max_len=int(DEFAULT_CONFIG.OCR_QUALITY_REPEAT_TOKEN_MAX_LEN),
+            min_non_empty_lines=int(DEFAULT_CONFIG.OCR_QUALITY_MIN_NON_EMPTY_LINES),
+            reject_min_flags=int(DEFAULT_CONFIG.OCR_QUALITY_REJECT_MIN_FLAGS),
+        )
+        if quality.get("reject_ocr"):
+            reason = ",".join(quality.get("active_flags", [])) or "quality_flags"
+            return s_base, used_base, f"{note_base};ocr_raw_attempted;ocr_raw_rejected_quality:{reason}"
 
         page_width = float(s_base.get("page_width", 0.0) or 0.0)
         page_height = float(s_base.get("page_height", 0.0) or 0.0)

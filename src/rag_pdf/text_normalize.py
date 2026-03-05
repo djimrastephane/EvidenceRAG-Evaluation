@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+from typing import Optional
+
 import re
 from datetime import datetime, timezone
 
 try:
-    import fitz  # PyMuPDF
+    import pymupdf as fitz  # PyMuPDF
 except Exception as e:
     raise RuntimeError(
         "Failed to import PyMuPDF.\n"
@@ -89,7 +91,7 @@ def dehyphenate_lines(lines: list[str]) -> list[str]:
 # REPORT METADATA EXTRACTION
 # =============================================================================
 
-def extract_report_year_from_filename(name: str) -> str | None:
+def extract_report_year_from_filename(name: str) -> Optional[str]:
     """Extract year range from filename (e.g., 'Report-2022-2023.pdf' → '2022-2023')."""
     yrs = re.findall(r"(?:19|20)\d{2}", name)
     if len(yrs) >= 2:
@@ -99,7 +101,7 @@ def extract_report_year_from_filename(name: str) -> str | None:
     return None
 
 
-def extract_year_range_from_text(text: str) -> str | None:
+def extract_year_range_from_text(text: str) -> Optional[str]:
     """
     Extract year range from cover page text.
 
@@ -131,7 +133,7 @@ def extract_year_range_from_text(text: str) -> str | None:
     return None
 
 
-def extract_period_end_date(text: str) -> str | None:
+def extract_period_end_date(text: str) -> Optional[str]:
     """
     Extract period end date from text.
 

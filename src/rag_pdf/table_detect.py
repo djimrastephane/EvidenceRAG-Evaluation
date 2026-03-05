@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Optional
+
 import re
 
 from rag_pdf.config import DEFAULT_CONFIG
@@ -275,7 +277,7 @@ def contains_many_numbers(text: str) -> bool:
 # TABLE CLASSIFICATION
 # =============================================================================
 
-def detect_table_type(text: str) -> str | None:
+def detect_table_type(text: str) -> Optional[str]:
     """
     Classify financial table type from text content.
 

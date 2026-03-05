@@ -3,7 +3,13 @@ from pathlib import Path
 from collections import Counter
 
 DOC_ID = "Grampian-2022-2023"
-OUT_DIR = Path(f"/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/{DOC_ID}")
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+OUT_DIR = PROJECT_ROOT / "data_processed" / DOC_ID
+
+# noinspection SpellCheckingInspection
+PRIMARY_EXTRACTOR_KEY = "pymupdf"
+# noinspection SpellCheckingInspection
+FALLBACK_EXTRACTOR_KEY = "pdfplumber"
 
 
 def validate_text_quality():
@@ -46,7 +52,8 @@ def validate_text_quality():
     print("-" * 70)
 
     # Check for replacement characters (bad encoding)
-    pages_with_replacement = sum(pages_df['clean_text'].str.contains('\ufffd', na=False))
+    replacement_char = "\uFFFD"
+    pages_with_replacement = sum(pages_df['clean_text'].str.contains(replacement_char, na=False))
 
     # Check alphabetic ratio
     def alpha_ratio(text):
@@ -71,11 +78,11 @@ def validate_text_quality():
     print("-" * 70)
 
     extractor_counts = pages_df['extractor'].value_counts()
-    print(f"  PyMuPDF (primary): {extractor_counts.get('pymupdf', 0)} pages")
-    print(f"  PDFPlumber (fallback): {extractor_counts.get('pdfplumber', 0)} pages")
+    print(f"  PyMuPDF (primary): {extractor_counts.get(PRIMARY_EXTRACTOR_KEY, 0)} pages")
+    print(f"  PDFPlumber (fallback): {extractor_counts.get(FALLBACK_EXTRACTOR_KEY, 0)} pages")
 
     # Check fallback reasons
-    fallback_notes = pages_df[pages_df['extractor'] == 'pdfplumber']['extractor_notes'].value_counts()
+    fallback_notes = pages_df[pages_df['extractor'] == FALLBACK_EXTRACTOR_KEY]['extractor_notes'].value_counts()
     if len(fallback_notes) > 0:
         print(f"\n  Fallback reasons:")
         for reason, count in fallback_notes.items():
@@ -165,10 +172,15 @@ def validate_text_quality():
 
 def compare_with_source_pdf():
     """Compare a sample page with source PDF."""
-    import fitz
+    import pymupdf as fitz
 
     pdf_path = Path(
-        "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/Data/Annual Accounts NHS Grampian/Preliminary_Test/Grampian-2022-2023.pdf")
+        PROJECT_ROOT
+        / "Data"
+        / "Annual Accounts NHS Grampian"
+        / "Preliminary_Test"
+        / "Grampian-2022-2023.pdf"
+    )
 
     if not pdf_path.exists():
         print("\n⚠️ PDF not found, skipping source comparison")

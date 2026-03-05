@@ -60,6 +60,9 @@ Key constants to adjust before running each script:
   - Paths: `DATA_DIR`, `INDEX_PATH`, `META_PATH`, `EVAL_SET_PATH`
   - Embeddings: `EMBED_MODEL_NAME`
   - Metrics/output: `K_LIST`, `RESULTS_JSON`, `METRICS_JSON`, `SUMMARY_CSV`
+- `scripts/build_global_indexes.py`
+  - Multi-document artifacts: global dense index + lexical scope manifest
+  - Paths: `--data-root`, `--out-dir`
 
 - `scripts/preprocess_hybrid.py`
   - OCR thresholds: `OCR_MIN_ALPHA_RATIO`, `OCR_MIN_DIGIT_RATIO`
@@ -106,6 +109,18 @@ Outputs:
 - `embeddings.npy`
 - `chunk_meta.parquet`
 - `metrics.json` (updated)
+
+Optional: build global (multi-document) retrieval artifacts
+
+```bash
+python scripts/build_global_indexes.py --data-root data_processed --out-dir data_processed/_global
+```
+
+Outputs:
+- `data_processed/_global/global_dense.faiss`
+- `data_processed/_global/global_meta.parquet`
+- `data_processed/_global/lexical_manifest.json`
+- `data_processed/_global/lexical_corpus.parquet`
 
 4) Evaluate retrieval
 
@@ -173,6 +188,30 @@ Runs preprocess -> build index -> retrieval eval -> reports in one command.
 - Paths in scripts are currently absolute; update them to match your environment.
 - If you see `fitz` import errors, uninstall the `fitz` package and install `pymupdf`.
 - The FAISS index uses inner product on L2-normalized vectors to approximate cosine similarity.
+- Search API supports metadata filtering and scope control:
+  - `retrieval_scope`: `doc | trust | global`
+  - `lexical_scope`: `doc | trust | global`
+  - filters: `doc_id`, `trust_id`, `year`, `is_table`, `section_contains`, `subsection_contains`
+
+## Canonical Trust IDs
+
+Trust-scoped retrieval uses canonical NHS board names derived from `doc_id`.
+Current canonical list:
+
+- NHS Ayrshire & Arran
+- NHS Borders
+- NHS Dumfries & Galloway
+- NHS Fife
+- NHS Forth Valley
+- NHS Grampian
+- NHS Greater Glasgow & Clyde
+- NHS Highland
+- NHS Lanarkshire
+- NHS Lothian
+- NHS Orkney
+- NHS Shetland
+- NHS Tayside
+- NHS Western Isles
 - If `scripts/build_index.py` or `scripts/retrieval_eval.py` crashes with a SIGSEGV, run with:
   `OMP_NUM_THREADS=1 FAISS_NO_AVX2=1`.
 - Git ignores `Data/`, `data_processed/`, `figures/`, and all `*.pdf` outputs by default.
@@ -183,20 +222,22 @@ Runs preprocess -> build index -> retrieval eval -> reports in one command.
 ## Example eval_set.json
 
 ```json
-[
-  {
-    "query_id": "Q001",
-    "question": "What is the reporting period end date?",
-    "expected_pages": [1],
-    "answer_type": "date"
+{
+  "_meta": {
+    "doc_id": "Grampian-2023-2024"
   },
-  {
-    "query_id": "Q002",
-    "question": "What is the total staff costs figure?",
-    "expected_pages": [120, 121],
-    "answer_type": "number"
-  }
-]
+  "queries": [
+    {
+      "query_id": "Q_2024_FIN_01",
+      "question": "What was the underlying deficit against the Core Revenue Resource Limit for 2023/24?",
+      "expected_pages": [27],
+      "expected_answer": "-24,703 (£000)",
+      "answer_type": "number",
+      "doc_id": "Grampian-2023-2024",
+      "year": 2024
+    }
+  ]
+}
 ```
 
 ## OCR Setup (Optional)
@@ -314,15 +355,30 @@ Use the ablation runner to compare:
 - chunking settings (optional rebuild mode)
 - lexical/table rerank weights
 - deterministic query rewrites
+- sparse retrievers (`hybrid` dense+BM25 and `splade_hybrid` dense+SPLADE)
+
+Default hybrid fusion parameters are documented in:
+- `HYBRID_RRF_DEFAULTS.md`
+
+Optional local built-in cross-encoder reranker:
+- `LOCAL_CROSS_ENCODER_RERANKER.md`
 
 Config file:
 
 - `configs/retrieval_tuning.yaml`
+- `configs/retrieval_tuning_splade_template.yaml` (SPLADE-ready template)
 
 Run all configured experiments:
 
 ```bash
 .venv/bin/python scripts/run_retrieval_ablation.py --config configs/retrieval_tuning.yaml
+```
+
+Run SPLADE ablation template:
+
+```bash
+.venv/bin/python scripts/run_retrieval_ablation.py \
+  --config configs/retrieval_tuning_splade_template.yaml
 ```
 
 Run only selected experiments:
@@ -372,6 +428,41 @@ Batch runner flags + outputs:
 - `--force` to reprocess even if outputs already exist
 - Logs per PDF: `<out_root>/<DOC_ID>/preprocess.log`
 - Summary CSV: `<out_root>/batch_summary.csv`
+
+## Consolidated Exports (Multi-Doc)
+
+Generate canonical cross-document consolidated outputs from per-document `retrieval_results.json` files:
+
+```bash
+.venv/bin/python scripts/export_consolidated_answers.py \
+  --data-root data_processed \
+  --out-dir data_processed/consolidated \
+  --top-k 1
+```
+
+Optional generation enrichment from API search logs (JSONL):
+
+```bash
+.venv/bin/python scripts/export_consolidated_answers.py \
+  --data-root data_processed \
+  --out-dir data_processed/consolidated \
+  --top-k 1 \
+  --search-log-jsonl results/search_api.jsonl
+```
+
+`--search-log-jsonl` enriches/overrides generation-related fields in consolidated answers when keyed by
+`(doc_id, query_id, question)`:
+- `generation_status`
+- `generation_confidence`
+- `low_retrieval_margin`
+- `retrieval_margin`
+- `answer_mode`
+- `final_answer`
+
+Outputs:
+- `data_processed/consolidated/consolidated_answers.csv`
+- `data_processed/consolidated/consolidated_answers.jsonl`
+- `data_processed/consolidated/consolidated_table_facts.csv` (unless `--no-table-facts`)
 
 ## Minimal Retrieval UI
 

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Optional
+
 import re
 
 from rag_pdf.config import DEFAULT_CONFIG
@@ -9,7 +11,7 @@ HEADING_MIN_CHARS = DEFAULT_CONFIG.HEADING_MIN_CHARS
 HEADING_FONT_BOOST_FRAC = DEFAULT_CONFIG.HEADING_FONT_BOOST_FRAC
 
 
-def is_part_label(line: str) -> str | None:
+def is_part_label(line: str) -> Optional[str]:
     """
     Detect report part labels (e.g., 'Part A', 'Part B').
 
@@ -73,6 +75,8 @@ def looks_like_lettered_subsection(line: str) -> bool:
     if re.search(r"\bpage\s+\d+\b", line, flags=re.IGNORECASE):
         return False
     return True
+
+
 
 
 def is_section_anchor_line(line: str) -> bool:

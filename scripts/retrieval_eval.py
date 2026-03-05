@@ -59,13 +59,14 @@ Implementation details:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
 import sys
 from pathlib import Path
 from datetime import datetime, timezone
-from typing import Any
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
@@ -223,6 +224,74 @@ def _normalize_key(s: str) -> str:
     return t
 
 
+def _file_sha1(path: Path) -> str:
+    h = hashlib.sha1()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _safe_json(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    try:
+        obj = read_json(path)
+        if isinstance(obj, dict):
+            return obj
+    except Exception:
+        pass
+    return {}
+
+
+def _collect_pipeline_settings(data_dir: Path) -> dict[str, Any]:
+    """
+    Capture preprocessing/pipeline settings from metrics.json so retrieval runs
+    can always be traced back to the exact chunking/config used.
+    """
+    metrics_path = data_dir / "metrics.json"
+    metrics = _safe_json(metrics_path)
+    params = metrics.get("params", {}) if isinstance(metrics, dict) else {}
+    return {
+        "source_metrics_path": str(metrics_path),
+        "source_metrics_exists": metrics_path.exists(),
+        "doc_id": metrics.get("doc_id"),
+        "corpus_id": metrics.get("corpus_id"),
+        "report_year": metrics.get("report_year"),
+        "preprocess_run_utc": metrics.get("run_utc"),
+        "preprocess_git_commit_short": metrics.get("git_commit_short"),
+        "embedding_model_preprocess": metrics.get("embedding_model"),
+        "chunk_size_tokens": params.get("chunk_size_tokens"),
+        "chunk_overlap_tokens": params.get("chunk_overlap_tokens"),
+        "segment_aware_chunking": params.get("segment_aware_chunking"),
+        "whole_doc_markdown_mode": params.get("whole_doc_markdown_mode"),
+        "markdown_header_carry_forward": params.get("markdown_header_carry_forward"),
+        "markdown_table_injection": params.get("markdown_table_injection"),
+        "primary_extractor": params.get("primary_extractor"),
+        "min_chunk_words": params.get("min_chunk_words"),
+    }
+
+
+def _collect_eval_set_info(eval_set_path: Path, eval_obj: Any, query_count: int) -> dict[str, Any]:
+    """
+    Capture eval_set version/fingerprint for reproducibility and drift tracking.
+    """
+    stat = eval_set_path.stat()
+    meta: dict[str, Any] = {}
+    if isinstance(eval_obj, dict) and isinstance(eval_obj.get("_meta"), dict):
+        meta = eval_obj.get("_meta", {})
+    return {
+        "path": str(eval_set_path),
+        "sha1": _file_sha1(eval_set_path),
+        "size_bytes": int(stat.st_size),
+        "modified_utc": datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc).replace(microsecond=0).isoformat(),
+        "query_count": int(query_count),
+        "meta_dataset_name": meta.get("dataset_name"),
+        "meta_doc_id": meta.get("doc_id"),
+        "meta_version": meta.get("version"),
+    }
+
+
 def is_table_metric_route(route: QueryRoute) -> bool:
     """Return True when routed intent belongs to table-metric extraction family."""
     return route.intent.startswith("table_metric_")
@@ -297,8 +366,8 @@ def extract_answer_from_table_facts(
     route: QueryRoute,
     table_facts_df: pd.DataFrame,
     candidate_pages: list[int],
-    expected_doc_id: str | None,
-) -> tuple[str | None, str | None]:
+    expected_doc_id: Optional[str],
+) -> tuple[Optional[str], Optional[str]]:
     """
     Attempt deterministic answer extraction from canonical table facts.
 
@@ -380,8 +449,8 @@ def extract_answer_from_table_facts(
 def score_answer_correctness(
     expected_answer: Any,
     answer_type: str,
-    extracted_answer: str | None,
-) -> tuple[bool | None, str]:
+    extracted_answer: Optional[str],
+) -> tuple[Optional[bool], str]:
     """
     Score extracted answer correctness independently of retrieval-stage failures.
 
@@ -734,7 +803,7 @@ def _extract_numbers(val: str) -> list[str]:
     return re.findall(r"\d+(?:\.\d+)?", str(val or ""))
 
 
-def _is_missing_extraction(extracted_answer: str | None) -> bool:
+def _is_missing_extraction(extracted_answer: Optional[str]) -> bool:
     if not extracted_answer:
         return True
     lowered = str(extracted_answer).strip().lower()
@@ -801,7 +870,7 @@ def categorize_failure_type(
     expected_answer: Any,
     answer_type: str,
     context_text: str,
-    extracted_answer: str | None,
+    extracted_answer: Optional[str],
 ) -> str:
     if not gold_exists:
         return "FP1_MISSING_CONTENT"
@@ -924,6 +993,8 @@ def main():
             "requires_expected_doc_id": True,
             "fields": ["retrieved_doc_ids_top_k", "leakage_count_top_k", "leakage_doc_ids_top_k", "leakage_rate_top_k"],
         },
+        "pipeline_settings": _collect_pipeline_settings(DATA_DIR),
+        "eval_set": _collect_eval_set_info(EVAL_SET_PATH, eval_obj, len(eval_items)),
     }
 
     results: list[dict[str, Any]] = []
@@ -948,7 +1019,7 @@ def main():
         max_entity_matches=MAX_ENTITY_MATCHES,
     )
 
-    def _extract_quarter_value(label: str, text: str, q_lower: str) -> tuple[str | None, str | None]:
+    def _extract_quarter_value(label: str, text: str, q_lower: str) -> tuple[Optional[str], Optional[str]]:
         m = re.search(
             rf"{label}\s+([\d-]+)\s+([\d-]+)\s+([\d-]+)\s+([\d-]+)",
             text,
@@ -958,7 +1029,7 @@ def main():
             return None, None
         vals = [m.group(i) for i in range(1, 5)]
 
-        def _pick(idx: int) -> str | None:
+        def _pick(idx: int) -> Optional[str]:
             return None if vals[idx] == "-" else vals[idx]
 
         if "q1" in q_lower:

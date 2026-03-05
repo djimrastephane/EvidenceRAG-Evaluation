@@ -11,9 +11,13 @@ class PreprocessConfig:
     OUT_ROOT: Path = Path(".")
     CORPUS_ID: Optional[str] = None
 
-    CHUNK_SIZE_TOKENS: int = 320
+    CHUNK_SIZE_TOKENS: int = 280
     CHUNK_OVERLAP_TOKENS: int = 90
-    SEGMENT_AWARE_CHUNKING: bool = False
+    SEGMENT_AWARE_CHUNKING: bool = True
+    WHOLE_DOC_MARKDOWN_MODE: bool = False
+    MARKDOWN_HEADER_CARRY_FORWARD: bool = True
+    MARKDOWN_TABLE_INJECTION: bool = True
+    TABLE_CHUNKING_STRATEGY: str = "baseline"
 
     TOP_STRIP_FRAC: float = 0.08
     BOTTOM_STRIP_FRAC: float = 0.08
@@ -51,6 +55,13 @@ class PreprocessConfig:
 
     OCR_MIN_ALPHA_RATIO: float = 0.3
     OCR_MIN_DIGIT_RATIO: float = 0.6
+    OCR_QUALITY_MIN_CHARS: int = 200
+    OCR_QUALITY_MIN_ALPHA_WORDS: int = 30
+    OCR_QUALITY_MAX_SYMBOL_RATIO: float = 0.35
+    OCR_QUALITY_REPEAT_TOKEN_MAX_COUNT: int = 20
+    OCR_QUALITY_REPEAT_TOKEN_MAX_LEN: int = 4
+    OCR_QUALITY_MIN_NON_EMPTY_LINES: int = 4
+    OCR_QUALITY_REJECT_MIN_FLAGS: int = 2
 
 # ============================================================================
 # ROTATION HANDLING CONFIGURATION

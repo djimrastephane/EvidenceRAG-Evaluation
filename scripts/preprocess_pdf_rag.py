@@ -94,7 +94,7 @@ from collections import Counter, defaultdict, OrderedDict
 from typing import Any, Optional
 
 try:
-    import fitz  # PyMuPDF
+    import pymupdf as fitz  # PyMuPDF
 except Exception as e:
     raise RuntimeError(
         "Failed to import PyMuPDF.\n\n"
@@ -171,7 +171,7 @@ OUT_ROOT = Path(
 CORPUS_ID: Optional[str] = None
 
 # Chunking settings (tokens if tiktoken is available)
-CHUNK_SIZE_TOKENS = 320
+CHUNK_SIZE_TOKENS = 280
 CHUNK_OVERLAP_TOKENS = 90
 
 # Header/footer removal by page coordinate strips (fractions of page height)
@@ -373,7 +373,7 @@ def make_chunk_id_global(doc_id: str, chunk_id: str) -> str:
 # =============================================================================
 # REPORT METADATA EXTRACTION (FROM COVER AND FILENAME)
 # =============================================================================
-def extract_report_year_from_filename(name: str) -> str | None:
+def extract_report_year_from_filename(name: str) -> Optional[str]:
     yrs = re.findall(r"(?:19|20)\d{2}", name)
     if len(yrs) >= 2:
         return f"{yrs[0]}-{yrs[1]}"
@@ -382,7 +382,7 @@ def extract_report_year_from_filename(name: str) -> str | None:
     return None
 
 
-def extract_year_range_from_text(text: str) -> str | None:
+def extract_year_range_from_text(text: str) -> Optional[str]:
     t = normalize_line(text).replace("–", "-").replace("—", "-")
 
     m = re.search(r"\b((?:19|20)\d{2})\s*[-/]\s*(\d{2})\b", t)
@@ -403,7 +403,7 @@ def extract_year_range_from_text(text: str) -> str | None:
     return None
 
 
-def extract_period_end_date(text: str) -> str | None:
+def extract_period_end_date(text: str) -> Optional[str]:
     t = normalize_line(text)
     m = re.search(
         r"\bperiod\s+ended\s+(\d{1,2})\s+([A-Za-z]+)\s+((?:19|20)\d{2})\b",
@@ -475,7 +475,7 @@ def dehyphenate_lines(lines: list[str]) -> list[str]:
     return out
 
 
-def is_part_label(line: str) -> str | None:
+def is_part_label(line: str) -> Optional[str]:
     if re.search(r"\bPart\s+A\b", line, flags=re.IGNORECASE):
         return "Part A"
     if re.search(r"\bPart\s+B\b", line, flags=re.IGNORECASE):
@@ -816,7 +816,7 @@ def extract_page_struct_pdfplumber(pl_page) -> dict:
 
     grouped: list[list[dict]] = []
     cur: list[dict] = []
-    cur_y: float | None = None
+    cur_y: Optional[float] = None
 
     for w in words_sorted:
         y = float(w.get("top", 0.0))
