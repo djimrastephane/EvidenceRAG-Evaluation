@@ -25,6 +25,8 @@ python scripts/retrieve.py --config configs/thesis_rag.yaml --chunk-metadata-pat
 python scripts/evaluate.py --config configs/thesis_rag.yaml --dense-hits-path runs/<retrieve_run>/dense_page_hits.jsonl --sparse-hits-path runs/<retrieve_run>/bm25_page_hits.jsonl --hybrid-hits-path runs/<retrieve_run>/hybrid_page_hits.jsonl --query-set-path data/eval_set.json
 ```
 
+Embedding normalization is pipeline-controlled rather than model-controlled. When `embedding.apply_l2_normalization: true`, the pipeline applies an explicit row-wise L2 normalization step after raw embeddings are produced by `all-MiniLM-L6-v2`; this normalization is not performed by MiniLM itself.
+
 The scripts are designed for reproducible, page-accurate retrieval on large reports (e.g., NHS annual reports).
 
 Parity status against the legacy pipeline has been checked on a fixed benchmark subset for `Grampian-2022-2023`.

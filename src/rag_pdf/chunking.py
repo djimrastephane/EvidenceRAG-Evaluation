@@ -1,6 +1,12 @@
 from __future__ import annotations
 import re
+import functools
 from dataclasses import dataclass
+
+@functools.lru_cache(maxsize=256)
+def _compile_cached(pattern: str) -> re.Pattern:
+    return re.compile(pattern)
+
 
 try:
     import tiktoken  # type: ignore
@@ -148,10 +154,10 @@ def split_text_for_segment_aware_chunking_with_patterns(
     if not lines:
         return [SegmentBlock(title="segment_000", text=t, boundary_type="CONTINUATION", segment_has_search_hit=False)]
 
-    boundary_matchers = [re.compile(patt) for patt in boundary_match_patterns]
-    boundary_searchers = [re.compile(patt) for patt in boundary_search_patterns]
-    insert_matchers = [re.compile(patt) for patt in insert_patterns]
-    uppercase_heading = re.compile(uppercase_heading_pattern)
+    boundary_matchers = [_compile_cached(patt) for patt in boundary_match_patterns]
+    boundary_searchers = [_compile_cached(patt) for patt in boundary_search_patterns]
+    insert_matchers = [_compile_cached(patt) for patt in insert_patterns]
+    uppercase_heading = _compile_cached(uppercase_heading_pattern)
 
     segments: list[SegmentBlock] = []
     cur_title = "segment_000"

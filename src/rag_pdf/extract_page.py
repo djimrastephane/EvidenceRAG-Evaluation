@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Optional
 import os
+import shutil
 
 try:
     import pymupdf as fitz  # PyMuPDF
@@ -77,11 +78,11 @@ def extract_page_with_ocr(pdf_path: str, page_index: int, rotation_deg: int = 0)
         return ""
 
     try:
-        if os.path.exists("/opt/homebrew/bin/tesseract"):
-            pytesseract.pytesseract.tesseract_cmd = "/opt/homebrew/bin/tesseract"
-        poppler_path = None
-        if os.path.exists("/opt/homebrew/bin/pdftoppm"):
-            poppler_path = "/opt/homebrew/bin"
+        tesseract_bin = shutil.which("tesseract")
+        if tesseract_bin:
+            pytesseract.pytesseract.tesseract_cmd = tesseract_bin
+        pdftoppm_bin = shutil.which("pdftoppm")
+        poppler_path = os.path.dirname(pdftoppm_bin) if pdftoppm_bin else None
         images = convert_from_path(
             pdf_path,
             first_page=page_index + 1,
@@ -361,14 +362,17 @@ def extract_page_struct_hybrid(
 
         x0 = page_width * 0.1 if page_width > 0 else 0.0
         x1 = page_width * 0.9 if page_width > 0 else 0.0
-        y0 = page_height * 0.5 if page_height > 0 else 0.0
-        y1 = y0
+
+        raw_lines = [normalize_line(ln) for ln in ocr_text.splitlines()]
+        non_empty = [ln for ln in raw_lines if ln]
+        n_lines = max(len(non_empty), 1)
+        line_height = (page_height * 0.9) / n_lines if page_height > 0 else 12.0
+        y_start = page_height * 0.05 if page_height > 0 else 0.0
 
         lines_all: list[dict] = []
-        for line in ocr_text.splitlines():
-            norm = normalize_line(line)
-            if not norm:
-                continue
+        for i, norm in enumerate(non_empty):
+            y0 = y_start + i * line_height
+            y1 = y0 + line_height
             lines_all.append({
                 "text": norm,
                 "x0": x0,
