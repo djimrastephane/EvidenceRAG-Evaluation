@@ -1,0 +1,94 @@
+<svg width="1800" height="1200" viewBox="0 0 1800 1200" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Inside the Thesis RAG Pipeline</title>
+  <desc id="desc">Infographic showing the main stages of the thesis retrieval pipeline from PDF reports to grounded answers.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="10" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#6B7280"/>
+    </marker>
+    <style>
+      .bg { fill: #F7F8FA; }
+      .panel { fill: #FFFFFF; stroke: #D6D9DE; stroke-width: 2; }
+      .line { stroke: #6B7280; stroke-width: 5; fill: none; marker-end: url(#arrow); }
+      .title { font: 700 66px 'Arial', sans-serif; fill: #111827; }
+      .subtitle { font: 400 34px 'Arial', sans-serif; fill: #374151; }
+      .boxText { font: 700 28px 'Arial', sans-serif; fill: #1F2937; text-anchor: middle; }
+      .boxSub { font: 400 24px 'Arial', sans-serif; fill: #374151; text-anchor: middle; }
+      .bulletHead { font: 700 25px 'Arial', sans-serif; fill: #111827; }
+      .bulletBody { font: 400 22px 'Arial', sans-serif; fill: #2F3A49; }
+      .footer { font: 400 24px 'Arial', sans-serif; fill: #4B5563; }
+      .label { font: 700 24px 'Arial', sans-serif; fill: #1F2937; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="8" y="8" width="1784" height="1184" rx="42"/>
+
+  <text class="title" x="84" y="120">Inside the Thesis RAG Pipeline</text>
+  <text class="subtitle" x="84" y="172">How the system turns NHS PDF reports into grounded,</text>
+  <text class="subtitle" x="84" y="208">page-level evidence</text>
+
+  <rect class="panel" x="40" y="220" width="500" height="760" rx="26"/>
+  <rect x="96" y="774" width="250" height="92" rx="18" fill="#E8EAED" stroke="#B8BEC8" stroke-width="2"/>
+  <text class="boxText" x="221" y="820">Raw PDF Reports</text>
+  <text class="boxSub" x="221" y="850">annual accounts,</text>
+  <text class="boxSub" x="221" y="878">mixed layouts</text>
+
+  <rect x="78" y="640" width="286" height="88" rx="18" fill="#F8E7B6" stroke="#CFB76B" stroke-width="2"/>
+  <text class="boxText" x="221" y="684">Page Extraction</text>
+  <text class="boxSub" x="221" y="714">text, tables,</text>
+  <text class="boxSub" x="221" y="742">OCR fallback</text>
+
+  <rect x="66" y="500" width="310" height="94" rx="18" fill="#D8EAD4" stroke="#8FB786" stroke-width="2"/>
+  <text class="boxText" x="221" y="546">Chunking + Metadata</text>
+  <text class="boxSub" x="221" y="576">pages, sections,</text>
+  <text class="boxSub" x="221" y="604">table flags</text>
+
+  <rect x="44" y="320" width="354" height="126" rx="26" fill="#C8D6EE" stroke="#8FA5C8" stroke-width="2"/>
+  <text class="boxText" x="221" y="374">Indexing Layer</text>
+  <text class="boxSub" x="221" y="408">MiniLM embeddings + FAISS</text>
+  <text class="boxSub" x="221" y="438">BM25 lexical representation</text>
+
+  <line class="line" x1="221" y1="774" x2="221" y2="728"/>
+  <line class="line" x1="221" y1="640" x2="221" y2="594"/>
+  <line class="line" x1="221" y1="500" x2="221" y2="446"/>
+  <path class="line" d="M221 320 L221 250 L650 250"/>
+
+  <rect x="100" y="916" width="240" height="54" rx="14" fill="#EEF2F7"/>
+  <text class="label" x="220" y="952">Offline Document Processing</text>
+
+  <g transform="translate(620,236)">
+    <text class="bulletHead" x="0" y="0">• From PDF to Searchable Evidence:</text>
+    <text class="bulletBody" x="18" y="38">Pages are extracted, cleaned, and routed into</text>
+    <text class="bulletBody" x="18" y="68">text and table-aware chunks that retain page,</text>
+    <text class="bulletBody" x="18" y="98">section, and structure metadata.</text>
+
+    <text class="bulletHead" x="0" y="186">• Dual Retrieval Signals:</text>
+    <text class="bulletBody" x="18" y="220">MiniLM supports dense semantic search, while BM25</text>
+    <text class="bulletBody" x="18" y="250">preserves exact lexical cues such as accounting</text>
+    <text class="bulletBody" x="18" y="280">terms, statutory labels, and table wording.</text>
+
+    <text class="bulletHead" x="0" y="370">• Query-Time Ranking:</text>
+    <text class="bulletBody" x="18" y="404">At query time, FAISS returns semantically similar</text>
+    <text class="bulletBody" x="18" y="434">chunks, BM25 scores token overlap, and Reciprocal</text>
+    <text class="bulletBody" x="18" y="464">Rank Fusion combines both into one evidence list.</text>
+
+    <text class="bulletHead" x="0" y="554">• Answering with Page Traceability:</text>
+    <text class="bulletBody" x="18" y="582">Top-ranked chunks are passed forward with page</text>
+    <text class="bulletBody" x="18" y="612">references so downstream extraction or generation</text>
+    <text class="bulletBody" x="18" y="642">answers from retrieved evidence.</text>
+  </g>
+
+  <g transform="translate(840,850)">
+    <rect x="0" y="0" width="140" height="58" rx="14" fill="#D8EAD4"/>
+    <rect x="484" y="0" width="140" height="58" rx="14" fill="#C8D6EE"/>
+    <text class="label" x="70" y="38">Question</text>
+    <text class="label" x="554" y="38">Answer</text>
+    <text x="156" y="76" style="font: 400 26px 'Arial', sans-serif; fill: #111827;">What was the capital limit?</text>
+    <rect x="256" y="18" width="76" height="76" rx="14" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="2"/>
+    <text x="294" y="67" style="font: 700 48px 'Arial', sans-serif; fill: #4B5563; text-anchor: middle;">⇄</text>
+    <path class="line" d="M340 55 L428 55"/>
+    <text x="594" y="76" style="font: 400 25px 'Arial', sans-serif; fill: #111827;">£86,909 on page 28</text>
+  </g>
+
+  <text class="footer" x="82" y="1102">Figure concept: document-side stages are prepared offline; query-time retrieval fuses dense and lexical evidence.</text>
+  <text class="footer" x="82" y="1138">This mirrors the thesis pipeline: preprocessing, indexing, hybrid retrieval, and page-level evidence attribution.</text>
+</svg>

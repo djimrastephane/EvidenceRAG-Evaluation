@@ -57,6 +57,7 @@ def validate_text_quality():
 
     # Check alphabetic ratio
     def alpha_ratio(text):
+        """Return the fraction of alphabetic characters in text, or 0 for empty input."""
         if not text:
             return 0
         alpha = sum(c.isalpha() for c in text)

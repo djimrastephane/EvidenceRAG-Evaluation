@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">Horizontal page-level hybrid retrieval figure</title>
+  <desc id="desc">A compact horizontal thesis figure showing BM25 and dense FAISS page rankings, weighted reciprocal rank fusion, and the final page rank under competition.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#111"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .frame { fill: #fff; stroke: #111; stroke-width: 2; }
+      .box { fill: #f3f3f3; stroke: #111; stroke-width: 1.3; rx: 6; ry: 6; }
+      .highlight { fill: #ececec; stroke: #111; stroke-width: 1.8; rx: 6; ry: 6; }
+      .correct { fill: #ededed; stroke: #111; stroke-width: 2.6; rx: 6; ry: 6; }
+      .title { font: 700 24px Georgia, "Times New Roman", serif; fill: #111; }
+      .formula { font: italic 22px Georgia, "Times New Roman", serif; fill: #111; }
+      .panelhead { font: 700 20px Georgia, "Times New Roman", serif; fill: #111; }
+      .label { font: 700 16px Arial, Helvetica, sans-serif; fill: #111; }
+      .small { font: 400 13px Arial, Helvetica, sans-serif; fill: #444; }
+      .mono { font: 700 18px "Courier New", Courier, monospace; fill: #111; }
+      .score { font: 400 17px "Courier New", Courier, monospace; fill: #111; }
+      .caption { font: 400 14px Georgia, "Times New Roman", serif; fill: #222; }
+      .arrow { stroke: #111; stroke-width: 2.6; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1280" height="760"/>
+
+  <text class="title" x="640" y="38" text-anchor="middle">Page-Level Hybrid Retrieval Used in the Thesis Pipeline</text>
+  <text class="formula" x="640" y="72" text-anchor="middle">RRF_score(p) = w_dense / (k + r_dense(p)) + w_bm25 / (k + r_bm25(p))</text>
+  <text class="small" x="640" y="92" text-anchor="middle">k = 20, w_dense = 0.5, w_bm25 = 2.0</text>
+  <text class="small" x="640" y="110" text-anchor="middle">Here, k + r_dense(p) = 20 + dense rank and k + r_bm25(p) = 20 + BM25 rank.</text>
+
+  <rect class="frame" x="40" y="138" width="390" height="420" rx="12" ry="12"/>
+  <text class="panelhead" x="235" y="170" text-anchor="middle">Page Candidates</text>
+  <text class="label" x="145" y="198" text-anchor="middle">BM25</text>
+  <text class="label" x="325" y="198" text-anchor="middle">Dense FAISS</text>
+  <text class="small" x="145" y="216" text-anchor="middle">lexical page rank</text>
+  <text class="small" x="325" y="216" text-anchor="middle">MiniLM page rank</text>
+
+  <rect class="correct" x="70" y="244" width="150" height="30"/>
+  <text class="mono" x="145" y="265" text-anchor="middle">page 28</text>
+  <text class="small" x="145" y="286" text-anchor="middle">correct evidence page</text>
+
+  <rect class="highlight" x="70" y="314" width="150" height="30"/>
+  <text class="mono" x="145" y="335" text-anchor="middle">page 31</text>
+  <text class="small" x="145" y="356" text-anchor="middle">financial summary, competing page</text>
+
+  <rect class="box" x="70" y="384" width="150" height="30"/>
+  <text class="mono" x="145" y="405" text-anchor="middle">page 29</text>
+
+  <rect class="highlight" x="250" y="244" width="150" height="30"/>
+  <text class="mono" x="325" y="265" text-anchor="middle">page 44</text>
+  <text class="small" x="325" y="286" text-anchor="middle">semantically similar, wrong year</text>
+
+  <rect class="correct" x="250" y="314" width="150" height="30"/>
+  <text class="mono" x="325" y="335" text-anchor="middle">page 28</text>
+  <text class="small" x="325" y="356" text-anchor="middle">ranked by both methods</text>
+
+  <rect class="box" x="250" y="384" width="150" height="30"/>
+  <text class="mono" x="325" y="405" text-anchor="middle">page 29</text>
+
+  <path class="arrow" d="M 448 348 L 520 348"/>
+
+  <rect class="frame" x="530" y="138" width="470" height="420" rx="12" ry="12"/>
+  <text class="panelhead" x="765" y="170" text-anchor="middle">Weighted Reciprocal Rank Fusion</text>
+  <text class="small" x="765" y="194" text-anchor="middle">Competition is explicit: page 44 is ranked only by dense retrieval, while page 31 is ranked only by BM25.</text>
+
+  <rect class="correct" x="565" y="246" width="140" height="34"/>
+  <text class="mono" x="635" y="269" text-anchor="middle">page 28</text>
+  <text class="score" x="735" y="269">0.5/22 + 2.0/21 = 0.1179</text>
+
+  <rect class="box" x="565" y="296" width="140" height="34"/>
+  <text class="mono" x="635" y="319" text-anchor="middle">page 29</text>
+  <text class="score" x="735" y="319">0.5/23 + 2.0/23 = 0.1087</text>
+
+  <rect class="highlight" x="565" y="346" width="140" height="34"/>
+  <text class="mono" x="635" y="369" text-anchor="middle">page 31</text>
+  <text class="score" x="735" y="369">0.0 + 2.0/22 = 0.0909</text>
+
+  <rect class="highlight" x="565" y="396" width="140" height="34"/>
+  <text class="mono" x="635" y="419" text-anchor="middle">page 44</text>
+  <text class="score" x="735" y="419">0.5/21 + 0.0 = 0.0238</text>
+
+  <path class="arrow" d="M 1018 348 L 1080 348"/>
+
+  <rect class="frame" x="1090" y="220" width="150" height="256" rx="12" ry="12"/>
+  <text class="panelhead" x="1165" y="252" text-anchor="middle">Final Rank</text>
+  <text class="small" x="1165" y="272" text-anchor="middle">pages kept</text>
+
+  <rect class="correct" x="1110" y="300" width="110" height="30"/>
+  <text class="mono" x="1165" y="321" text-anchor="middle">page 28</text>
+
+  <rect class="box" x="1110" y="342" width="110" height="30"/>
+  <text class="mono" x="1165" y="363" text-anchor="middle">page 29</text>
+
+  <rect class="highlight" x="1110" y="384" width="110" height="30"/>
+  <text class="mono" x="1165" y="405" text-anchor="middle">page 31</text>
+
+  <text class="caption" x="640" y="706" text-anchor="middle">Page-level hybrid retrieval using weighted reciprocal rank fusion (RRF). BM25 and dense retrieval produce competing candidate rankings,</text>
+  <text class="caption" x="640" y="724" text-anchor="middle">including semantically similar but incorrect pages and lexically similar alternatives. The fusion step combines these signals, favouring</text>
+  <text class="caption" x="640" y="742" text-anchor="middle">pages ranked across both methods and improving ranking stability under competition.</text>
+</svg>

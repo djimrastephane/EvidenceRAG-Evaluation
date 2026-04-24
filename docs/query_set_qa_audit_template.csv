@@ -1,0 +1,2 @@
+query_id,issue_found,issue_type,question_clear,evidence_supported,expected_pages_correct,expected_answer_correct,answer_type_correct,section_subsection_correct,evidence_layout_correct,difficulty_correct,paraphrase_equivalent,numeric_units_correct,notes,original_value,corrected_value,review_status,reviewer,review_date
+Q_EXAMPLE_001,no,,yes,yes,yes,yes,yes,yes,yes,yes,,yes,"Example row; replace with real audit entry",,,pending,,

@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="860" viewBox="0 0 1400 860" role="img" aria-labelledby="title desc">
+  <title id="title">Hybrid retrieval and weighted RRF fusion in the thesis pipeline</title>
+  <desc id="desc">A figure showing BM25 and dense FAISS retrieval lists, weighted reciprocal rank fusion with k equals 20, and the final hybrid ranking with optional reranking.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#222"/>
+    </marker>
+    <style>
+      .bg { fill: #ffffff; }
+      .title { font: 700 28px Georgia, "Times New Roman", serif; fill: #111; }
+      .subtitle { font: 400 16px Georgia, "Times New Roman", serif; fill: #333; }
+      .formula { font: italic 28px Georgia, "Times New Roman", serif; fill: #111; }
+      .panel { fill: #fffdfa; stroke: #cc3b2f; stroke-width: 2.4; }
+      .panel-soft { fill: #fcfcfc; stroke: #7b7b7b; stroke-width: 1.5; stroke-dasharray: 8 6; }
+      .list-box { fill: #f5f5f5; stroke: #222; stroke-width: 1.6; rx: 8; ry: 8; }
+      .small-box { fill: #f5f5f5; stroke: #222; stroke-width: 1.4; rx: 6; ry: 6; }
+      .head { font: 700 18px "Helvetica Neue", Helvetica, Arial, sans-serif; fill: #111; }
+      .label { font: 600 15px "Helvetica Neue", Helvetica, Arial, sans-serif; fill: #222; }
+      .mono { font: 600 15px "Courier New", Courier, monospace; fill: #111; }
+      .score { font: italic 15px "Courier New", Courier, monospace; fill: #111; }
+      .caption { font: 400 15px Georgia, "Times New Roman", serif; fill: #222; }
+      .foot { font: 400 14px Georgia, "Times New Roman", serif; fill: #333; }
+      .tiny { font: 400 13px "Helvetica Neue", Helvetica, Arial, sans-serif; fill: #444; }
+      .arrow { stroke: #222; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1400" height="860"/>
+
+  <text class="formula" x="700" y="62" text-anchor="middle">
+    RRFscore(d) = 0.5 / (20 + r_dense(d)) + 2.0 / (20 + r_bm25(d))
+  </text>
+  <text class="subtitle" x="700" y="96" text-anchor="middle">
+    Current thesis pipeline: dense MiniLM retrieval over FAISS IndexFlatIP plus BM25 lexical retrieval, fused by weighted reciprocal rank fusion.
+  </text>
+
+  <rect class="panel" x="48" y="150" width="460" height="300" rx="14" ry="14"/>
+  <text class="head" x="278" y="184" text-anchor="middle">Parallel Candidate Retrieval</text>
+
+  <text class="label" x="152" y="214" text-anchor="middle">BM25</text>
+  <text class="tiny" x="152" y="234" text-anchor="middle">lexical rank list</text>
+  <text class="label" x="390" y="214" text-anchor="middle">MiniLM + FAISS IndexFlatIP</text>
+  <text class="tiny" x="390" y="234" text-anchor="middle">dense rank list</text>
+
+  <rect class="list-box" x="70" y="254" width="165" height="36"/>
+  <text class="mono" x="152" y="278" text-anchor="middle">chunk 2</text>
+  <rect class="list-box" x="70" y="296" width="165" height="36"/>
+  <text class="mono" x="152" y="320" text-anchor="middle">chunk 4</text>
+  <rect class="list-box" x="70" y="338" width="165" height="36"/>
+  <text class="mono" x="152" y="362" text-anchor="middle">chunk 3</text>
+  <rect class="list-box" x="70" y="380" width="165" height="36"/>
+  <text class="mono" x="152" y="404" text-anchor="middle">chunk 1</text>
+
+  <rect class="list-box" x="308" y="254" width="165" height="36"/>
+  <text class="mono" x="390" y="278" text-anchor="middle">chunk 1</text>
+  <rect class="list-box" x="308" y="296" width="165" height="36"/>
+  <text class="mono" x="390" y="320" text-anchor="middle">chunk 2</text>
+  <rect class="list-box" x="308" y="338" width="165" height="36"/>
+  <text class="mono" x="390" y="362" text-anchor="middle">chunk 3</text>
+  <rect class="list-box" x="308" y="380" width="165" height="36"/>
+  <text class="mono" x="390" y="404" text-anchor="middle">chunk 4</text>
+
+  <path class="arrow" d="M 520 300 L 592 300"/>
+
+  <rect class="panel" x="600" y="150" width="430" height="300" rx="14" ry="14"/>
+  <text class="head" x="815" y="184" text-anchor="middle">Weighted RRF Score</text>
+  <text class="tiny" x="815" y="208" text-anchor="middle">k = 20, dense weight = 0.5, BM25 weight = 2.0</text>
+
+  <rect class="small-box" x="626" y="248" width="155" height="36"/>
+  <text class="mono" x="704" y="272" text-anchor="middle">chunk 1</text>
+  <text class="score" x="804" y="272">0.5/21 + 2.0/24 = 0.1071</text>
+
+  <rect class="small-box" x="626" y="292" width="155" height="36"/>
+  <text class="mono" x="704" y="316" text-anchor="middle">chunk 2</text>
+  <text class="score" x="804" y="316">0.5/22 + 2.0/21 = 0.1179</text>
+
+  <rect class="small-box" x="626" y="336" width="155" height="36"/>
+  <text class="mono" x="704" y="360" text-anchor="middle">chunk 3</text>
+  <text class="score" x="804" y="360">0.5/23 + 2.0/23 = 0.1087</text>
+
+  <rect class="small-box" x="626" y="380" width="155" height="36"/>
+  <text class="mono" x="704" y="404" text-anchor="middle">chunk 4</text>
+  <text class="score" x="804" y="404">0.5/24 + 2.0/22 = 0.1117</text>
+
+  <path class="arrow" d="M 1042 300 L 1110 300"/>
+
+  <rect class="panel" x="1118" y="150" width="234" height="300" rx="14" ry="14"/>
+  <text class="head" x="1235" y="184" text-anchor="middle">Hybrid Rank</text>
+  <text class="tiny" x="1235" y="208" text-anchor="middle">fused output before optional rerank</text>
+
+  <rect class="list-box" x="1142" y="254" width="186" height="36"/>
+  <text class="mono" x="1235" y="278" text-anchor="middle">chunk 2</text>
+  <rect class="list-box" x="1142" y="296" width="186" height="36"/>
+  <text class="mono" x="1235" y="320" text-anchor="middle">chunk 4</text>
+  <rect class="list-box" x="1142" y="338" width="186" height="36"/>
+  <text class="mono" x="1235" y="362" text-anchor="middle">chunk 3</text>
+  <rect class="list-box" x="1142" y="380" width="186" height="36"/>
+  <text class="mono" x="1235" y="404" text-anchor="middle">chunk 1</text>
+
+  <text class="caption" x="700" y="508" text-anchor="middle">
+    Figure X: Hybrid retrieval in the thesis pipeline. BM25 and dense FAISS retrieval produce separate ranked chunk lists;
+  </text>
+  <text class="caption" x="700" y="531" text-anchor="middle">
+    weighted reciprocal rank fusion combines them, with BM25 given higher weight than dense retrieval in the tuned default configuration.
+  </text>
+
+  <rect class="panel-soft" x="362" y="592" width="676" height="184" rx="14" ry="14"/>
+  <text class="head" x="700" y="625" text-anchor="middle">What Happens Next in the Actual Service Path</text>
+
+  <rect class="small-box" x="396" y="654" width="188" height="42"/>
+  <text class="label" x="490" y="679" text-anchor="middle">optional cross-encoder rerank</text>
+  <rect class="small-box" x="606" y="654" width="188" height="42"/>
+  <text class="label" x="700" y="679" text-anchor="middle">heuristic boosts</text>
+  <rect class="small-box" x="816" y="654" width="188" height="42"/>
+  <text class="label" x="910" y="679" text-anchor="middle">final top-k chunks</text>
+
+  <path class="arrow" d="M 584 675 L 606 675"/>
+  <path class="arrow" d="M 794 675 L 816 675"/>
+
+  <text class="tiny" x="490" y="716" text-anchor="middle">enabled only when configured</text>
+  <text class="tiny" x="700" y="716" text-anchor="middle">table, overlap, numeric, subsection, segment-hit</text>
+  <text class="tiny" x="910" y="716" text-anchor="middle">returned with page numbers, sections, scores</text>
+
+  <text class="foot" x="80" y="812">
+    Notes: dense retrieval uses L2-normalized MiniLM embeddings in FAISS IndexFlatIP, which makes inner-product search approximate cosine similarity.
+  </text>
+  <text class="foot" x="80" y="834">
+    Defaults taken from the current code path: [RRF_K = 20, dense weight = 0.5, BM25 weight = 2.0] in src/rag_pdf/services/search_service.py.
+  </text>
+</svg>

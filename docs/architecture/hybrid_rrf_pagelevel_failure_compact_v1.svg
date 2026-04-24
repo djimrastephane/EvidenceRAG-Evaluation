@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="980" viewBox="0 0 1000 980" role="img" aria-labelledby="title desc">
+  <title id="title">Corpus-backed page-level hybrid retrieval failure figure</title>
+  <desc id="desc">An audited FP2 retrieval case from the Grampian-2024-2025 corpus for query Q_2025_FIN_02, where weighted reciprocal rank fusion preserves page 29 above the gold page 28.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#111"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .frame { fill: #fff; stroke: #111; stroke-width: 2; }
+      .box { fill: #f3f3f3; stroke: #111; stroke-width: 1.4; rx: 6; ry: 6; }
+      .highlight { fill: #ececec; stroke: #111; stroke-width: 1.8; rx: 6; ry: 6; }
+      .correct { fill: #ededed; stroke: #111; stroke-width: 2.8; rx: 6; ry: 6; }
+      .wrong { fill: #e8e8e8; stroke: #111; stroke-width: 2.4; rx: 6; ry: 6; }
+      .winner { fill: #dcdcdc; stroke: #111; stroke-width: 4.2; rx: 6; ry: 6; }
+      .winner-tag { font: 700 10px Arial, Helvetica, sans-serif; fill: #111; }
+      .goldpage { fill: #dcebdc; stroke: #1f5f3a; stroke-width: 3.4; rx: 6; ry: 6; }
+      .title { font: 700 24px Georgia, "Times New Roman", serif; fill: #111; }
+      .formula { font: italic 23px Georgia, "Times New Roman", serif; fill: #111; }
+      .panelhead { font: 700 20px Georgia, "Times New Roman", serif; fill: #111; }
+      .label { font: 700 16px Arial, Helvetica, sans-serif; fill: #111; }
+      .small { font: 400 13px Arial, Helvetica, sans-serif; fill: #444; }
+      .query { font: 700 14px Arial, Helvetica, sans-serif; fill: #111; }
+      .mono { font: 700 18px "Courier New", Courier, monospace; fill: #111; }
+      .score { font: 400 17px "Courier New", Courier, monospace; fill: #111; }
+      .caption { font: 400 14px Georgia, "Times New Roman", serif; fill: #222; }
+      .arrow { stroke: #111; stroke-width: 2.6; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1000" height="980"/>
+
+  <text class="title" x="500" y="42" text-anchor="middle">Audited FP2 Case: Gold Page Retrieved but Ranked Second</text>
+  <text class="formula" x="500" y="78" text-anchor="middle">RRF_score(p) = w_dense / (k + r_dense(p)) + w_bm25 / (k + r_bm25(p))</text>
+  <text class="small" x="500" y="100" text-anchor="middle">k = 20, w_dense = 0.5, w_bm25 = 2.0</text>
+  <text class="query" x="500" y="118" text-anchor="middle">Query Q_2025_FIN_02, Grampian-2024-2025: "How much did NHS Grampian actually spend against its core resource budget in 2024/25?"</text>
+
+  <rect class="frame" x="70" y="136" width="860" height="268" rx="12" ry="12"/>
+  <text class="panelhead" x="500" y="169" text-anchor="middle">Page Candidates</text>
+  <text class="label" x="270" y="201" text-anchor="middle">BM25</text>
+  <text class="label" x="730" y="201" text-anchor="middle">Dense FAISS</text>
+  <text class="small" x="270" y="220" text-anchor="middle">lexical page rank</text>
+  <text class="small" x="730" y="220" text-anchor="middle">MiniLM page rank</text>
+
+  <rect class="wrong" x="180" y="244" width="180" height="30"/>
+  <text class="mono" x="270" y="265" text-anchor="middle">page 29</text>
+  <text class="small" x="270" y="289" text-anchor="middle">in-year out-turn memorandum and deficit summary</text>
+  <rect class="goldpage" x="180" y="304" width="180" height="30"/>
+  <text class="mono" x="270" y="325" text-anchor="middle">page 28</text>
+  <text class="small" x="270" y="349" text-anchor="middle">gold page with statutory financial targets table</text>
+  <rect class="box" x="180" y="364" width="180" height="30"/>
+  <text class="mono" x="270" y="385" text-anchor="middle">page 30</text>
+  <text class="small" x="270" y="409" text-anchor="middle">overspend narrative and recovery context</text>
+
+  <rect class="wrong" x="640" y="244" width="180" height="30"/>
+  <text class="mono" x="730" y="265" text-anchor="middle">page 29</text>
+  <text class="small" x="730" y="289" text-anchor="middle">same near-miss page also ranked first by dense search</text>
+  <rect class="goldpage" x="640" y="304" width="180" height="30"/>
+  <text class="mono" x="730" y="325" text-anchor="middle">page 28</text>
+  <text class="small" x="730" y="349" text-anchor="middle">gold page ranked second at page level</text>
+  <rect class="correct" x="640" y="364" width="180" height="30"/>
+  <text class="mono" x="730" y="385" text-anchor="middle">page 30</text>
+  <text class="small" x="730" y="409" text-anchor="middle">related financial narrative ranked third</text>
+
+  <path class="arrow" d="M 500 430 L 500 480"/>
+
+  <rect class="frame" x="110" y="490" width="780" height="304" rx="12" ry="12"/>
+  <text class="panelhead" x="500" y="524" text-anchor="middle">Weighted Reciprocal Rank Fusion</text>
+  <text class="small" x="500" y="545" text-anchor="middle">Dense and BM25 agree on the same near-miss page, so RRF preserves that ordering instead of promoting the gold page.</text>
+
+  <rect class="wrong" x="145" y="580" width="150" height="34"/>
+  <text class="mono" x="220" y="603" text-anchor="middle">page 29</text>
+  <text class="score" x="335" y="603">0.5/21 + 2.0/21 = 0.1190</text>
+
+  <rect class="goldpage" x="145" y="628" width="150" height="34"/>
+  <text class="mono" x="220" y="651" text-anchor="middle">page 28</text>
+  <text class="score" x="335" y="651">0.5/22 + 2.0/22 = 0.1136</text>
+
+  <rect class="highlight" x="145" y="676" width="150" height="34"/>
+  <text class="mono" x="220" y="699" text-anchor="middle">page 30</text>
+  <text class="score" x="335" y="699">0.5/23 + 2.0/23 = 0.1087</text>
+
+  <path class="arrow" d="M 500 810 L 500 858"/>
+
+  <rect class="frame" x="300" y="874" width="400" height="84" rx="12" ry="12"/>
+  <text class="panelhead" x="500" y="906" text-anchor="middle">Final Page Rank</text>
+  <rect class="winner" x="390" y="922" width="220" height="24"/>
+  <text class="winner-tag" x="426" y="938" text-anchor="middle">WINNER</text>
+  <text class="mono" x="500" y="939" text-anchor="middle">page 29</text>
+
+  <text class="caption" x="500" y="958" text-anchor="middle">Audited corpus-backed FP2 retrieval case from data_processed/Grampian-2024-2025 for query Q_2025_FIN_02.</text>
+  <text class="caption" x="500" y="976" text-anchor="middle">The gold page 28 is present in both branches, but page 29 ranks first in both, so weighted RRF keeps the near-miss at the top.</text>
+</svg>

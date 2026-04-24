@@ -1,0 +1,98 @@
+<svg width="1800" height="1080" viewBox="0 0 1800 1080" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Thesis Retrieval Pipeline Overview</title>
+  <desc id="desc">Formal architecture diagram showing preprocessing, indexing, hybrid retrieval, and grounded answering in the thesis pipeline.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="4.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#4B5563"/>
+    </marker>
+    <style>
+      .bg { fill: #FFFFFF; }
+      .frame { fill: none; stroke: #D1D5DB; stroke-width: 2; }
+      .stage { fill: #F8FAFC; stroke: #9CA3AF; stroke-width: 2; }
+      .accentA { fill: #EEF2F7; stroke: #94A3B8; stroke-width: 2; }
+      .accentB { fill: #F3F4F6; stroke: #A8B0BB; stroke-width: 2; }
+      .arrow { stroke: #4B5563; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+      .title { font: 700 48px 'Arial', sans-serif; fill: #111827; }
+      .subtitle { font: 400 24px 'Arial', sans-serif; fill: #4B5563; }
+      .stageHead { font: 700 24px 'Arial', sans-serif; fill: #1F2937; text-anchor: middle; }
+      .stageSub { font: 400 20px 'Arial', sans-serif; fill: #4B5563; text-anchor: middle; }
+      .sectionHead { font: 700 25px 'Arial', sans-serif; fill: #111827; }
+      .body { font: 400 19px 'Arial', sans-serif; fill: #374151; }
+      .small { font: 400 17px 'Arial', sans-serif; fill: #4B5563; }
+      .label { font: 700 18px 'Arial', sans-serif; fill: #374151; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1800" height="1080"/>
+  <rect class="frame" x="34" y="34" width="1732" height="1012" rx="12"/>
+
+  <text class="title" x="84" y="110">Retrieval Pipeline Overview</text>
+  <text class="subtitle" x="84" y="148">Deterministic preprocessing, hybrid retrieval, and</text>
+  <text class="subtitle" x="84" y="180">page-grounded evidence attribution for NHS annual reports</text>
+
+  <rect class="stage accentB" x="88" y="240" width="320" height="96" rx="10"/>
+  <text class="stageHead" x="248" y="286">Source Reports</text>
+  <text class="stageSub" x="248" y="314">PDF annual accounts and</text>
+  <text class="stageSub" x="248" y="338">narrative reports</text>
+
+  <rect class="stage accentA" x="88" y="388" width="320" height="108" rx="10"/>
+  <text class="stageHead" x="248" y="432">Preprocessing</text>
+  <text class="stageSub" x="248" y="458">page extraction, OCR fallback,</text>
+  <text class="stageSub" x="248" y="482">metadata cleaning</text>
+
+  <rect class="stage accentA" x="88" y="548" width="320" height="108" rx="10"/>
+  <text class="stageHead" x="248" y="592">Chunk Construction</text>
+  <text class="stageSub" x="248" y="618">page-aware chunks with section</text>
+  <text class="stageSub" x="248" y="642">and table metadata</text>
+
+  <rect class="stage accentB" x="88" y="708" width="320" height="126" rx="10"/>
+  <text class="stageHead" x="248" y="752">Indexing</text>
+  <text class="stageSub" x="248" y="782">MiniLM embeddings and</text>
+  <text class="stageSub" x="248" y="806">FAISS vector index</text>
+  <text class="stageSub" x="248" y="830">BM25 lexical representation over chunk text</text>
+
+  <line class="arrow" x1="248" y1="336" x2="248" y2="388"/>
+  <line class="arrow" x1="248" y1="496" x2="248" y2="548"/>
+  <line class="arrow" x1="248" y1="656" x2="248" y2="708"/>
+  <path class="arrow" d="M408 771 L522 771"/>
+
+  <text class="label" x="248" y="890">Offline document-side pipeline</text>
+
+  <g transform="translate(510,232)">
+    <text class="sectionHead" x="0" y="0">Document preparation</text>
+    <text class="body" x="0" y="38">Each report is converted into page-grounded retrieval units.</text>
+    <text class="body" x="0" y="68">Chunks retain page numbers, section titles, subsection cues,</text>
+    <text class="body" x="0" y="98">and table indicators so retrieved evidence remains traceable.</text>
+
+    <text class="sectionHead" x="0" y="194">Dense and lexical indexing</text>
+    <text class="body" x="0" y="232">MiniLM embeddings support semantic search through FAISS.</text>
+    <text class="body" x="0" y="262">BM25 preserves exact lexical matches for financial terminology,</text>
+    <text class="body" x="0" y="292">statutory labels, and table wording that dense similarity may blur.</text>
+
+    <text class="sectionHead" x="0" y="396">Query-time retrieval</text>
+    <text class="body" x="0" y="434">At inference time, the query is embedded once and searched</text>
+    <text class="body" x="0" y="464">against the vector index, then scored lexically with BM25.</text>
+    <text class="body" x="0" y="494">Reciprocal Rank Fusion combines both rankings into a single</text>
+    <text class="body" x="0" y="524">evidence list for extraction or grounded generation.</text>
+
+    <text class="sectionHead" x="0" y="592">Grounded answering</text>
+    <text class="body" x="0" y="630">Answers are produced only from retrieved context.</text>
+    <text class="body" x="0" y="660">Page-level citations are preserved so outputs can be verified</text>
+    <text class="body" x="0" y="690">against the source report.</text>
+  </g>
+
+  <g transform="translate(980,724)">
+    <rect class="stage accentB" x="0" y="0" width="162" height="60" rx="10"/>
+    <rect class="stage accentA" x="256" y="0" width="214" height="60" rx="10"/>
+    <rect class="stage accentB" x="548" y="0" width="170" height="60" rx="10"/>
+    <text class="label" x="81" y="38">Question</text>
+    <text class="label" x="363" y="38">Hybrid ranking</text>
+    <text class="label" x="633" y="38">Answer + page</text>
+    <line class="arrow" x1="162" y1="30" x2="256" y2="30"/>
+    <line class="arrow" x1="470" y1="30" x2="548" y2="30"/>
+    <text class="small" x="0" y="96">Example: question → retrieve page 28 → answer with citation.</text>
+  </g>
+
+  <text class="small" x="84" y="992">The diagram reflects the thesis pipeline: preprocessing and indexing are completed offline.</text>
+  <text class="small" x="84" y="1018">Hybrid retrieval and grounded answering occur at query time.</text>
+</svg>

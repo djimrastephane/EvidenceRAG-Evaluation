@@ -1,5 +1,13 @@
 from __future__ import annotations
 
+"""CLI entrypoint for page-level retrieval evaluation.
+
+This command consumes saved retrieval outputs rather than recomputing search.
+It applies the thesis page-level evaluation protocol, writes aggregate metrics,
+per-query results, and diagnostics, and returns the run directory so the stage
+can be chained from shell scripts or examiner reproduction steps.
+"""
+
 import argparse
 import sys
 from pathlib import Path
@@ -14,6 +22,7 @@ from thesis_rag.pipeline import evaluate_retrieval
 
 
 def parse_args() -> argparse.Namespace:
+    """Parse configuration, retrieval outputs, and optional query-set override."""
     parser = argparse.ArgumentParser(description="Evaluate page-level retrieval outputs.")
     parser.add_argument("--config", required=True, help="Path to YAML config.")
     parser.add_argument("--query-set-path", default="", help="Optional override path to query set JSON.")
@@ -24,6 +33,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
+    """Run evaluation and print the created evaluation run directory."""
     args = parse_args()
     config = load_config(args.config)
     query_path = Path(args.query_set_path) if args.query_set_path else config.paths.query_set_path

@@ -1,0 +1,154 @@
+<svg width="1800" height="1200" viewBox="0 0 1800 1200" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Contextual Encoding in the NHS Annual-Report Corpus</title>
+  <desc id="desc">Conceptual illustration of how transformer-based dense retrieval encodes tokens differently depending on surrounding financial-report context.</desc>
+  <defs>
+    <style>
+      .bg { fill: #FFFFFF; }
+      .frame { fill: none; stroke: #D1D5DB; stroke-width: 2; }
+      .title { font: 700 50px 'Arial', sans-serif; fill: #111827; }
+      .subtitle { font: 400 24px 'Arial', sans-serif; fill: #4B5563; }
+      .code { font: 400 24px 'Courier New', monospace; fill: #1F2937; }
+      .code-em { font: 700 24px 'Courier New', monospace; fill: #7C2D12; }
+      .label { font: 700 22px 'Arial', sans-serif; fill: #1F2937; }
+      .body { font: 400 22px 'Arial', sans-serif; fill: #374151; }
+      .small { font: 400 18px 'Arial', sans-serif; fill: #4B5563; }
+      .panel { fill: #FAFAFA; stroke: #D1D5DB; stroke-width: 1.5; }
+      .token { font: 700 21px 'Arial', sans-serif; fill: #111827; text-anchor: middle; }
+      .token-dim { font: 700 21px 'Arial', sans-serif; fill: #374151; text-anchor: middle; }
+      .hiA { fill: #DDEAF7; }
+      .hiB { fill: #F9E4D0; }
+      .hiC { fill: #E5E7EB; }
+      .attnA { stroke: #2563EB; stroke-width: 2.6; opacity: 0.55; fill: none; }
+      .attnB { stroke: #D97706; stroke-width: 2.6; opacity: 0.55; fill: none; }
+      .attnC { stroke: #6B7280; stroke-width: 2.0; opacity: 0.45; fill: none; }
+      .caption { font: 400 20px 'Arial', sans-serif; fill: #374151; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1800" height="1200"/>
+  <rect class="frame" x="28" y="28" width="1744" height="1144" rx="12"/>
+
+  <text class="title" x="78" y="106">Contextual Encoding in the NHS Annual-Report Corpus</text>
+  <text class="subtitle" x="78" y="146">Conceptual illustration of why dense retrieval can separate similar financial phrases by context, while still producing near-miss rankings in repeated report structures.</text>
+
+  <rect class="panel" x="78" y="194" width="1644" height="172" rx="10"/>
+  <text class="code" x="108" y="242">sentence_a = "</text>
+  <text class="code-em" x="312" y="242">core revenue resource limit</text>
+  <text class="code" x="694" y="242"> was set for ongoing activity"</text>
+  <text class="code" x="108" y="286">sentence_b = "</text>
+  <text class="code-em" x="312" y="286">capital resource limit</text>
+  <text class="code" x="637" y="286"> was set for infrastructure investment"</text>
+  <text class="code" x="108" y="330">model = MiniLM(..., contextual embeddings)</text>
+  <text class="small" x="108" y="356">Illustrative corpus-specific example: the repeated token “limit” should be represented differently when surrounded by revenue versus capital terminology.</text>
+
+  <text class="label" x="78" y="430">Example attention views (conceptual)</text>
+
+  <!-- Panel A -->
+  <g transform="translate(78,460)">
+    <rect class="panel" x="0" y="0" width="520" height="560" rx="10"/>
+    <text class="label" x="24" y="36">(a) Revenue-oriented context</text>
+    <text class="small" x="24" y="64">Dense encoding emphasises the “core / revenue / ongoing activity” context around “limit”.</text>
+
+    <rect class="hiA" x="40" y="124" width="172" height="34" rx="6"/>
+    <rect class="hiA" x="310" y="124" width="172" height="34" rx="6"/>
+
+    <text class="token-dim" x="126" y="116">[CLS]</text>
+    <text class="token" x="126" y="148">core</text>
+    <text class="token" x="126" y="184">revenue</text>
+    <text class="token" x="126" y="220">resource</text>
+    <text class="token" x="126" y="256">limit</text>
+    <text class="token-dim" x="126" y="292">ongoing</text>
+    <text class="token-dim" x="126" y="328">activity</text>
+    <text class="token-dim" x="126" y="364">[SEP]</text>
+
+    <text class="token-dim" x="396" y="116">[CLS]</text>
+    <text class="token" x="396" y="148">capital</text>
+    <text class="token-dim" x="396" y="184">resource</text>
+    <text class="token" x="396" y="220">limit</text>
+    <text class="token-dim" x="396" y="256">infrastructure</text>
+    <text class="token-dim" x="396" y="292">investment</text>
+    <text class="token-dim" x="396" y="328">[SEP]</text>
+
+    <path class="attnA" d="M126 256 C190 248, 258 200, 396 220"/>
+    <path class="attnA" d="M126 256 C192 240, 246 168, 396 148"/>
+    <path class="attnA" d="M126 256 C186 254, 256 292, 396 256"/>
+    <path class="attnC" d="M126 220 C208 224, 294 220, 396 220"/>
+    <path class="attnC" d="M126 184 C210 190, 296 188, 396 184"/>
+
+    <text class="caption" x="24" y="444">Interpretation: when the chunk contains “core revenue resource limit”,</text>
+    <text class="caption" x="24" y="474">the embedding for “limit” is pulled toward budget-allocation language.</text>
+    <text class="caption" x="24" y="516">This supports correct retrieval for queries asking about revenue ceilings,</text>
+    <text class="caption" x="24" y="546">even when structurally similar pages exist nearby.</text>
+  </g>
+
+  <!-- Panel B -->
+  <g transform="translate(640,460)">
+    <rect class="panel" x="0" y="0" width="520" height="560" rx="10"/>
+    <text class="label" x="24" y="36">(b) Capital-oriented context</text>
+    <text class="small" x="24" y="64">The same repeated token “limit” shifts toward infrastructure and capital spending cues.</text>
+
+    <rect class="hiB" x="40" y="188" width="172" height="34" rx="6"/>
+    <rect class="hiB" x="310" y="188" width="172" height="34" rx="6"/>
+
+    <text class="token-dim" x="126" y="116">[CLS]</text>
+    <text class="token-dim" x="126" y="148">core</text>
+    <text class="token-dim" x="126" y="184">revenue</text>
+    <text class="token" x="126" y="220">resource</text>
+    <text class="token-dim" x="126" y="256">limit</text>
+    <text class="token-dim" x="126" y="292">ongoing</text>
+    <text class="token-dim" x="126" y="328">activity</text>
+    <text class="token-dim" x="126" y="364">[SEP]</text>
+
+    <text class="token-dim" x="396" y="116">[CLS]</text>
+    <text class="token" x="396" y="148">capital</text>
+    <text class="token" x="396" y="184">resource</text>
+    <text class="token" x="396" y="220">limit</text>
+    <text class="token" x="396" y="256">infrastructure</text>
+    <text class="token" x="396" y="292">investment</text>
+    <text class="token-dim" x="396" y="328">[SEP]</text>
+
+    <path class="attnB" d="M396 220 C334 216, 266 202, 126 220"/>
+    <path class="attnB" d="M396 220 C336 208, 264 168, 126 184"/>
+    <path class="attnB" d="M396 220 C334 236, 278 270, 126 256"/>
+    <path class="attnC" d="M396 184 C314 188, 226 186, 126 220"/>
+    <path class="attnC" d="M396 256 C314 252, 228 250, 126 256"/>
+
+    <text class="caption" x="24" y="444">Interpretation: “capital resource limit” is encoded with a different</text>
+    <text class="caption" x="24" y="474">semantic neighborhood from “core revenue resource limit”.</text>
+    <text class="caption" x="24" y="516">This is why dense retrieval can separate related financial concepts,</text>
+    <text class="caption" x="24" y="546">but still confuse pages when report templates are highly repetitive.</text>
+  </g>
+
+  <!-- Panel C -->
+  <g transform="translate(1202,460)">
+    <rect class="panel" x="0" y="0" width="520" height="560" rx="10"/>
+    <text class="label" x="24" y="36">(c) Why hybrid retrieval is still needed</text>
+    <text class="small" x="24" y="64">Context helps, but repeated headings, tables, and near-duplicate summaries still create retrieval ambiguity.</text>
+
+    <rect class="hiC" x="38" y="140" width="190" height="40" rx="6"/>
+    <rect class="hiC" x="292" y="140" width="190" height="40" rx="6"/>
+
+    <text class="token" x="133" y="166">resource limit</text>
+    <text class="token" x="387" y="166">resource limit</text>
+
+    <text class="body" x="38" y="244">Chunk 1:</text>
+    <text class="body" x="132" y="244">Performance analysis table</text>
+    <text class="body" x="38" y="280">Chunk 2:</text>
+    <text class="body" x="132" y="280">Narrative summary on nearby page</text>
+    <text class="body" x="38" y="316">Both contain:</text>
+    <text class="body" x="168" y="316">similar financial wording</text>
+
+    <path class="attnC" d="M133 166 C210 208, 312 208, 387 166"/>
+    <path class="attnC" d="M133 166 C218 248, 306 250, 387 166"/>
+
+    <text class="caption" x="24" y="430">Interpretation for this dissertation:</text>
+    <text class="caption" x="24" y="466">MiniLM provides context-sensitive chunk representations, which helps</text>
+    <text class="caption" x="24" y="496">with semantically phrased queries. However, NHS annual reports contain</text>
+    <text class="caption" x="24" y="526">repeated financial language, table-heavy pages, and near-duplicate local</text>
+    <text class="caption" x="24" y="556">sections. That is why BM25 and hybrid fusion remain important in the</text>
+    <text class="caption" x="24" y="586">final pipeline: lexical cues stabilise ranking when dense similarity alone</text>
+    <text class="caption" x="24" y="616">cannot cleanly separate the correct evidence page from near-miss pages.</text>
+  </g>
+
+  <text class="small" x="78" y="1098">The illustration is conceptual rather than a literal attention dump from the evaluated MiniLM model. Its purpose is to explain why contextual encoding helps retrieval in this corpus, and why hybrid dense+BM25 retrieval remains necessary.</text>
+</svg>

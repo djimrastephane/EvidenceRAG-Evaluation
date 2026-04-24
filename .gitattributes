@@ -1,0 +1,5 @@
+docs/*.html linguist-generated=true
+docs/**/*.html linguist-generated=true
+results/** linguist-generated=true
+runs/** linguist-generated=true
+artifacts/** linguist-generated=true

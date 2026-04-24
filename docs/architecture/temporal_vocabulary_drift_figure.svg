@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="620" viewBox="0 0 1400 620" role="img" aria-labelledby="title desc">
+  <title id="title">Temporal vocabulary drift in long-form reports</title>
+  <desc id="desc">Two-panel figure comparing an aligned query that matches a 2015 report using HSMR terminology with a cross-era query that mismatches a 2024 report using Quality metrics terminology.</desc>
+  <defs>
+    <style>
+      .bg { fill: #fcfbf8; }
+      .panel { fill: #f4efe7; stroke: #342b24; stroke-width: 3; }
+      .headline { font: 700 32px Georgia, "Times New Roman", serif; fill: #221b16; }
+      .body { font: 400 24px Georgia, "Times New Roman", serif; fill: #4a4038; }
+      .body-small { font: 400 18px Georgia, "Times New Roman", serif; fill: #6d6258; }
+      .era { font: 400 18px Georgia, "Times New Roman", serif; fill: #766b62; }
+      .year { font: 400 18px Georgia, "Times New Roman", serif; fill: #7f746a; }
+      .chip-text { font: 700 28px Georgia, "Times New Roman", serif; fill: #2a2420; }
+      .card-year { font: 400 18px Georgia, "Times New Roman", serif; fill: #8a7c71; }
+      .card-title { font: 700 26px Georgia, "Times New Roman", serif; fill: #211b17; }
+      .badge { font: 700 24px Georgia, "Times New Roman", serif; }
+      .caption-label { font: 700 22px Georgia, "Times New Roman", serif; fill: #221b16; }
+      .caption { font: 400 22px Georgia, "Times New Roman", serif; fill: #221b16; }
+    </style>
+    <marker id="arrow-dark" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2e2823"/>
+    </marker>
+    <marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#a7aab2"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect class="bg" width="1400" height="760"/>
+
+  <g transform="translate(40 40)">
+    <rect class="panel" x="0" y="0" rx="16" ry="16" width="620" height="540"/>
+    <text class="headline" x="42" y="62">A. Aligned query</text>
+
+    <rect x="155" y="78" rx="24" ry="24" width="310" height="52" fill="#dff1e4"/>
+    <text class="chip-text" x="310" y="113" text-anchor="middle">HSMR</text>
+
+    <line x1="86" y1="205" x2="550" y2="205" stroke="#2f2823" stroke-width="3" marker-end="url(#arrow-dark)"/>
+    <line x1="105" y1="194" x2="105" y2="216" stroke="#2f2823" stroke-width="3"/>
+    <line x1="312" y1="194" x2="312" y2="216" stroke="#2f2823" stroke-width="3"/>
+    <line x1="532" y1="194" x2="532" y2="216" stroke="#2f2823" stroke-width="3"/>
+
+    <text class="year" x="77" y="244">2004</text>
+    <text class="year" x="280" y="244">2011</text>
+    <text class="year" x="505" y="244">2025</text>
+
+    <rect x="100" y="248" rx="8" ry="8" width="100" height="42" fill="#cfe3f7"/>
+    <rect x="198" y="248" rx="8" ry="8" width="208" height="42" fill="#f6d8b3"/>
+    <rect x="404" y="248" rx="8" ry="8" width="126" height="42" fill="#d9eed2"/>
+
+    <text class="era" x="150" y="334" text-anchor="middle">2004-2010</text>
+    <text class="era" x="302" y="334" text-anchor="middle">2011-2018</text>
+    <text class="era" x="468" y="334" text-anchor="middle">2019-2025</text>
+
+    <line x1="310" y1="137" x2="435" y2="232" stroke="#2e2823" stroke-width="4" marker-end="url(#arrow-dark)"/>
+
+    <rect x="120" y="352" rx="12" ry="12" width="380" height="118" fill="#fffdf9" stroke="#342b24" stroke-width="2.5" filter="url(#shadow)"/>
+    <text class="card-year" x="310" y="382" text-anchor="middle">2015 report</text>
+    <text class="card-title" x="310" y="426" text-anchor="middle">Hospital mortality</text>
+    <text class="body" x="310" y="456" text-anchor="middle">HSMR benchmark language</text>
+
+    <text class="body" x="310" y="500" text-anchor="middle" fill="#6b5f55">Aligned terminology</text>
+
+    <circle cx="275" cy="522" r="10" fill="#dff1e4"/>
+    <text class="badge" x="300" y="531" fill="#38563e">match</text>
+  </g>
+
+  <g transform="translate(740 40)">
+    <rect class="panel" x="0" y="0" rx="16" ry="16" width="620" height="540"/>
+    <text class="headline" x="42" y="62">B. Cross-era query</text>
+
+    <rect x="155" y="78" rx="24" ry="24" width="310" height="52" fill="#f4d8db"/>
+    <text class="chip-text" x="310" y="113" text-anchor="middle">HSMR</text>
+
+    <line x1="86" y1="205" x2="550" y2="205" stroke="#2f2823" stroke-width="3" marker-end="url(#arrow-dark)"/>
+    <line x1="105" y1="194" x2="105" y2="216" stroke="#2f2823" stroke-width="3"/>
+    <line x1="312" y1="194" x2="312" y2="216" stroke="#2f2823" stroke-width="3"/>
+    <line x1="532" y1="194" x2="532" y2="216" stroke="#2f2823" stroke-width="3"/>
+
+    <text class="year" x="77" y="244">2004</text>
+    <text class="year" x="280" y="244">2011</text>
+    <text class="year" x="505" y="244">2025</text>
+
+    <rect x="100" y="248" rx="8" ry="8" width="100" height="42" fill="#cfe3f7"/>
+    <rect x="198" y="248" rx="8" ry="8" width="208" height="42" fill="#f6d8b3"/>
+    <rect x="404" y="248" rx="8" ry="8" width="126" height="42" fill="#f1c8cb"/>
+
+    <text class="era" x="150" y="334" text-anchor="middle">2004-2010</text>
+    <text class="era" x="302" y="334" text-anchor="middle">2011-2018</text>
+    <text class="era" x="468" y="334" text-anchor="middle">2019-2025</text>
+
+    <line x1="310" y1="137" x2="170" y2="260" stroke="#a7aab2" stroke-width="3" stroke-dasharray="10 10" marker-end="url(#arrow-muted)"/>
+
+    <rect x="120" y="352" rx="12" ry="12" width="380" height="118" fill="#fffdf9" stroke="#342b24" stroke-width="2.5" filter="url(#shadow)"/>
+    <text class="card-year" x="310" y="382" text-anchor="middle">2024 report</text>
+    <text class="card-title" x="310" y="426" text-anchor="middle">Quality metrics</text>
+    <text class="body" x="310" y="456" text-anchor="middle">safety and outcomes language</text>
+
+    <text class="body" x="310" y="500" text-anchor="middle" fill="#8b6a6f">Temporal mismatch</text>
+
+    <circle cx="255" cy="522" r="10" fill="#f4d8db"/>
+    <text class="badge" x="280" y="531" fill="#7b4d54">mismatch</text>
+  </g>
+
+</svg>

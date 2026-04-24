@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="How MiniLM fits the NHS Grampian RAG pipeline" />
+  <title>From Thesis Chunks to FAISS Vectors</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">From Thesis Chunks to FAISS Vectors</h1>
+<p class="author">How MiniLM fits the NHS Grampian RAG pipeline</p>
+</header>
+<h1 id="from-thesis-chunks-to-faiss-vectors">From Thesis Chunks to FAISS
+Vectors</h1>
+<h2 id="chunk-entering-the-encoder">1. Chunk entering the encoder</h2>
+<ul>
+<li>Thesis retrieval setting: <code>chunk_size=224</code>,
+<code>overlap=56</code>, <code>segment_aware=false</code></li>
+<li>The same chunk is indexed for both branches:
+<ul>
+<li>dense with <code>all-MiniLM-L6-v2</code></li>
+<li>sparse with the BM25 regex tokenizer</li>
+</ul></li>
+<li>Real corpus example: <code>Grampian-2024-2025:p0028_001</code> on
+page <code>28</code></li>
+<li>That chunk contains the statutory financial targets table, including
+the core revenue resource limit and outturn</li>
+</ul>
+<h2 id="what-minilm-actually-stores">2. What MiniLM actually stores</h2>
+<ul>
+<li><code>tiktoken</code> created the chunk boundary, but MiniLM
+tokenizes the text again for embedding</li>
+<li>Each input token becomes a contextualised <code>384</code>-value
+representation</li>
+<li>Mean pooling collapses all token states into one
+<code>1 x 384</code> chunk vector</li>
+<li>That final vector is the row stored in FAISS for dense
+retrieval</li>
+</ul>
+<h2 id="why-this-matters-in-the-thesis">3. Why this matters in the
+thesis</h2>
+<ul>
+<li>Query example: <code>Q_2025_FIN_02</code></li>
+<li>Question:
+<code>How much did NHS Grampian actually spend against its core resource budget in 2024/25?</code></li>
+<li>Expected evidence page: <code>28</code></li>
+<li>Hybrid retrieval uses <code>RRF(k=20)</code> with
+<code>dense_weight=0.5</code> and <code>bm25_weight=2.0</code></li>
+<li>Reranking is enabled, with boosts for table chunks and other
+evidence cues</li>
+<li>In the recorded example, hybrid retrieves page <code>28</code> at
+top-1 via <code>Grampian-2024-2025:p0028_001</code></li>
+</ul>
+<h2 id="reader-takeaway">Reader takeaway</h2>
+<ul>
+<li><code>tiktoken</code> decides where chunks begin and end</li>
+<li>MiniLM turns each thesis chunk into a searchable semantic
+vector</li>
+<li>BM25 plus reranking help the same evidence win when the question
+uses exact finance wording</li>
+<li>In this setup, the sliding-window stride is <code>168</code> tokens
+(<code>224 - 56</code>)</li>
+</ul>
+</body>
+</html>

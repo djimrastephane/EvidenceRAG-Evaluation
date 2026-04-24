@@ -1,5 +1,14 @@
 from __future__ import annotations
 
+"""Chunk-to-page ranking conversion.
+
+The pipeline retrieves chunks but evaluates pages. This module makes that
+conversion explicit so duplicate pages, cross-page chunks, and rank tie
+handling stay consistent across dense, sparse, and hybrid runs.
+"""
+
+from collections import defaultdict
+
 from .schemas import RetrievalHit
 
 
@@ -9,10 +18,14 @@ def chunk_hits_to_page_hits(
     *,
     chunk_limit: int | None = None,
 ) -> list[RetrievalHit]:
+    """Collapse ranked chunk hits into a stable ranked list of unique pages."""
     ranked_pages: list[RetrievalHit] = []
     query_order = _query_order(hits)
+    grouped: dict[str, list[RetrievalHit]] = defaultdict(list)
+    for hit in hits:
+        grouped[hit.query_id].append(hit)
     for query_id in query_order:
-        query_hits = [hit for hit in hits if hit.query_id == query_id]
+        query_hits = grouped[query_id]
         query_hits.sort(key=lambda hit: (hit.rank, -hit.score, hit.doc_id, hit.page_number, hit.chunk_id or ""))
         if chunk_limit is not None:
             query_hits = query_hits[:chunk_limit]
@@ -44,6 +57,7 @@ def chunk_hits_to_page_hits(
 
 
 def _query_order(hits: list[RetrievalHit]) -> list[str]:
+    """Return query ids in the order they first appear in the hit list."""
     seen: set[str] = set()
     order: list[str] = []
     for hit in hits:

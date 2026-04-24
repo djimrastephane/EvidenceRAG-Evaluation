@@ -1,5 +1,12 @@
 from __future__ import annotations
 
+"""Sparse retrieval over chunk text.
+
+BM25 serves as the transparent lexical baseline in the thesis pipeline. This
+module supports both ``rank_bm25`` and a small fallback implementation so
+retrieval experiments can still run in constrained environments.
+"""
+
 import math
 import re
 from collections import Counter
@@ -8,6 +15,7 @@ from .schemas import BM25Config, ChunkRecord, QueryRecord, RetrievalHit
 
 
 def build_bm25(chunks: list[ChunkRecord], config: BM25Config):
+    """Build the configured BM25 backend over chunk text."""
     corpus = [_tokenize_bm25(chunk.text) for chunk in chunks]
     try:
         from rank_bm25 import BM25Okapi
@@ -24,6 +32,7 @@ def sparse_retrieve(
     *,
     top_k: int,
 ) -> list[RetrievalHit]:
+    """Run lexical retrieval and emit chunk-level sparse hits."""
     hits: list[RetrievalHit] = []
     for query in queries:
         scores = _get_bm25_scores(bm25, query.query_text)
@@ -57,6 +66,7 @@ def sparse_retrieve_legacy_style(
     *,
     top_k: int,
 ) -> list[RetrievalHit]:
+    """Run the parity-aligned BM25 ranking path used in thesis comparisons."""
     hits: list[RetrievalHit] = []
     for query in queries:
         scores = _get_bm25_scores(bm25, query.query_text)
@@ -81,7 +91,7 @@ def sparse_retrieve_legacy_style(
 
 
 def _tokenize_bm25(text: str) -> list[str]:
-    return re.findall(r"[a-z0-9][a-z0-9\\-]{1,}", str(text or "").lower())
+    return re.findall(r"[a-z0-9][a-z0-9-]+", (text or "").lower())
 
 
 def _get_bm25_scores(bm25, query_text: str):
@@ -103,6 +113,7 @@ def _pages_for_chunk(chunk: ChunkRecord) -> list[int]:
 
 
 class _FallbackBM25:
+    """Minimal BM25 implementation used when ``rank_bm25`` is unavailable."""
     def __init__(self, docs_tokens: list[list[str]], k1: float, b: float) -> None:
         self.docs_tokens = docs_tokens
         self.k1 = float(k1)
@@ -121,6 +132,7 @@ class _FallbackBM25:
         }
 
     def score_query(self, query_tokens: list[str]) -> list[float]:
+        """Return BM25 scores for every document in the corpus given the tokenised query."""
         if self.n_docs == 0:
             return []
         q_terms = Counter(query_tokens)

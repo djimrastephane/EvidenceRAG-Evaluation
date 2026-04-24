@@ -1,8 +1,15 @@
 from __future__ import annotations
 
-import faiss
+"""Dense retrieval over chunk embeddings.
+
+This module wraps exact FAISS search and the legacy-style dense reranking logic
+used for parity with the original thesis pipeline. It keeps chunk-level scoring
+separate from later page-level aggregation.
+"""
+
 import numpy as np
 import pandas as pd
+from typing import TYPE_CHECKING
 
 from rag_pdf.question_router import route_question
 from rag_pdf.retrieval.rerank import (
@@ -15,8 +22,11 @@ from rag_pdf.retrieval.rerank import (
 
 from .schemas import ChunkRecord, QueryRecord, RetrievalHit
 
+if TYPE_CHECKING:
+    import faiss
 
-def search_faiss_stably(index: faiss.Index, query_vectors: np.ndarray, top_k: int) -> tuple[np.ndarray, np.ndarray]:
+
+def search_faiss_stably(index: "faiss.Index", query_vectors: np.ndarray, top_k: int) -> tuple[np.ndarray, np.ndarray]:
     """Search one query at a time to avoid macOS batch-search instability in some FAISS builds."""
     if query_vectors.ndim != 2:
         raise ValueError(f"Expected 2D query matrix, got shape {query_vectors.shape}")
@@ -30,13 +40,14 @@ def search_faiss_stably(index: faiss.Index, query_vectors: np.ndarray, top_k: in
 
 
 def dense_retrieve(
-    index: faiss.Index,
+    index: "faiss.Index",
     chunk_records: list[ChunkRecord],
     query_records: list[QueryRecord],
     query_vectors: np.ndarray,
     *,
     top_k: int,
 ) -> list[RetrievalHit]:
+    """Convert raw FAISS top-k chunk matches directly into retrieval hits."""
     scores, indices = search_faiss_stably(index, query_vectors, top_k)
     hits: list[RetrievalHit] = []
     for query_row, query, row_scores, row_indices in zip(range(len(query_records)), query_records, scores, indices):
@@ -62,7 +73,7 @@ def dense_retrieve(
 
 
 def dense_retrieve_legacy_style(
-    index: faiss.Index,
+    index: "faiss.Index",
     chunk_records: list[ChunkRecord],
     query_records: list[QueryRecord],
     query_vectors: np.ndarray,
@@ -70,6 +81,7 @@ def dense_retrieve_legacy_style(
     top_k: int,
     max_k_search: int = 100,
 ) -> list[RetrievalHit]:
+    """Apply legacy dense reranking heuristics on top of raw FAISS candidates."""
     meta = pd.DataFrame([chunk.to_dict() for chunk in chunk_records])
     chunk_text_by_id = {chunk.chunk_id: chunk.text for chunk in chunk_records}
     rerank_cfg = RerankConfig(
@@ -94,6 +106,7 @@ def dense_retrieve_legacy_style(
             score += segment_search_hit_boost(query.query_text, bool(row.get("segment_has_search_hit", False)), rerank_cfg)
             boosted.append((score, idx))
         boosted.sort(key=lambda item: item[0], reverse=True)
+        # Oracle boost: uses gold subsection label — intentional for ablation only, not production.
         if query.expected_subsection and "subsection_title" in meta.columns:
             target = str(query.expected_subsection or "").strip().lower()
             boosted = [

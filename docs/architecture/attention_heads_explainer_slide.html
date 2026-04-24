@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>How 12 Attention Heads Work</title>
+  <style>
+    :root {
+      --bg: #f5efe5;
+      --card: #fffdf8;
+      --ink: #1f1a17;
+      --muted: #60564f;
+      --line: #d9cfbf;
+      --accent: #0b6e69;
+      --accent-soft: #d8f1ee;
+      --warm: #f7e5c7;
+      --warm-ink: #835b12;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      font-family: "Avenir Next", "Gill Sans", "Trebuchet MS", sans-serif;
+      background:
+        radial-gradient(1100px 520px at 100% 0%, #efe6d7 0%, transparent 60%),
+        radial-gradient(900px 420px at 0% 100%, #ece2d5 0%, transparent 60%),
+        var(--bg);
+      color: var(--ink);
+      display: grid;
+      place-items: center;
+      padding: 18px;
+    }
+    .slide {
+      width: min(1280px, 100%);
+      aspect-ratio: 16 / 9;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+      padding: clamp(24px, 3vw, 40px);
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 14px;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(1.9rem, 2.7vw, 2.8rem);
+      line-height: 1.05;
+      letter-spacing: 0.01em;
+    }
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.25vw, 1.22rem);
+      max-width: 90%;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 16px;
+      min-height: 0;
+    }
+    .stack {
+      display: grid;
+      grid-template-rows: 0.88fr 1.12fr;
+      gap: 14px;
+      min-height: 0;
+    }
+    .card {
+      background: #fffefb;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px 18px;
+      min-height: 0;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      background: var(--accent-soft);
+      border: 1px solid #b8e5df;
+      color: #0c4e4a;
+    }
+    .pill.warm {
+      background: var(--warm);
+      border-color: #efd59d;
+      color: var(--warm-ink);
+    }
+    p {
+      margin: 0;
+      line-height: 1.34;
+      font-size: clamp(0.98rem, 1.1vw, 1.08rem);
+    }
+    ul {
+      margin: 10px 0 0 18px;
+      padding: 0;
+      line-height: 1.28;
+      font-size: clamp(0.92rem, 1vw, 1rem);
+    }
+    li { margin: 7px 0; }
+    .formula {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #f7f4ec;
+      border: 1px dashed var(--line);
+      font-size: clamp(1rem, 1.18vw, 1.12rem);
+      line-height: 1.35;
+    }
+    .lanes {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 12px;
+    }
+    .lane {
+      background: linear-gradient(180deg, #d8f1ee 0%, #edf9f7 100%);
+      border: 1px solid #b6e3dc;
+      color: #0e5550;
+      border-radius: 10px;
+      text-align: center;
+      padding: 8px 4px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .box {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px;
+      text-align: center;
+      background: #fff;
+      min-height: 84px;
+      display: grid;
+      align-content: center;
+      gap: 4px;
+    }
+    .box strong {
+      font-size: 1.04rem;
+    }
+    .small {
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .arrow {
+      font-size: 1.5rem;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .footer {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 14px;
+      align-items: center;
+    }
+    .note {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    code {
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.92em;
+    }
+  </style>
+</head>
+<body>
+  <section class="slide">
+    <h1>Why your model has <span style="color: var(--accent)">12 attention heads</span></h1>
+    <p class="subtitle">Your pipeline uses the pretrained encoder <code>all-MiniLM-L6-v2</code>. That model was designed and trained with a hidden size of <code>384</code> and <code>12</code> heads, so each head gets an equal 32-number slice.</p>
+
+    <div class="grid">
+      <article class="card">
+        <div class="pill">Simple idea</div>
+        <p>
+          Think of attention heads like <strong>12 small reading teams</strong> looking at the same sentence at the same time.
+          Each team looks for different relationships, such as:
+        </p>
+        <ul>
+          <li>which words belong together,</li>
+          <li>which number matches which label,</li>
+          <li>which part of a sentence explains another part.</li>
+        </ul>
+        <div class="formula">
+          <strong>Why 12?</strong><br />
+          The model stores each token as <code>384</code> values.<br />
+          It splits those values evenly across <code>12</code> heads.<br />
+          <strong><code>384 / 12 = 32</code></strong>
+        </div>
+        <div class="lanes">
+          <div class="lane">H1<br />32</div>
+          <div class="lane">H2<br />32</div>
+          <div class="lane">H3<br />32</div>
+          <div class="lane">H4<br />32</div>
+          <div class="lane">H5<br />32</div>
+          <div class="lane">H6<br />32</div>
+          <div class="lane">H7<br />32</div>
+          <div class="lane">H8<br />32</div>
+          <div class="lane">H9<br />32</div>
+          <div class="lane">H10<br />32</div>
+          <div class="lane">H11<br />32</div>
+          <div class="lane">H12<br />32</div>
+        </div>
+      </article>
+
+      <div class="stack">
+        <article class="card">
+          <div class="pill warm">Why not 16 or 20?</div>
+          <ul>
+            <li><strong>20</strong> does not fit cleanly: <code>384 / 20 = 19.2</code>.</li>
+            <li><strong>16</strong> would fit mathematically: <code>384 / 16 = 24</code>.</li>
+            <li>To keep <strong>32 values per head</strong> with 16 heads, the model would need <code>512</code> total values.</li>
+            <li>So <strong>16 would be a different model design</strong>, not this MiniLM checkpoint.</li>
+            <li>The head count is fixed during pretraining, not chosen later by the pipeline.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="pill">What happens inside one layer</div>
+          <div class="flow">
+            <div class="box">
+              <strong>1. Start</strong>
+              <div class="small">one token representation</div>
+              <div><code>384 values</code></div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="box">
+              <strong>2. Split</strong>
+              <div class="small">12 heads look at smaller parts</div>
+              <div><code>12 × 32</code></div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="box">
+              <strong>3. Merge</strong>
+              <div class="small">combine what all heads learned</div>
+              <div><code>back to 384</code></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="note">
+        <strong>Non-technical takeaway:</strong> the model uses several smaller “views” in parallel instead of one giant view.
+        That helps it notice different kinds of patterns without making the model too heavy.
+      </div>
+      <div class="note">
+        <strong>Your checkpoint:</strong><br />
+        <code>hidden_size = 384</code><br />
+        <code>num_attention_heads = 12</code><br />
+        <code>num_hidden_layers = 6</code>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

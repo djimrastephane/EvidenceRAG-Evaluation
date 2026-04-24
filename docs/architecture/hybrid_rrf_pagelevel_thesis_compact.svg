@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="980" viewBox="0 0 1000 980" role="img" aria-labelledby="title desc">
+  <title id="title">Compact page-level hybrid retrieval figure</title>
+  <desc id="desc">A compact monochrome figure showing page-level BM25 and dense FAISS retrieval, weighted reciprocal rank fusion, and final page ranking.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#111"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .frame { fill: #fff; stroke: #111; stroke-width: 2; }
+      .box { fill: #f3f3f3; stroke: #111; stroke-width: 1.4; rx: 6; ry: 6; }
+      .highlight { fill: #ececec; stroke: #111; stroke-width: 1.8; rx: 6; ry: 6; }
+      .winner { fill: #dcdcdc; stroke: #111; stroke-width: 4.2; rx: 6; ry: 6; }
+      .winner-tag { font: 700 10px Arial, Helvetica, sans-serif; fill: #111; }
+      .title { font: 700 24px Georgia, "Times New Roman", serif; fill: #111; }
+      .formula { font: italic 23px Georgia, "Times New Roman", serif; fill: #111; }
+      .panelhead { font: 700 20px Georgia, "Times New Roman", serif; fill: #111; }
+      .label { font: 700 16px Arial, Helvetica, sans-serif; fill: #111; }
+      .small { font: 400 13px Arial, Helvetica, sans-serif; fill: #444; }
+      .mono { font: 700 18px "Courier New", Courier, monospace; fill: #111; }
+      .score { font: 400 17px "Courier New", Courier, monospace; fill: #111; }
+      .note { font: 400 15px Georgia, "Times New Roman", serif; fill: #222; }
+      .caption { font: 400 14px Georgia, "Times New Roman", serif; fill: #222; }
+      .arrow { stroke: #111; stroke-width: 2.6; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1000" height="980"/>
+
+  <text class="title" x="500" y="42" text-anchor="middle">Page-Level Hybrid Retrieval Used in the Thesis Pipeline</text>
+  <text class="formula" x="500" y="78" text-anchor="middle">RRF_score(p) = w_dense / (k + r_dense(p)) + w_bm25 / (k + r_bm25(p))</text>
+  <text class="small" x="500" y="100" text-anchor="middle">k = 20, w_dense = 0.5, w_bm25 = 2.0</text>
+
+  <rect class="frame" x="70" y="128" width="860" height="268" rx="12" ry="12"/>
+  <text class="panelhead" x="500" y="161" text-anchor="middle">Page Candidates</text>
+  <text class="label" x="270" y="193" text-anchor="middle">BM25</text>
+  <text class="label" x="730" y="193" text-anchor="middle">Dense FAISS</text>
+  <text class="small" x="270" y="212" text-anchor="middle">lexical page rank</text>
+  <text class="small" x="730" y="212" text-anchor="middle">MiniLM page rank</text>
+
+  <rect class="highlight" x="180" y="236" width="180" height="30"/>
+  <text class="mono" x="270" y="257" text-anchor="middle">page 28</text>
+  <text class="small" x="270" y="281" text-anchor="middle">correct evidence page</text>
+  <rect class="highlight" x="180" y="296" width="180" height="30"/>
+  <text class="mono" x="270" y="317" text-anchor="middle">page 31</text>
+  <text class="small" x="270" y="341" text-anchor="middle">financial summary, competing page</text>
+  <rect class="box" x="180" y="356" width="180" height="30"/>
+  <text class="mono" x="270" y="377" text-anchor="middle">page 29</text>
+
+  <rect class="highlight" x="640" y="236" width="180" height="30"/>
+  <text class="mono" x="730" y="257" text-anchor="middle">page 44</text>
+  <text class="small" x="730" y="281" text-anchor="middle">semantically similar narrative, wrong year</text>
+  <rect class="highlight" x="640" y="296" width="180" height="30"/>
+  <text class="mono" x="730" y="317" text-anchor="middle">page 28</text>
+  <text class="small" x="730" y="341" text-anchor="middle">supported by both methods</text>
+  <rect class="box" x="640" y="356" width="180" height="30"/>
+  <text class="mono" x="730" y="377" text-anchor="middle">page 29</text>
+
+  <path class="arrow" d="M 500 414 L 500 464"/>
+
+  <rect class="frame" x="110" y="482" width="780" height="286" rx="12" ry="12"/>
+  <text class="panelhead" x="500" y="516" text-anchor="middle">Weighted Reciprocal Rank Fusion</text>
+  <text class="small" x="500" y="537" text-anchor="middle">Competition is explicit here: page 44 is dense-only, while page 31 is BM25-only.</text>
+
+  <rect class="highlight" x="145" y="572" width="150" height="34"/>
+  <text class="mono" x="220" y="595" text-anchor="middle">page 28</text>
+  <text class="score" x="335" y="595">0.5/22 + 2.0/21 = 0.1179</text>
+
+  <rect class="box" x="145" y="620" width="150" height="34"/>
+  <text class="mono" x="220" y="643" text-anchor="middle">page 29</text>
+  <text class="score" x="335" y="643">0.5/23 + 2.0/23 = 0.1087</text>
+
+  <rect class="highlight" x="145" y="668" width="150" height="34"/>
+  <text class="mono" x="220" y="691" text-anchor="middle">page 31</text>
+  <text class="score" x="335" y="691">0.0 + 2.0/22 = 0.0909</text>
+
+  <rect class="highlight" x="145" y="716" width="150" height="34"/>
+  <text class="mono" x="220" y="739" text-anchor="middle">page 44</text>
+  <text class="score" x="335" y="739">0.5/21 + 0.0 = 0.0238</text>
+
+  <path class="arrow" d="M 500 786 L 500 834"/>
+
+  <rect class="frame" x="300" y="850" width="400" height="84" rx="12" ry="12"/>
+  <text class="panelhead" x="500" y="882" text-anchor="middle">Final Page Rank</text>
+  <rect class="winner" x="390" y="898" width="220" height="24"/>
+  <text class="winner-tag" x="426" y="914" text-anchor="middle">WINNER</text>
+  <text class="mono" x="500" y="915" text-anchor="middle">page 28</text>
+
+  <text class="caption" x="500" y="958" text-anchor="middle">Page-level hybrid retrieval using weighted reciprocal rank fusion. BM25 and dense retrieval</text>
+  <text class="caption" x="500" y="976" text-anchor="middle">produce competing candidate rankings, which are combined using a weighted RRF scheme.</text>
+</svg>

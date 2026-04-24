@@ -1,0 +1,96 @@
+<svg width="1300" height="900" viewBox="0 0 1300 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Contextual Encoding in the NHS Corpus</title>
+  <desc id="desc">Compact thesis-safe conceptual figure showing why contextual embeddings distinguish similar financial phrases and why hybrid retrieval is still needed.</desc>
+  <defs>
+    <style>
+      .bg { fill: #FFFFFF; }
+      .frame { fill: none; stroke: #D1D5DB; stroke-width: 2; }
+      .title { font: 700 34px 'Arial', sans-serif; fill: #111827; }
+      .subtitle { font: 400 18px 'Arial', sans-serif; fill: #4B5563; }
+      .panel { fill: #FAFAFA; stroke: #D1D5DB; stroke-width: 1.5; }
+      .panelHead { font: 700 22px 'Arial', sans-serif; fill: #1F2937; }
+      .body { font: 400 18px 'Arial', sans-serif; fill: #374151; }
+      .small { font: 400 16px 'Arial', sans-serif; fill: #4B5563; }
+      .token { font: 700 17px 'Arial', sans-serif; fill: #111827; text-anchor: middle; }
+      .tokenDim { font: 700 17px 'Arial', sans-serif; fill: #4B5563; text-anchor: middle; }
+      .hiA { fill: #DDEAF7; }
+      .hiB { fill: #F9E4D0; }
+      .attnA { stroke: #2563EB; stroke-width: 2.2; opacity: 0.55; fill: none; }
+      .attnB { stroke: #D97706; stroke-width: 2.2; opacity: 0.55; fill: none; }
+      .attnC { stroke: #6B7280; stroke-width: 1.8; opacity: 0.45; fill: none; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1300" height="900"/>
+  <rect class="frame" x="24" y="24" width="1252" height="852" rx="10"/>
+
+  <text class="title" x="64" y="86">Contextual Encoding in the NHS Annual-Report Corpus</text>
+  <text class="subtitle" x="64" y="118">Conceptual illustration of why dense retrieval separates similar financial phrases, yet still benefits from BM25 in repeated report structures.</text>
+
+  <g transform="translate(64,160)">
+    <rect class="panel" x="0" y="0" width="560" height="610" rx="10"/>
+    <text class="panelHead" x="24" y="34">(a) Context changes the meaning of repeated financial terms</text>
+
+    <text class="body" x="24" y="74">Example chunk pair from the corpus:</text>
+    <text class="body" x="24" y="108">“core revenue resource limit”</text>
+    <text class="body" x="24" y="138">“capital resource limit”</text>
+
+    <rect class="hiA" x="68" y="220" width="160" height="32" rx="6"/>
+    <rect class="hiB" x="330" y="220" width="160" height="32" rx="6"/>
+
+    <text class="tokenDim" x="148" y="204">[CLS]</text>
+    <text class="token" x="148" y="242">core</text>
+    <text class="token" x="148" y="274">revenue</text>
+    <text class="token" x="148" y="306">resource</text>
+    <text class="token" x="148" y="338">limit</text>
+    <text class="tokenDim" x="148" y="370">activity</text>
+    <text class="tokenDim" x="148" y="402">[SEP]</text>
+
+    <text class="tokenDim" x="410" y="204">[CLS]</text>
+    <text class="token" x="410" y="242">capital</text>
+    <text class="token" x="410" y="274">resource</text>
+    <text class="token" x="410" y="306">limit</text>
+    <text class="tokenDim" x="410" y="338">infrastructure</text>
+    <text class="tokenDim" x="410" y="370">investment</text>
+    <text class="tokenDim" x="410" y="402">[SEP]</text>
+
+    <path class="attnA" d="M148 338 C214 324, 286 284, 410 306"/>
+    <path class="attnA" d="M148 338 C214 314, 286 250, 410 242"/>
+    <path class="attnB" d="M410 306 C344 300, 276 302, 148 306"/>
+    <path class="attnC" d="M148 306 C224 306, 306 306, 410 274"/>
+
+    <text class="body" x="24" y="500">Interpretation:</text>
+    <text class="body" x="24" y="532">The repeated term “limit” is embedded differently when the</text>
+    <text class="body" x="24" y="560">surrounding context is revenue-related versus capital-related.</text>
+  </g>
+
+  <g transform="translate(664,160)">
+    <rect class="panel" x="0" y="0" width="560" height="610" rx="10"/>
+    <text class="panelHead" x="24" y="34">(b) Why hybrid retrieval is still needed in this thesis</text>
+
+    <text class="body" x="24" y="86">Dense embeddings capture semantic context, but NHS reports</text>
+    <text class="body" x="24" y="116">also contain repeated templates, table wording, and near-duplicate</text>
+    <text class="body" x="24" y="146">financial summaries across neighbouring pages.</text>
+
+    <rect x="42" y="228" width="212" height="70" rx="8" fill="#EEF2F7" stroke="#94A3B8" stroke-width="1.5"/>
+    <rect x="308" y="228" width="212" height="70" rx="8" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+    <text class="token" x="148" y="258">Chunk A</text>
+    <text class="small" x="72" y="284">performance analysis table</text>
+    <text class="token" x="414" y="258">Chunk B</text>
+    <text class="small" x="334" y="284">nearby narrative summary</text>
+
+    <text class="body" x="42" y="352">Both may contain phrases such as:</text>
+    <text class="body" x="72" y="390">• resource limit</text>
+    <text class="body" x="72" y="422">• financial target</text>
+    <text class="body" x="72" y="454">• variance / outturn</text>
+
+    <path class="attnC" d="M254 262 C282 262, 288 262, 308 262"/>
+    <path class="attnC" d="M254 278 C282 300, 288 300, 308 278"/>
+
+    <text class="body" x="24" y="528">Implication for the pipeline:</text>
+    <text class="body" x="24" y="560">Dense retrieval helps with semantic phrasing, but BM25 adds</text>
+    <text class="body" x="24" y="588">lexical stability when near-miss pages use very similar wording.</text>
+  </g>
+
+  <text class="small" x="64" y="826">Notes: [CLS] is the special classification token placed at the start of a transformer input sequence. The figure is conceptual rather than a literal attention map from the evaluated MiniLM model.</text>
+</svg>

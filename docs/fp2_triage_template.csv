@@ -1,0 +1,2 @@
+query_id,document,difficulty,question,expected_answer,expected_pages,evidence_layout,answer_type,top1_chunk_id,top1_pages,top3_chunk_ids,gold_exists,gold_pages_found,fp2_subtype,notes,review_status,reviewer,review_date
+Q_EXAMPLE_001,Grampian-2024-2025,MOD,Example question,Example answer,"[28]",table,number,Grampian-2024-2025:p0028_000,"[28]","['Grampian-2024-2025:p0028_000']",true,true,table_lost_to_prose,Replace example row with real audit entry,pending,,
