@@ -12,6 +12,7 @@ import pathlib
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+matplotlib.rcParams['axes.titlelocation'] = 'left'
 import matplotlib.ticker as mticker
 import numpy as np
 
@@ -49,22 +50,23 @@ n_methods = len(METHODS)
 bar_width = 0.72 / n_methods
 x = np.arange(len(TIERS))
 
-for i, method in enumerate(METHODS):
+def _draw_method(i, method, hex_color):
     vals    = [DATA[method][t][0] for t in TIERS]
     ns      = [DATA[method][t][1] for t in TIERS]
     errs    = [wilson_half_width(v, n) for v, n in zip(vals, ns)]
     offsets = x + (i - (n_methods - 1) / 2.0) * bar_width
-
     ax.bar(offsets, vals, bar_width,
-           color=COLORS[method], label=method, zorder=3, linewidth=0)
-
+           color=hex_color, label=method, zorder=3, linewidth=0)
     ax.errorbar(offsets, vals, yerr=errs,
                 fmt="none", color="#333333",
                 capsize=3, capthick=1.1, elinewidth=1.1, zorder=4)
-
     for xi, (v, err) in zip(offsets, zip(vals, errs)):
         ax.text(xi, v + err + 0.012, f"{v:.2f}",
                 ha="center", va="bottom", fontsize=9, fontweight="semibold")
+
+_draw_method(0, "Dense (MiniLM)", "#0072B2")
+_draw_method(1, "BM25",           "#D55E00")
+_draw_method(2, "Hybrid (base)",  "#009E73")
 
 # ── Y-axis: start at 0, ticks every 0.2 ──────────────────────────────────────
 ax.set_ylim(0, 1.08)
