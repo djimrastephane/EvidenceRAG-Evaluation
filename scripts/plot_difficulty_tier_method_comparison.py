@@ -100,7 +100,8 @@ ax.set_title("Retrieval Performance by Query Complexity",
              fontsize=13, fontweight="bold", loc="left", pad=14)
 
 # ── Legend ───────────────────────────────────────────────────────────────────
-ax.legend(fontsize=10, frameon=False, loc="upper right")
+ax.legend(fontsize=10, frameon=False, loc="upper right",
+          bbox_to_anchor=(1.0, 1.05), bbox_transform=ax.transAxes)
 
 # ── Footer annotation ────────────────────────────────────────────────────────
 fig.text(
