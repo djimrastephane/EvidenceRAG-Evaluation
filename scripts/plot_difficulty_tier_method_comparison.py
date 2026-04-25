@@ -106,7 +106,7 @@ ax.legend(fontsize=10, frameon=False, loc="upper right")
 fig.text(
     0.12, 0.005,
     r"LEX $\to$ STR relative drop:  "
-    r"$\bf{Dense}$ $-$13%    $\bf{BM25}$ $-$36%    $\bf{Hybrid}$ $-$24%",
+    r"$\bf{Dense}$ $-$13%    $\bf{BM25}$ $-$35%    $\bf{Hybrid}$ $-$23%",
     ha="left", va="bottom",
     fontsize=8.5, style="italic", color="#555555",
 )
