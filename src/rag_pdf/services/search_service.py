@@ -73,6 +73,14 @@ ENTITY_MATCH_BOOST = float(os.getenv("ENTITY_MATCH_BOOST", "0.04"))
 NUMERIC_DENSITY_BOOST = float(os.getenv("NUMERIC_DENSITY_BOOST", "0.03"))
 SEGMENT_SEARCH_HIT_BOOST = float(os.getenv("SEGMENT_SEARCH_HIT_BOOST", "0.03"))
 MAX_ENTITY_MATCHES = int(os.getenv("MAX_ENTITY_MATCHES", "4"))
+TABLE_BOOST_ALLOWED_SECTION_PATTERNS: tuple[str, ...] = tuple(
+    p.strip().lower()
+    for p in os.getenv(
+        "TABLE_BOOST_ALLOWED_SECTION_PATTERNS",
+        "performance report,financial highlights,performance analysis,overview",
+    ).split(",")
+    if p.strip()
+)
 SUBSECTION_BOOST = float(os.getenv("SUBSECTION_BOOST", "0.05"))
 CROSS_PAGE_OUT_OF_SECTION_PENALTY = float(os.getenv("CROSS_PAGE_OUT_OF_SECTION_PENALTY", "0.08"))
 ANSWER_GATE_ENABLED = os.getenv("ANSWER_GATE_ENABLED", "1").strip().lower() in {"1", "true", "yes", "y", "on"}
@@ -133,6 +141,7 @@ class SearchService:
             numeric_density_boost=NUMERIC_DENSITY_BOOST,
             segment_search_hit_boost=SEGMENT_SEARCH_HIT_BOOST,
             max_entity_matches=MAX_ENTITY_MATCHES,
+            table_boost_allowed_section_patterns=TABLE_BOOST_ALLOWED_SECTION_PATTERNS,
         )
         self.local_llm = LocalLLMService()
         self._cache: dict[str, LoadedDoc] = {}

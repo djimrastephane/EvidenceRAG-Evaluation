@@ -64,6 +64,7 @@ class ProcessService:
                 f"Unsupported UI_TABLE_CHUNKING_MODE={table_chunking_mode!r}. "
                 f"Expected one of {sorted(self.ALLOWED_TABLE_CHUNKING_MODES)}."
             )
+        mixed_routing = os.getenv("UI_MIXED_ROUTING", "1").strip().lower() in {"1", "true", "yes", "y", "on"}
 
         cmd_preprocess = [
             sys.executable,
@@ -75,6 +76,8 @@ class ProcessService:
             "--table-chunking",
             table_chunking_mode,
         ]
+        if mixed_routing:
+            cmd_preprocess.append("--mixed-routing")
         preprocess_output = self._run(cmd_preprocess)
 
         if eval_set_path is not None and eval_set_path.exists():

@@ -11,7 +11,7 @@ SRC_PATH = REPO_ROOT / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
-from rag_pdf.table_extract import _build_table_chunk_texts
+from rag_pdf.table_chunking import build_table_chunk_texts
 
 
 class TableChunkingStrategyTests(unittest.TestCase):
@@ -24,9 +24,10 @@ class TableChunkingStrategyTests(unittest.TestCase):
             ],
             columns=["Line", "2024", "2025"],
         )
-        chunks = _build_table_chunk_texts(
+        chunks = build_table_chunk_texts(
             strategy="row_preserving",
             page_no=10,
+            table_type=None,
             table_summary="Financial table on page 10",
             raw_table=df,
             header_injected_facts="",
@@ -50,9 +51,10 @@ class TableChunkingStrategyTests(unittest.TestCase):
             ],
             columns=["Category", "2024", "2025"],
         )
-        chunks = _build_table_chunk_texts(
+        chunks = build_table_chunk_texts(
             strategy="two_stage",
             page_no=83,
+            table_type=None,
             table_summary="Staff costs table",
             raw_table=df,
             header_injected_facts="",

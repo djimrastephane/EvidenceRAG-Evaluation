@@ -25,6 +25,7 @@ if "sentence_transformers" not in sys.modules:
     sys.modules["sentence_transformers"] = st_mod
 
 from rag_pdf.services.search_service import SearchService
+from rag_pdf.retrieval.rerank import RerankConfig
 
 
 class _FakeModel:
@@ -62,6 +63,11 @@ class SearchGenerationToggleTests(unittest.TestCase):
         svc.gen_max_context_chars = 9000
         svc.gen_max_chunk_chars = 2200
         svc.gen_timeout_seconds = 20.0
+        svc.rerank_cfg = RerankConfig()
+        svc.lexical_rerank_enabled = False
+        svc.subsection_boost_enabled = False
+        svc._cache_sig = {}
+        svc._global_cache_sig = {}
         svc._obs_lock = threading.Lock()
         svc._obs = {
             "generation_total": 0.0,
