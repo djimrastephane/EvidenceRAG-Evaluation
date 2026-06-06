@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import tempfile
+import uuid
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any, Optional
@@ -15,9 +16,14 @@ import threading
 from collections import defaultdict, deque
 from urllib.parse import urlparse
 
+tlogging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s %(message)s",
+    datefmt="%Y-%m-%dT%H:%M:%S",
+)
 logger = logging.getLogger(__name__)
 
-from fastapi import FastAPI, HTTPException, Depends, Header, Query, Request
+from fastapi import FastAPI, HTTPException, Depends, Header, Query, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.schemas import (
@@ -117,6 +123,25 @@ app.add_middleware(
 )
 
 
+@app.middleware("http")
+async def _request_id_middleware(request: Request, call_next) -> Response:
+    """Stamp every response with a unique request ID and log request latency."""
+    req_id = request.headers.get("X-Request-ID") or str(uuid.uuid4())
+    t0 = time.perf_counter()
+    response = await call_next(request)
+    elapsed_ms = int((time.perf_counter() - t0) * 1000)
+    response.headers["X-Request-ID"] = req_id
+    logger.info(
+        "method=%s path=%s status=%s latency_ms=%d req_id=%s",
+        request.method,
+        request.url.path,
+        response.status_code,
+        elapsed_ms,
+        req_id,
+    )
+    return response
+
+
 class SlidingWindowRateLimiter:
     """Simple in-memory sliding-window limiter."""
 
@@ -148,10 +173,6 @@ class SlidingWindowRateLimiter:
             return True, 0
 
 
-rate_limiter = SlidingWindowRateLimiter(
-    max_requests=RATE_LIMIT_REQ_PER_MIN,
-    window_seconds=60,
-)
 read_rate_limiter = SlidingWindowRateLimiter(
     max_requests=RATE_LIMIT_READ_PER_MIN if RATE_LIMIT_READ_PER_MIN > 0 else RATE_LIMIT_REQ_PER_MIN,
     window_seconds=60,
@@ -184,21 +205,6 @@ def _rate_limit_key(request: Request, x_api_key: Optional[str]) -> str:
     if REQUIRE_API_KEY:
         return f"api_key:{(x_api_key or '').strip()}|ip:{client_host}"
     return f"ip:{client_host}"
-
-
-def _enforce_rate_limit(
-    request: Request,
-    x_api_key: Optional[str] = Header(default=None, alias="X-API-Key"),
-) -> None:
-    """Enforce request budget per minute on protected endpoints."""
-    key = _rate_limit_key(request, x_api_key)
-    allowed, retry_after = rate_limiter.check(key)
-    if not allowed:
-        raise HTTPException(
-            status_code=429,
-            detail="Rate limit exceeded. Try again later.",
-            headers={"Retry-After": str(retry_after)},
-        )
 
 
 def _enforce_read_rate_limit(
@@ -285,6 +291,12 @@ def _decode_base64_payload(payload: str, field_name: str) -> bytes:
     return decoded
 
 
+def _validate_pdf_magic(data: bytes) -> None:
+    """Reject payloads that don't start with the PDF magic bytes %PDF-."""
+    if not data.startswith(b"%PDF-"):
+        raise HTTPException(status_code=400, detail="Uploaded file is not a valid PDF.")
+
+
 @app.get("/api/v1/health")
 def health() -> dict[str, Any]:
     """Health check endpoint — includes Ollama reachability."""
@@ -338,6 +350,7 @@ async def upload_doc(
         tmp_dir = Path(td)
         pdf_path = tmp_dir / pdf_filename
         pdf_bytes = _decode_base64_payload(req.pdf_base64, "pdf_base64")
+        _validate_pdf_magic(pdf_bytes)
         with open(pdf_path, "wb") as f:
             f.write(pdf_bytes)
 

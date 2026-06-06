@@ -33,3 +33,6 @@ jobs:
 
       - name: Run tests
         run: pytest tests/ -q --tb=short
+
+      - name: Retrieval regression gate
+        run: python scripts/eval_regression_gate.py
