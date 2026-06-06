@@ -219,6 +219,12 @@ def parse_args() -> argparse.Namespace:
         help="Emit region-level segmentation/classification diagnostics without changing main routing.",
     )
     parser.add_argument(
+        "--mixed-routing",
+        action="store_true",
+        default=_env_flag("MIXED_ROUTING", "0"),
+        help="Route pages with both table and text regions to both extractors.",
+    )
+    parser.add_argument(
         "--table-page-backup-text-chunks",
         action="store_true",
         default=_env_flag("TABLE_PAGE_BACKUP_TEXT_CHUNKS", "0"),
@@ -735,6 +741,7 @@ def main() -> None:
         ),
         REGION=RegionConfig(
             ENABLE_DIAGNOSTICS=bool(args.region_diagnostics),
+            ENABLE_MIXED_ROUTING=bool(args.mixed_routing),
         ),
         OCR_MIN_ALPHA_RATIO=0.3,
         OCR_MIN_DIGIT_RATIO=0.6,
