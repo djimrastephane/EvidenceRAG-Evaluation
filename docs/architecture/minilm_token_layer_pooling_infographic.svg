@@ -1,0 +1,151 @@
+<svg width="1800" height="1200" viewBox="0 0 1800 1200" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">MiniLM Token to Vector Detail</title>
+  <desc id="desc">Infographic explaining WordPiece tokenisation, token position embeddings, passage through six MiniLM transformer layers, mean pooling, and L2 normalisation.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="11" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L11,5 L0,10 Z" fill="#334155"/>
+    </marker>
+    <style>
+      .bg { fill: #F6F7F9; }
+      .panel { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 2; }
+      .box { fill: #FFFFFF; stroke: #94A3B8; stroke-width: 2; }
+      .blue { fill: #EFF6FF; stroke: #7EA2D9; stroke-width: 2; }
+      .green { fill: #EAF7EF; stroke: #58A273; stroke-width: 2; }
+      .gold { fill: #FFF8E6; stroke: #D2A83E; stroke-width: 2; }
+      .rose { fill: #FFF1F2; stroke: #D46A7A; stroke-width: 2; }
+      .ink { fill: #111827; }
+      .title { font: 700 52px Arial, Helvetica, sans-serif; fill: #111827; }
+      .subtitle { font: 400 23px Arial, Helvetica, sans-serif; fill: #4B5563; }
+      .head { font: 700 26px Arial, Helvetica, sans-serif; fill: #172033; text-anchor: middle; }
+      .body { font: 400 18px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .tiny { font: 400 15px Arial, Helvetica, sans-serif; fill: #475569; text-anchor: middle; }
+      .mono { font: 400 15px "Courier New", Courier, monospace; fill: #1E293B; }
+      .monoSmall { font: 400 13px "Courier New", Courier, monospace; fill: #1E293B; }
+      .monoHead { font: 700 15px "Courier New", Courier, monospace; fill: #1E293B; }
+      .tag { fill: #E8EEF6; stroke: #C8D2E1; stroke-width: 1.5; }
+      .tagText { font: 700 15px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .arrow { stroke: #334155; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+      .softArrow { stroke: #64748B; stroke-width: 3; fill: none; marker-end: url(#arrow); stroke-dasharray: 8 8; }
+      .caption { font: 400 18px Arial, Helvetica, sans-serif; fill: #526071; }
+      .eq { font: 700 20px Arial, Helvetica, sans-serif; fill: #1F2937; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1800" height="1200"/>
+
+  <text class="title" x="900" y="72" text-anchor="middle">Inside MiniLM: From Chunk Text to One Dense Vector</text>
+  <text class="subtitle" x="900" y="112" text-anchor="middle">Each chunk is re-tokenised by MiniLM, position-aware token vectors pass through six transformer layers, then mean pooling creates one retrieval vector.</text>
+
+  <rect class="panel" x="58" y="152" width="1684" height="895" rx="22"/>
+
+  <!-- Input payload -->
+  <rect class="box" x="95" y="215" width="300" height="210" rx="14"/>
+  <text class="head" x="245" y="250">Embedding Payload</text>
+  <text class="body" x="245" y="282">text passed to SentenceTransformer</text>
+  <text class="mono" x="128" y="322">Financial Statements</text>
+  <text class="mono" x="128" y="348">Core Revenue Resource</text>
+  <text class="mono" x="128" y="374">Limit: GBP 43.316m</text>
+  <rect class="tag" x="125" y="394" width="240" height="28" rx="7"/>
+  <text class="tagText" x="245" y="414">section + subsection + chunk</text>
+
+  <!-- WordPiece -->
+  <rect class="blue" x="495" y="215" width="360" height="210" rx="14"/>
+  <text class="head" x="675" y="250">WordPiece Tokenisation</text>
+  <text class="body" x="675" y="282">BERT tokenizer, lowercased</text>
+  <text class="tiny" x="675" y="310">SentenceTransformer max_seq_length = 256</text>
+  <text class="monoSmall" x="525" y="345">[CLS] financial statements core revenue</text>
+  <text class="monoSmall" x="525" y="369">resource limit : gb ##p 43 .</text>
+  <text class="monoSmall" x="525" y="393">316 ##m [SEP]</text>
+  <path class="arrow" d="M395 320 L480 320"/>
+
+  <!-- Token vectors -->
+  <rect class="gold" x="955" y="215" width="360" height="210" rx="14"/>
+  <text class="head" x="1135" y="250">Input Vector Per Token</text>
+  <text class="body" x="1135" y="282">three learned vectors are added</text>
+  <text class="eq" x="1135" y="326">x_i = token_i + position_i + type_0</text>
+  <text class="tiny" x="1135" y="360">absolute position embeddings tell MiniLM order</text>
+  <rect class="tag" x="1015" y="386" width="240" height="28" rx="7"/>
+  <text class="tagText" x="1135" y="406">shape: sequence x 384</text>
+  <path class="arrow" d="M855 320 L940 320"/>
+
+  <!-- Transformer config -->
+  <rect class="blue" x="1400" y="215" width="300" height="210" rx="14"/>
+  <text class="head" x="1550" y="250">MiniLM Config</text>
+  <text class="body" x="1550" y="282">BERT-style encoder</text>
+  <text class="mono" x="1445" y="320">layers: 6</text>
+  <text class="mono" x="1445" y="345">hidden: 384</text>
+  <text class="mono" x="1445" y="370">heads: 12 x 32</text>
+  <text class="mono" x="1445" y="395">FFN: 384 -> 1536 -> 384</text>
+  <path class="arrow" d="M1315 320 L1385 320"/>
+
+  <!-- Layer internals -->
+  <rect class="panel" x="150" y="500" width="1500" height="270" rx="18"/>
+  <text class="head" x="900" y="540">What Happens Inside Each of the 6 Transformer Layers</text>
+
+  <rect class="box" x="205" y="585" width="260" height="130" rx="12"/>
+  <text class="head" x="335" y="617">Self-Attention</text>
+  <text class="body" x="335" y="649">each token builds Q, K, V</text>
+  <text class="tiny" x="335" y="676">token i can attend to token j</text>
+  <text class="monoSmall" x="247" y="702">score = Q_i dot K_j / sqrt(32)</text>
+
+  <rect class="box" x="555" y="585" width="260" height="130" rx="12"/>
+  <text class="head" x="685" y="617">12 Heads</text>
+  <text class="body" x="685" y="649">parallel attention views</text>
+  <text class="tiny" x="685" y="676">numbers, labels, headings, context</text>
+  <text class="monoSmall" x="617" y="702">12 x 32 = 384</text>
+  <path class="arrow" d="M465 650 L540 650"/>
+
+  <rect class="box" x="905" y="585" width="260" height="130" rx="12"/>
+  <text class="head" x="1035" y="617">Residual + Norm</text>
+  <text class="body" x="1035" y="649">attention output is added back</text>
+  <text class="tiny" x="1035" y="676">keeps original signal stable</text>
+  <text class="monoSmall" x="965" y="702">LayerNorm(x + attention)</text>
+  <path class="arrow" d="M815 650 L890 650"/>
+
+  <rect class="box" x="1255" y="585" width="320" height="130" rx="12"/>
+  <text class="head" x="1415" y="617">Feed-Forward Block</text>
+  <text class="body" x="1415" y="649">per-token nonlinear transform</text>
+  <text class="tiny" x="1415" y="676">then residual + layer norm again</text>
+  <text class="monoSmall" x="1325" y="702">384 -> 1536 -> GELU -> 384</text>
+  <path class="arrow" d="M1165 650 L1240 650"/>
+
+  <path class="arrow" d="M1550 425 C1550 480 900 460 900 492"/>
+
+  <!-- Output token states -->
+  <rect class="rose" x="150" y="830" width="330" height="145" rx="14"/>
+  <text class="head" x="315" y="864">Contextual Token States</text>
+  <text class="body" x="315" y="896">one final 384-vector per real token</text>
+  <text class="tiny" x="315" y="925">"316" now carries context from</text>
+  <text class="tiny" x="315" y="950">resource, limit, page wording, headings</text>
+  <path class="arrow" d="M900 770 C900 820 315 790 315 815"/>
+
+  <!-- Mean pooling -->
+  <rect class="green" x="610" y="830" width="330" height="145" rx="14"/>
+  <text class="head" x="775" y="864">Mean Pooling</text>
+  <text class="body" x="775" y="896">average only attention_mask = 1 tokens</text>
+  <text class="tiny" x="775" y="925">ignores padding, not using CLS pooling</text>
+  <text class="eq" x="775" y="956">chunk = mean(h_1 ... h_n)</text>
+  <path class="arrow" d="M480 902 L595 902"/>
+
+  <!-- Final vector -->
+  <rect class="green" x="1070" y="830" width="330" height="145" rx="14"/>
+  <text class="head" x="1235" y="864">L2 Normalised Vector</text>
+  <text class="body" x="1235" y="896">one 384-dimensional chunk vector</text>
+  <text class="tiny" x="1235" y="925">unit length for cosine-style search</text>
+  <text class="mono" x="1140" y="956">embeddings.npy row i</text>
+  <path class="arrow" d="M940 902 L1055 902"/>
+
+  <!-- FAISS -->
+  <rect class="box" x="1510" y="830" width="170" height="145" rx="14"/>
+  <text class="head" x="1595" y="864">FAISS</text>
+  <text class="body" x="1595" y="896">IndexFlatIP</text>
+  <text class="tiny" x="1595" y="925">same row maps</text>
+  <text class="tiny" x="1595" y="948">to metadata page</text>
+  <path class="arrow" d="M1400 902 L1495 902"/>
+
+  <!-- Footer -->
+  <rect x="95" y="1070" width="1610" height="62" rx="12" fill="#EEF2F7" stroke="#D7DEE9" stroke-width="1.5"/>
+  <text class="caption" x="120" y="1098">Practical effect: dense retrieval compares the question vector to these chunk vectors, so semantic similarity reflects words, order, headings, and nearby labels.</text>
+  <text class="caption" x="120" y="1122">Your page citation remains possible because vector row order is preserved against chunk_metadata.parquet, which stores chunk_id, page_start, page_end, and pages.</text>
+</svg>

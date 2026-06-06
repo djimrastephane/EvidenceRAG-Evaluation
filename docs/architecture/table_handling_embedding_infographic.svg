@@ -1,0 +1,147 @@
+<svg width="1800" height="1200" viewBox="0 0 1800 1200" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Table Handling and Embedding Flow</title>
+  <desc id="desc">Infographic showing how table pages are detected, extracted, converted into structured and text chunk representations, embedded with MiniLM, and retrieved with page citations.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="11" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L11,5 L0,10 Z" fill="#334155"/>
+    </marker>
+    <marker id="softArrow" markerWidth="14" markerHeight="14" refX="11" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L11,5 L0,10 Z" fill="#718096"/>
+    </marker>
+    <style>
+      .bg { fill: #F6F7F9; }
+      .panel { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 2; }
+      .box { fill: #FFFFFF; stroke: #94A3B8; stroke-width: 2; }
+      .blue { fill: #EFF6FF; stroke: #7EA2D9; stroke-width: 2; }
+      .green { fill: #EAF7EF; stroke: #58A273; stroke-width: 2; }
+      .gold { fill: #FFF8E6; stroke: #D2A83E; stroke-width: 2; }
+      .rose { fill: #FFF1F2; stroke: #D46A7A; stroke-width: 2; }
+      .purple { fill: #F3F0FF; stroke: #9B8AD7; stroke-width: 2; }
+      .title { font: 700 52px Arial, Helvetica, sans-serif; fill: #111827; }
+      .subtitle { font: 400 23px Arial, Helvetica, sans-serif; fill: #4B5563; }
+      .head { font: 700 25px Arial, Helvetica, sans-serif; fill: #172033; text-anchor: middle; }
+      .body { font: 400 18px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .tiny { font: 400 15px Arial, Helvetica, sans-serif; fill: #475569; text-anchor: middle; }
+      .mono { font: 400 15px "Courier New", Courier, monospace; fill: #1E293B; }
+      .monoSmall { font: 400 13px "Courier New", Courier, monospace; fill: #1E293B; }
+      .tag { fill: #E8EEF6; stroke: #C8D2E1; stroke-width: 1.5; }
+      .tagText { font: 700 15px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .arrow { stroke: #334155; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+      .soft { stroke: #718096; stroke-width: 3; fill: none; marker-end: url(#softArrow); stroke-dasharray: 8 8; }
+      .caption { font: 400 18px Arial, Helvetica, sans-serif; fill: #526071; }
+      .lane { font: 700 18px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1800" height="1200"/>
+
+  <text class="title" x="900" y="72" text-anchor="middle">How Tables Are Handled and Embedded</text>
+  <text class="subtitle" x="900" y="112" text-anchor="middle">Table pages are detected, parsed into structured artifacts, then linearised into text-rich chunks that MiniLM embeds like other evidence.</text>
+
+  <rect class="panel" x="58" y="152" width="1684" height="910" rx="22"/>
+
+  <!-- Top flow -->
+  <rect class="box" x="95" y="220" width="265" height="190" rx="14"/>
+  <text class="head" x="228" y="254">Cleaned PDF Page</text>
+  <text class="body" x="228" y="286">raw lines + cleaned text</text>
+  <text class="body" x="228" y="315">drawings + layout signals</text>
+  <rect class="tag" x="130" y="345" width="196" height="28" rx="7"/>
+  <text class="tagText" x="228" y="365">page provenance kept</text>
+
+  <rect class="gold" x="455" y="220" width="305" height="190" rx="14"/>
+  <text class="head" x="608" y="254">Table Classification</text>
+  <text class="body" x="608" y="286">digit ratio, spacing, keywords</text>
+  <text class="body" x="608" y="315">column alignment, grid drawings</text>
+  <text class="tiny" x="608" y="345">assigns is_table and table_type</text>
+  <path class="arrow" d="M360 315 L440 315"/>
+
+  <rect class="blue" x="855" y="220" width="330" height="190" rx="14"/>
+  <text class="head" x="1020" y="254">Table Extraction</text>
+  <text class="body" x="1020" y="286">Camelot first</text>
+  <text class="body" x="1020" y="315">OCR table fallback for scans</text>
+  <text class="body" x="1020" y="344">pdfplumber fallback if needed</text>
+  <rect class="tag" x="910" y="368" width="220" height="28" rx="7"/>
+  <text class="tagText" x="1020" y="388">clean dataframe output</text>
+  <path class="arrow" d="M760 315 L840 315"/>
+
+  <rect class="rose" x="1290" y="220" width="330" height="190" rx="14"/>
+  <text class="head" x="1455" y="254">Rejected OCR Table?</text>
+  <text class="body" x="1455" y="286">corrupt or weak table signal</text>
+  <text class="body" x="1455" y="315">sent back to normal text chunking</text>
+  <text class="tiny" x="1455" y="345">prevents bad OCR tables polluting index</text>
+  <path class="soft" d="M1185 315 L1275 315"/>
+
+  <!-- Split branches -->
+  <path class="arrow" d="M1020 410 C1020 455 525 455 525 500"/>
+  <path class="arrow" d="M1020 410 C1020 455 1270 455 1270 500"/>
+
+  <text class="lane" x="410" y="486">structured artifact branch</text>
+  <text class="lane" x="1395" y="486">retrieval chunk branch</text>
+
+  <!-- Structured artifacts -->
+  <rect class="purple" x="210" y="510" width="300" height="190" rx="14"/>
+  <text class="head" x="360" y="544">Structured Tables</text>
+  <text class="body" x="360" y="576">rows, columns, table_id</text>
+  <text class="body" x="360" y="605">extraction method + accuracy</text>
+  <text class="monoSmall" x="260" y="641">tables_structured.parquet</text>
+
+  <rect class="purple" x="600" y="510" width="310" height="190" rx="14"/>
+  <text class="head" x="755" y="544">Canonical Table Facts</text>
+  <text class="body" x="755" y="576">row label + column + value</text>
+  <text class="body" x="755" y="605">used for audit and table QA</text>
+  <text class="monoSmall" x="668" y="641">table_facts.parquet</text>
+  <path class="arrow" d="M510 605 L585 605"/>
+
+  <!-- Retrieval chunk construction -->
+  <rect class="green" x="1030" y="510" width="355" height="190" rx="14"/>
+  <text class="head" x="1208" y="544">Linearised Table Chunk</text>
+  <text class="body" x="1208" y="576">summary + header-injected facts</text>
+  <text class="body" x="1208" y="605">plus markdown table representation</text>
+  <text class="tiny" x="1208" y="635">default baseline strategy</text>
+  <text class="monoSmall" x="1070" y="665">row label > column header : value</text>
+
+  <rect class="green" x="1465" y="510" width="230" height="190" rx="14"/>
+  <text class="head" x="1580" y="544">Chunk Metadata</text>
+  <text class="mono" x="1510" y="580">is_table=True</text>
+  <text class="mono" x="1510" y="605">table_type</text>
+  <text class="mono" x="1510" y="630">table_ref</text>
+  <text class="mono" x="1510" y="655">pages=[p]</text>
+  <path class="arrow" d="M1385 605 L1450 605"/>
+
+  <!-- Embedding branch -->
+  <path class="arrow" d="M1208 700 C1208 745 610 745 610 790"/>
+  <path class="arrow" d="M1580 700 C1580 742 1085 745 1085 790"/>
+
+  <rect class="blue" x="330" y="800" width="360" height="165" rx="14"/>
+  <text class="head" x="510" y="834">MiniLM Input Text</text>
+  <text class="body" x="510" y="866">section title is prepended</text>
+  <text class="body" x="510" y="895">subsection is omitted for tables</text>
+  <text class="monoSmall" x="370" y="929">Financial Tables</text>
+  <text class="monoSmall" x="370" y="951">Table summary + facts + markdown</text>
+
+  <rect class="blue" x="805" y="800" width="330" height="165" rx="14"/>
+  <text class="head" x="970" y="834">MiniLM Embedding</text>
+  <text class="body" x="970" y="866">WordPiece tokens -> 6 layers</text>
+  <text class="body" x="970" y="895">mean pooling -> 384 vector</text>
+  <text class="tiny" x="970" y="925">then pipeline L2 normalisation</text>
+  <path class="arrow" d="M690 882 L790 882"/>
+
+  <rect class="box" x="1250" y="800" width="330" height="165" rx="14"/>
+  <text class="head" x="1415" y="834">Same Dense Index</text>
+  <text class="body" x="1415" y="866">table vectors share FAISS with text</text>
+  <text class="body" x="1415" y="895">row alignment maps vector to page</text>
+  <text class="tiny" x="1415" y="925">chunk_metadata.parquet keeps table fields</text>
+  <path class="arrow" d="M1135 882 L1235 882"/>
+
+  <!-- Retrieval note -->
+  <rect class="gold" x="430" y="990" width="700" height="68" rx="12"/>
+  <text class="body" x="780" y="1018">At retrieval time, table/numeric questions can boost is_table chunks</text>
+  <text class="body" x="780" y="1045">before the answer generator formats the page citation.</text>
+  <path class="soft" d="M1415 965 C1415 1030 1195 1030 1145 1030"/>
+
+  <!-- Footer -->
+  <rect x="95" y="1090" width="1610" height="62" rx="12" fill="#EEF2F7" stroke="#D7DEE9" stroke-width="1.5"/>
+  <text class="caption" x="120" y="1118">Key point: MiniLM embeds a text representation of the table, not the dataframe itself. The table structure is preserved by summaries, markdown, explicit facts, and metadata.</text>
+  <text class="caption" x="120" y="1142">Page citations work because table chunks carry chunk_id, page_start, page_end, pages, table_ref, table_type, and is_table metadata alongside the vector row.</text>
+</svg>

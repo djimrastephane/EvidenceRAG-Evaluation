@@ -1,0 +1,158 @@
+<svg width="1800" height="1200" viewBox="0 0 1800 1200" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">BM25 Query Scoring Across All Candidate Chunks</title>
+  <desc id="desc">Infographic showing how a document-scoped query loads one document's chunks, builds a BM25 corpus, scores every candidate chunk, sorts by lexical score, and maps results back to metadata.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="11" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L11,5 L0,10 Z" fill="#334155"/>
+    </marker>
+    <marker id="softArrow" markerWidth="14" markerHeight="14" refX="11" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L11,5 L0,10 Z" fill="#64748B"/>
+    </marker>
+    <style>
+      .bg { fill: #F6F7F9; }
+      .panel { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 2; }
+      .blue { fill: #EEF6FF; stroke: #73A3DC; stroke-width: 2; }
+      .green { fill: #EAF7EF; stroke: #58A273; stroke-width: 2; }
+      .gold { fill: #FFF8E6; stroke: #D2A83E; stroke-width: 2; }
+      .rose { fill: #FFF1F2; stroke: #D46A7A; stroke-width: 2; }
+      .purple { fill: #F3F0FF; stroke: #9B8AD7; stroke-width: 2; }
+      .slate { fill: #EEF2F7; stroke: #94A3B8; stroke-width: 2; }
+      .title { font: 700 48px Arial, Helvetica, sans-serif; fill: #111827; }
+      .subtitle { font: 400 23px Arial, Helvetica, sans-serif; fill: #4B5563; }
+      .head { font: 700 25px Arial, Helvetica, sans-serif; fill: #111827; text-anchor: middle; }
+      .subhead { font: 700 19px Arial, Helvetica, sans-serif; fill: #1F2937; text-anchor: middle; }
+      .body { font: 400 18px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .small { font: 400 15px Arial, Helvetica, sans-serif; fill: #475569; text-anchor: middle; }
+      .mono { font: 400 15px "Courier New", Courier, monospace; fill: #1E293B; }
+      .monoSmall { font: 400 13px "Courier New", Courier, monospace; fill: #1E293B; }
+      .tag { fill: #E8EEF6; stroke: #C8D2E1; stroke-width: 1.5; }
+      .tagText { font: 700 14px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .arrow { stroke: #334155; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+      .soft { stroke: #64748B; stroke-width: 3; fill: none; marker-end: url(#softArrow); stroke-dasharray: 8 8; }
+      .line { stroke: #CBD5E1; stroke-width: 2; }
+      .tableHead { fill: #DDEBFF; stroke: #A9C4E8; stroke-width: 1.5; }
+      .tableRow { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1.5; }
+      .tableAlt { fill: #F8FAFC; stroke: #CBD5E1; stroke-width: 1.5; }
+      .cell { font: 700 14px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .cellMono { font: 400 13px "Courier New", Courier, monospace; fill: #334155; text-anchor: middle; }
+      .formula { font: 700 18px "Courier New", Courier, monospace; fill: #92400E; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1800" height="1200"/>
+
+  <text class="title" x="900" y="68" text-anchor="middle">How BM25 Scores One Query Against All Candidate Chunks</text>
+  <text class="subtitle" x="900" y="108" text-anchor="middle">For document-scoped retrieval, BM25 builds a temporary lexical corpus from that document's chunk texts and scores every allowed chunk.</text>
+
+  <rect class="panel" x="58" y="150" width="1684" height="905" rx="22"/>
+
+  <!-- Query and document artifacts -->
+  <rect class="blue" x="100" y="210" width="365" height="180" rx="14"/>
+  <text class="head" x="283" y="246">Input Query</text>
+  <text class="body" x="283" y="282">selected document scope</text>
+  <text class="monoSmall" x="126" y="318">doc_id = Grampian-2022-2023</text>
+  <text class="monoSmall" x="126" y="344">question = "revenue resource limit"</text>
+  <rect class="tag" x="188" y="360" width="190" height="28" rx="7"/>
+  <text class="tagText" x="283" y="380">lexical_scope = doc</text>
+
+  <rect class="green" x="570" y="210" width="365" height="180" rx="14"/>
+  <text class="head" x="753" y="246">Per-Document Files</text>
+  <text class="monoSmall" x="610" y="286">data_processed/Grampian-2022-2023/</text>
+  <text class="monoSmall" x="610" y="316">chunks.parquet</text>
+  <text class="monoSmall" x="610" y="342">chunk_meta.parquet</text>
+  <text class="monoSmall" x="610" y="368">faiss.index</text>
+  <path class="arrow" d="M465 300 L555 300"/>
+
+  <rect class="gold" x="1040" y="210" width="365" height="180" rx="14"/>
+  <text class="head" x="1223" y="246">Candidate Set</text>
+  <text class="body" x="1223" y="282">metadata chooses allowed rows</text>
+  <text class="body" x="1223" y="312">doc_id, trust_id, year, is_table</text>
+  <text class="small" x="1223" y="342">if no extra filter: all chunks in this document</text>
+  <rect class="tag" x="1137" y="360" width="172" height="28" rx="7"/>
+  <text class="tagText" x="1223" y="380">N candidate chunks</text>
+  <path class="arrow" d="M935 300 L1025 300"/>
+
+  <!-- Corpus construction -->
+  <path class="arrow" d="M1223 390 C1223 445 320 435 320 490"/>
+
+  <rect class="purple" x="100" y="500" width="440" height="250" rx="14"/>
+  <text class="head" x="320" y="536">Temporary BM25 Corpus</text>
+  <text class="body" x="320" y="566">one text document per candidate chunk</text>
+  <g transform="translate(135 595)">
+    <rect class="tableHead" x="0" y="0" width="370" height="34"/>
+    <text class="cell" x="55" y="23">local id</text>
+    <text class="cell" x="185" y="23">chunk text</text>
+    <text class="cell" x="315" y="23">metadata row</text>
+    <rect class="tableRow" x="0" y="34" width="370" height="34"/>
+    <rect class="tableAlt" x="0" y="68" width="370" height="34"/>
+    <rect class="tableRow" x="0" y="102" width="370" height="34"/>
+    <rect class="tableAlt" x="0" y="136" width="370" height="34"/>
+    <line class="line" x1="105" y1="0" x2="105" y2="170"/>
+    <line class="line" x1="265" y1="0" x2="265" y2="170"/>
+    <text class="cellMono" x="55" y="56">0</text>
+    <text class="cellMono" x="185" y="56">chunk_000 text</text>
+    <text class="cellMono" x="315" y="56">row 0</text>
+    <text class="cellMono" x="55" y="90">1</text>
+    <text class="cellMono" x="185" y="90">chunk_001 text</text>
+    <text class="cellMono" x="315" y="90">row 1</text>
+    <text class="cellMono" x="55" y="124">2</text>
+    <text class="cellMono" x="185" y="124">chunk_002 text</text>
+    <text class="cellMono" x="315" y="124">row 2</text>
+    <text class="cellMono" x="55" y="158">...</text>
+    <text class="cellMono" x="185" y="158">chunk_N text</text>
+    <text class="cellMono" x="315" y="158">row N</text>
+  </g>
+
+  <rect class="blue" x="665" y="500" width="410" height="250" rx="14"/>
+  <text class="head" x="870" y="536">Tokenisation</text>
+  <text class="body" x="870" y="566">query and chunks use the same lexical tokenizer</text>
+  <text class="monoSmall" x="705" y="612">query tokens:</text>
+  <text class="monoSmall" x="705" y="638">["revenue", "resource", "limit"]</text>
+  <text class="monoSmall" x="705" y="682">chunk tokens:</text>
+  <text class="monoSmall" x="705" y="708">["revenue", "resource", "limit", ...]</text>
+  <rect class="tag" x="750" y="724" width="240" height="28" rx="7"/>
+  <text class="tagText" x="870" y="744">lowercase lexical matching</text>
+  <path class="arrow" d="M540 625 L650 625"/>
+
+  <rect class="rose" x="1200" y="500" width="430" height="250" rx="14"/>
+  <text class="head" x="1415" y="536">Score Vector Initialised</text>
+  <text class="body" x="1415" y="566">one score slot per candidate chunk</text>
+  <text class="mono" x="1250" y="610">scores = [0.0] * N</text>
+  <text class="mono" x="1250" y="642">score[0] -> chunk_000</text>
+  <text class="mono" x="1250" y="670">score[1] -> chunk_001</text>
+  <text class="mono" x="1250" y="698">score[2] -> chunk_002</text>
+  <text class="mono" x="1250" y="726">score[N] -> chunk_N</text>
+  <path class="arrow" d="M1075 625 L1185 625"/>
+
+  <!-- Scoring formula and every chunk loop -->
+  <path class="arrow" d="M1415 750 C1415 800 900 790 900 835"/>
+
+  <rect class="gold" x="170" y="840" width="630" height="145" rx="14"/>
+  <text class="head" x="485" y="875">BM25 Formula Applied</text>
+  <text class="body" x="485" y="906">for each query term, check its frequency in each chunk</text>
+  <text class="formula" x="485" y="940">sum IDF(t) * tf_saturation(t, chunk_length)</text>
+  <text class="small" x="485" y="970">rare matching terms help more; very long chunks are length-normalised</text>
+
+  <rect class="green" x="990" y="840" width="630" height="145" rx="14"/>
+  <text class="head" x="1305" y="875">All Candidate Chunks Are Scored</text>
+  <text class="body" x="1305" y="906">the loop visits every term-frequency dictionary</text>
+  <text class="mono" x="1060" y="940">for i, tf in enumerate(term_freqs):</text>
+  <text class="mono" x="1060" y="968">    scores[i] += contribution_or_zero</text>
+
+  <path class="soft" d="M800 912 L975 912"/>
+
+  <!-- Sorting and metadata mapping -->
+  <path class="arrow" d="M1305 985 C1305 1025 1010 1024 1010 1060"/>
+
+  <rect class="slate" x="95" y="1070" width="1610" height="72" rx="14"/>
+  <text class="subhead" x="900" y="1098">Sort, map back to metadata, then fuse with MiniLM</text>
+  <text class="body" x="900" y="1126">BM25 ranks local score positions, converts them back to chunk metadata rows, and passes those ranked chunk IDs into hybrid fusion.</text>
+
+  <!-- Side note -->
+  <rect class="rose" x="1465" y="220" width="220" height="132" rx="12"/>
+  <text class="subhead" x="1575" y="252">Important</text>
+  <text class="small" x="1575" y="282">Chunks with no lexical</text>
+  <text class="small" x="1575" y="304">overlap are still scored.</text>
+  <text class="small" x="1575" y="332">Their score remains 0.0.</text>
+</svg>

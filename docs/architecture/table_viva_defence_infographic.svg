@@ -1,0 +1,165 @@
+<svg width="1800" height="1200" viewBox="0 0 1800 1200" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Defending Table Handling in the RAG Pipeline</title>
+  <desc id="desc">Infographic explaining why table queries fail in the RAG pipeline: structured tables are flattened into text for MiniLM, causing truncation, weaker row-column grounding, numeric ambiguity, and ranking errors.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="11" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L11,5 L0,10 Z" fill="#334155"/>
+    </marker>
+    <marker id="warnArrow" markerWidth="14" markerHeight="14" refX="11" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L11,5 L0,10 Z" fill="#B45309"/>
+    </marker>
+    <style>
+      .bg { fill: #F5F7FA; }
+      .panel { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 2; }
+      .blue { fill: #EEF6FF; stroke: #73A3DC; stroke-width: 2; }
+      .green { fill: #EAF7EF; stroke: #57A773; stroke-width: 2; }
+      .gold { fill: #FFF7E6; stroke: #D69E2E; stroke-width: 2; }
+      .rose { fill: #FFF1F2; stroke: #E06475; stroke-width: 2; }
+      .purple { fill: #F4F0FF; stroke: #9B8AD7; stroke-width: 2; }
+      .slate { fill: #EEF2F7; stroke: #94A3B8; stroke-width: 2; }
+      .title { font: 700 48px Arial, Helvetica, sans-serif; fill: #111827; }
+      .subtitle { font: 400 23px Arial, Helvetica, sans-serif; fill: #4B5563; }
+      .head { font: 700 26px Arial, Helvetica, sans-serif; fill: #111827; text-anchor: middle; }
+      .subhead { font: 700 20px Arial, Helvetica, sans-serif; fill: #1E293B; text-anchor: middle; }
+      .body { font: 400 18px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .bodyLeft { font: 400 18px Arial, Helvetica, sans-serif; fill: #334155; }
+      .small { font: 400 15px Arial, Helvetica, sans-serif; fill: #475569; text-anchor: middle; }
+      .smallLeft { font: 400 15px Arial, Helvetica, sans-serif; fill: #475569; }
+      .mono { font: 400 15px "Courier New", Courier, monospace; fill: #1F2937; }
+      .tag { fill: #E8EEF6; stroke: #C8D2E1; stroke-width: 1.5; }
+      .tagText { font: 700 14px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .arrow { stroke: #334155; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+      .warn { stroke: #B45309; stroke-width: 4; fill: none; marker-end: url(#warnArrow); }
+      .dash { stroke: #7C8798; stroke-width: 3; fill: none; marker-end: url(#arrow); stroke-dasharray: 8 8; }
+      .gridLine { stroke: #CBD5E1; stroke-width: 2; }
+      .gridHead { fill: #DDEBFF; stroke: #A9C4E8; stroke-width: 1.5; }
+      .gridCell { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1.5; }
+      .cellText { font: 700 13px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .note { font: 700 18px Arial, Helvetica, sans-serif; fill: #92400E; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1800" height="1200"/>
+
+  <text class="title" x="900" y="70" text-anchor="middle">Why Table Queries Can Fail: The Viva Defence View</text>
+  <text class="subtitle" x="900" y="108" text-anchor="middle">The pipeline stores tables and citations, but MiniLM retrieves from a flattened text representation of each table.</text>
+
+  <rect class="panel" x="60" y="145" width="1680" height="870" rx="20"/>
+
+  <!-- Main pipeline row -->
+  <rect class="green" x="105" y="205" width="300" height="250" rx="14"/>
+  <text class="head" x="255" y="240">1. Real Table</text>
+  <text class="body" x="255" y="270">2D structure in the PDF</text>
+  <g transform="translate(135 300)">
+    <rect class="gridHead" x="0" y="0" width="240" height="36" rx="4"/>
+    <line class="gridLine" x1="80" y1="0" x2="80" y2="144"/>
+    <line class="gridLine" x1="160" y1="0" x2="160" y2="144"/>
+    <line class="gridLine" x1="0" y1="36" x2="240" y2="36"/>
+    <rect class="gridCell" x="0" y="36" width="240" height="36"/>
+    <rect class="gridCell" x="0" y="72" width="240" height="36"/>
+    <rect class="gridCell" x="0" y="108" width="240" height="36"/>
+    <text class="cellText" x="40" y="23">Metric</text>
+    <text class="cellText" x="120" y="23">Budget</text>
+    <text class="cellText" x="200" y="23">Actual</text>
+    <text class="cellText" x="40" y="60">RRL</text>
+    <text class="cellText" x="120" y="60">1278.8</text>
+    <text class="cellText" x="200" y="60">1278.0</text>
+    <text class="cellText" x="40" y="96">CRL</text>
+    <text class="cellText" x="120" y="96">63.0</text>
+    <text class="cellText" x="200" y="96">62.5</text>
+    <text class="cellText" x="40" y="132">Break</text>
+    <text class="cellText" x="120" y="132">0.0</text>
+    <text class="cellText" x="200" y="132">0.0</text>
+  </g>
+
+  <rect class="blue" x="510" y="205" width="300" height="250" rx="14"/>
+  <text class="head" x="660" y="240">2. Flattened Text</text>
+  <text class="body" x="660" y="270">summary + facts + markdown</text>
+  <text class="mono" x="548" y="310">Table summary...</text>
+  <text class="mono" x="548" y="338">RRL > Budget : 1278.8</text>
+  <text class="mono" x="548" y="366">RRL > Actual : 1278.0</text>
+  <text class="mono" x="548" y="394">CRL > Budget : 63.0</text>
+  <text class="mono" x="548" y="422">| Metric | Budget | Actual |</text>
+  <rect class="tag" x="573" y="438" width="174" height="28" rx="7"/>
+  <text class="tagText" x="660" y="458">embedded as text</text>
+
+  <rect class="gold" x="915" y="205" width="300" height="250" rx="14"/>
+  <text class="head" x="1065" y="240">3. MiniLM Encoder</text>
+  <text class="body" x="1065" y="270">sees tokens, not cells</text>
+  <text class="body" x="1065" y="306">WordPiece tokens</text>
+  <text class="body" x="1065" y="335">6 transformer layers</text>
+  <text class="body" x="1065" y="364">mean pooled vector</text>
+  <text class="note" x="1065" y="404">max sequence length = 256</text>
+  <text class="small" x="1065" y="432">long table text can be truncated</text>
+
+  <rect class="purple" x="1320" y="205" width="300" height="250" rx="14"/>
+  <text class="head" x="1470" y="240">4. FAISS Ranking</text>
+  <text class="body" x="1470" y="270">same index as normal text</text>
+  <text class="body" x="1470" y="306">semantic similarity</text>
+  <text class="body" x="1470" y="335">BM25/fusion/rerank</text>
+  <text class="body" x="1470" y="364">page citation metadata</text>
+  <rect class="tag" x="1380" y="398" width="180" height="28" rx="7"/>
+  <text class="tagText" x="1470" y="418">citation still works</text>
+
+  <path class="arrow" d="M405 330 L495 330"/>
+  <path class="arrow" d="M810 330 L900 330"/>
+  <path class="arrow" d="M1215 330 L1305 330"/>
+
+  <!-- Failure modes row -->
+  <rect class="slate" x="540" y="486" width="720" height="64" rx="12"/>
+  <text class="subhead" x="900" y="512">Main issue: representation mismatch</text>
+  <text class="body" x="900" y="538">A structured table is retrieved through a flattened text embedding.</text>
+
+  <rect class="rose" x="120" y="575" width="360" height="170" rx="14"/>
+  <text class="head" x="300" y="608">Row-Column Binding</text>
+  <text class="body" x="300" y="641">The model may not strongly bind</text>
+  <text class="body" x="300" y="668">a row label to the right column</text>
+  <text class="small" x="300" y="700">example: budget vs actual vs variance</text>
+
+  <rect class="rose" x="520" y="575" width="360" height="170" rx="14"/>
+  <text class="head" x="700" y="608">Exact Numbers</text>
+  <text class="body" x="700" y="641">Dense embeddings are semantic</text>
+  <text class="body" x="700" y="668">not exact numeric matchers</text>
+  <text class="small" x="700" y="700">nearby values can look very similar</text>
+
+  <rect class="rose" x="920" y="575" width="360" height="170" rx="14"/>
+  <text class="head" x="1100" y="608">Long Tables</text>
+  <text class="body" x="1100" y="641">Large serialised chunks can exceed</text>
+  <text class="body" x="1100" y="668">MiniLM's token window</text>
+  <text class="small" x="1100" y="700">late rows may never affect the vector</text>
+
+  <rect class="rose" x="1320" y="575" width="360" height="170" rx="14"/>
+  <text class="head" x="1500" y="608">Router Coverage</text>
+  <text class="body" x="1500" y="641">If a financial table query routes</text>
+  <text class="body" x="1500" y="668">as unknown, table boosts do not fire</text>
+  <text class="small" x="1500" y="700">table_facts may be bypassed</text>
+
+  <path class="warn" d="M255 455 C255 515 300 525 300 562"/>
+  <path class="warn" d="M660 455 C525 500 700 525 700 562"/>
+  <path class="warn" d="M1065 455 C1275 500 1100 525 1100 562"/>
+  <path class="warn" d="M1470 455 C1470 515 1500 525 1500 562"/>
+
+  <rect class="slate" x="540" y="486" width="720" height="64" rx="12"/>
+  <text class="subhead" x="900" y="512">Main issue: representation mismatch</text>
+  <text class="body" x="900" y="538">A structured table is retrieved through a flattened text embedding.</text>
+
+  <!-- FP2 explanation -->
+  <rect class="gold" x="165" y="790" width="645" height="155" rx="14"/>
+  <text class="head" x="488" y="826">What FP2 Really Means</text>
+  <text class="body" x="488" y="862">The correct page is in the retrieved candidates,</text>
+  <text class="body" x="488" y="891">but another chunk/page is ranked above it.</text>
+  <text class="body" x="488" y="920">That is a ranking/calibration problem, not proof that the table is missing.</text>
+
+  <rect class="green" x="990" y="790" width="645" height="155" rx="14"/>
+  <text class="head" x="1313" y="826">What You Can Defend</text>
+  <text class="body" x="1313" y="862">Tables are extracted, stored, and cited with provenance.</text>
+  <text class="body" x="1313" y="891">The limitation is the text-only embedding baseline.</text>
+  <text class="body" x="1313" y="920">Future work should use table-aware routing and cell-level matching.</text>
+
+  <!-- Viva wording -->
+  <rect class="slate" x="100" y="1045" width="1600" height="110" rx="14"/>
+  <text class="subhead" x="900" y="1080">Viva-ready explanation</text>
+  <text class="body" x="900" y="1112">The pipeline preserves table provenance, but retrieval embeds a textual serialization rather than the dataframe itself.</text>
+  <text class="body" x="900" y="1142">This is a transparent baseline, but table QA remains vulnerable to truncation, weak row-column grounding, numeric ambiguity, and ranking errors.</text>
+</svg>

@@ -1,0 +1,118 @@
+<svg width="1700" height="1100" viewBox="0 0 1700 1100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">MiniLM Chunk Embedding Flow</title>
+  <desc id="desc">Infographic showing how thesis RAG chunks are converted into MiniLM embeddings, normalized, aligned with metadata, and stored in FAISS.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="11" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L11,5 L0,10 Z" fill="#334155"/>
+    </marker>
+    <style>
+      .bg { fill: #F6F7F9; }
+      .panel { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 2; }
+      .box { fill: #FFFFFF; stroke: #94A3B8; stroke-width: 2; }
+      .boxBlue { fill: #EFF6FF; stroke: #7EA2D9; stroke-width: 2; }
+      .boxGold { fill: #FFF8E6; stroke: #D2A83E; stroke-width: 2; }
+      .boxGreen { fill: #EAF7EF; stroke: #58A273; stroke-width: 2; }
+      .boxRose { fill: #FFF1F2; stroke: #D46A7A; stroke-width: 2; }
+      .title { font: 700 50px Arial, Helvetica, sans-serif; fill: #111827; }
+      .subtitle { font: 400 22px Arial, Helvetica, sans-serif; fill: #4B5563; }
+      .head { font: 700 25px Arial, Helvetica, sans-serif; fill: #172033; text-anchor: middle; }
+      .body { font: 400 18px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .tiny { font: 400 15px Arial, Helvetica, sans-serif; fill: #475569; text-anchor: middle; }
+      .mono { font: 400 15px "Courier New", Courier, monospace; fill: #1E293B; }
+      .monoHead { font: 700 15px "Courier New", Courier, monospace; fill: #1E293B; }
+      .badge { fill: #E8EEF6; stroke: #C8D2E1; stroke-width: 1.5; }
+      .badgeText { font: 700 15px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .arrow { stroke: #334155; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+      .softArrow { stroke: #64748B; stroke-width: 3; fill: none; marker-end: url(#arrow); stroke-dasharray: 8 8; }
+      .caption { font: 400 18px Arial, Helvetica, sans-serif; fill: #526071; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1700" height="1100"/>
+
+  <text class="title" x="850" y="72" text-anchor="middle">How Chunks Become MiniLM Embeddings</text>
+  <text class="subtitle" x="850" y="110" text-anchor="middle">The thesis index stage turns page-grounded chunks into 384-dimensional vectors, normalizes them, and stores them beside page metadata.</text>
+
+  <rect class="panel" x="58" y="150" width="1584" height="820" rx="20"/>
+
+  <!-- Stage 1 -->
+  <rect class="box" x="95" y="230" width="250" height="185" rx="14"/>
+  <text class="head" x="220" y="264">Chunk Records</text>
+  <text class="body" x="220" y="295">loaded from chunks.parquet</text>
+  <rect class="badge" x="125" y="322" width="190" height="28" rx="7"/>
+  <text class="badgeText" x="220" y="342">224 tokens + 56 overlap</text>
+  <text class="mono" x="125" y="376">chunk_id</text>
+  <text class="mono" x="220" y="376">page(s)</text>
+  <text class="mono" x="125" y="399">section</text>
+  <text class="mono" x="220" y="399">chunk text</text>
+
+  <!-- Stage 2 -->
+  <rect class="boxBlue" x="430" y="230" width="285" height="185" rx="14"/>
+  <text class="head" x="572" y="264">Embedding Text</text>
+  <text class="body" x="572" y="295">section context is prepended</text>
+  <text class="tiny" x="572" y="326">non-table chunks also include subsection</text>
+  <text class="mono" x="465" y="361">Section title</text>
+  <text class="mono" x="465" y="384">Subsection title</text>
+  <text class="mono" x="465" y="407">Chunk text...</text>
+  <path class="arrow" d="M345 322 L415 322"/>
+
+  <!-- Stage 3 -->
+  <rect class="boxGold" x="810" y="230" width="300" height="185" rx="14"/>
+  <text class="head" x="960" y="264">SentenceTransformer</text>
+  <text class="body" x="960" y="295">all-MiniLM-L6-v2</text>
+  <text class="tiny" x="960" y="326">loaded offline-first from model cache</text>
+  <text class="tiny" x="960" y="353">batch_size = 32</text>
+  <text class="tiny" x="960" y="380">normalize_embeddings = False</text>
+  <path class="arrow" d="M715 322 L795 322"/>
+
+  <!-- Stage 4 -->
+  <rect class="boxBlue" x="1200" y="230" width="330" height="185" rx="14"/>
+  <text class="head" x="1365" y="264">MiniLM Encoder</text>
+  <text class="body" x="1365" y="295">MiniLM tokenizes again internally</text>
+  <text class="tiny" x="1365" y="326">transformer creates contextual token states</text>
+  <text class="tiny" x="1365" y="353">pooling returns one chunk vector</text>
+  <rect class="badge" x="1254" y="376" width="222" height="28" rx="7"/>
+  <text class="badgeText" x="1365" y="396">raw vector: 1 x 384</text>
+  <path class="arrow" d="M1110 322 L1185 322"/>
+
+  <!-- Middle validation -->
+  <rect class="boxRose" x="255" y="545" width="300" height="170" rx="14"/>
+  <text class="head" x="405" y="579">Shape Checks</text>
+  <text class="body" x="405" y="611">one vector per chunk</text>
+  <text class="body" x="405" y="640">dimension must equal 384</text>
+  <text class="tiny" x="405" y="673">errors stop indexing early</text>
+  <path class="arrow" d="M1365 415 C1365 500 405 480 405 530"/>
+
+  <rect class="boxGreen" x="700" y="545" width="300" height="170" rx="14"/>
+  <text class="head" x="850" y="579">L2 Normalization</text>
+  <text class="body" x="850" y="611">pipeline-controlled</text>
+  <text class="body" x="850" y="640">not delegated to MiniLM</text>
+  <text class="tiny" x="850" y="673">unit vectors enable cosine-style search</text>
+  <path class="arrow" d="M555 630 L685 630"/>
+
+  <rect class="box" x="1145" y="545" width="325" height="170" rx="14"/>
+  <text class="head" x="1308" y="579">Dense Artifacts</text>
+  <text class="body" x="1308" y="611">embeddings.npy stores float32 matrix</text>
+  <text class="body" x="1308" y="640">chunk_metadata.parquet keeps pages</text>
+  <text class="tiny" x="1308" y="673">row i vector maps to row i metadata</text>
+  <path class="arrow" d="M1000 630 L1130 630"/>
+
+  <!-- FAISS and retrieval -->
+  <rect class="boxGreen" x="600" y="795" width="350" height="125" rx="14"/>
+  <text class="head" x="775" y="829">FAISS IndexFlatIP</text>
+  <text class="body" x="775" y="861">inner product over normalized vectors</text>
+  <text class="tiny" x="775" y="892">equivalent to cosine ranking for dense retrieval</text>
+  <path class="arrow" d="M1308 715 C1308 780 930 775 860 790"/>
+
+  <rect class="boxBlue" x="1080" y="795" width="350" height="125" rx="14"/>
+  <text class="head" x="1255" y="829">Query Uses Same Policy</text>
+  <text class="body" x="1255" y="861">question text is encoded by MiniLM</text>
+  <text class="tiny" x="1255" y="892">same L2 normalization before FAISS search</text>
+  <path class="softArrow" d="M950 858 L1065 858"/>
+
+  <!-- Notes -->
+  <rect x="95" y="990" width="1440" height="62" rx="12" fill="#EEF2F7" stroke="#D7DEE9" stroke-width="1.5"/>
+  <text class="caption" x="120" y="1018">Key distinction: tiktoken creates the 224-token chunk boundaries; MiniLM then applies its own tokenizer when encoding the final text payload.</text>
+  <text class="caption" x="120" y="1042">The saved vector matrix, metadata parquet, and FAISS index preserve row alignment so dense hits can be mapped back to chunk_id and page citation.</text>
+</svg>

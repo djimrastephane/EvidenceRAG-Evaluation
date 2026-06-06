@@ -1,0 +1,180 @@
+<svg width="1800" height="1200" viewBox="0 0 1800 1200" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Proposed Table-Aware Generation Flow</title>
+  <desc id="desc">Infographic showing a proposed table-aware generation path for the RAG pipeline: after retrieval finds a table chunk, metadata is used to load structured table facts, select relevant rows or cells, build a compact prompt, and generate a cited answer.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="11" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L11,5 L0,10 Z" fill="#334155"/>
+    </marker>
+    <marker id="softArrow" markerWidth="14" markerHeight="14" refX="11" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L11,5 L0,10 Z" fill="#476A6F"/>
+    </marker>
+    <style>
+      .bg { fill: #F5F7FA; }
+      .panel { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 2; }
+      .blue { fill: #EEF6FF; stroke: #6FA8DC; stroke-width: 2; }
+      .green { fill: #EAF7EF; stroke: #57A773; stroke-width: 2; }
+      .gold { fill: #FFF7E6; stroke: #D69E2E; stroke-width: 2; }
+      .rose { fill: #FFF1F2; stroke: #E06475; stroke-width: 2; }
+      .teal { fill: #E8F6F3; stroke: #4D908E; stroke-width: 2; }
+      .slate { fill: #EEF2F7; stroke: #94A3B8; stroke-width: 2; }
+      .purple { fill: #F4F0FF; stroke: #9B8AD7; stroke-width: 2; }
+      .title { font: 700 48px Arial, Helvetica, sans-serif; fill: #111827; }
+      .subtitle { font: 400 23px Arial, Helvetica, sans-serif; fill: #4B5563; }
+      .sectionTitle { font: 700 24px Arial, Helvetica, sans-serif; fill: #111827; text-anchor: middle; }
+      .head { font: 700 22px Arial, Helvetica, sans-serif; fill: #111827; text-anchor: middle; }
+      .body { font: 400 17px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .bodyLeft { font: 400 17px Arial, Helvetica, sans-serif; fill: #334155; }
+      .small { font: 400 14px Arial, Helvetica, sans-serif; fill: #475569; text-anchor: middle; }
+      .smallLeft { font: 400 14px Arial, Helvetica, sans-serif; fill: #475569; }
+      .mono { font: 400 14px "Courier New", Courier, monospace; fill: #1F2937; }
+      .monoSmall { font: 400 12px "Courier New", Courier, monospace; fill: #1F2937; }
+      .tag { fill: #E8EEF6; stroke: #C8D2E1; stroke-width: 1.5; }
+      .tagText { font: 700 13px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .arrow { stroke: #334155; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+      .softArrow { stroke: #476A6F; stroke-width: 4; fill: none; marker-end: url(#softArrow); }
+      .dash { stroke: #7C8798; stroke-width: 3; fill: none; marker-end: url(#arrow); stroke-dasharray: 8 8; }
+      .warnLine { stroke: #B45309; stroke-width: 4; fill: none; stroke-dasharray: 8 8; }
+      .gridHead { fill: #DDEBFF; stroke: #A9C4E8; stroke-width: 1.5; }
+      .gridCell { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1.5; }
+      .cellText { font: 700 12px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .check { font: 700 20px Arial, Helvetica, sans-serif; fill: #047857; text-anchor: middle; }
+      .cross { font: 700 20px Arial, Helvetica, sans-serif; fill: #BE123C; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1800" height="1200"/>
+
+  <text class="title" x="900" y="68" text-anchor="middle">Table-Aware Generation: Proposed Improvement</text>
+  <text class="subtitle" x="900" y="106" text-anchor="middle">Instead of sending the first 2200 characters of a long table chunk, build a compact prompt from the relevant table rows, cells, facts, and citation metadata.</text>
+
+  <rect class="panel" x="60" y="138" width="1680" height="750" rx="18"/>
+
+  <text class="sectionTitle" x="900" y="178">Main Flow</text>
+
+  <!-- Step 1 -->
+  <rect class="blue" x="100" y="225" width="245" height="170" rx="12"/>
+  <text class="head" x="222" y="260">1. Retrieval Returns</text>
+  <text class="head" x="222" y="286">Top Table Chunk</text>
+  <text class="body" x="222" y="322">FAISS + BM25 + RRF</text>
+  <text class="body" x="222" y="348">put a table in top-k</text>
+  <rect class="tag" x="129" y="365" width="188" height="28" rx="14"/>
+  <text class="tagText" x="223" y="384">chunk_id + pages</text>
+
+  <line class="arrow" x1="350" y1="310" x2="405" y2="310"/>
+
+  <!-- Step 2 -->
+  <rect class="green" x="410" y="225" width="245" height="170" rx="12"/>
+  <text class="head" x="532" y="260">2. Detect Table</text>
+  <text class="head" x="532" y="286">Metadata</text>
+  <text class="body" x="532" y="322">is_table = true</text>
+  <text class="body" x="532" y="348">table_ref, table_type</text>
+  <rect class="tag" x="447" y="365" width="170" height="28" rx="14"/>
+  <text class="tagText" x="532" y="384">page_start/end</text>
+
+  <line class="arrow" x1="660" y1="310" x2="715" y2="310"/>
+
+  <!-- Step 3 -->
+  <rect class="teal" x="720" y="225" width="245" height="170" rx="12"/>
+  <text class="head" x="842" y="260">3. Load Structured</text>
+  <text class="head" x="842" y="286">Table Evidence</text>
+  <text class="body" x="842" y="322">table_facts.parquet</text>
+  <text class="body" x="842" y="348">tables_structured.parquet</text>
+  <rect class="tag" x="768" y="365" width="148" height="28" rx="14"/>
+  <text class="tagText" x="842" y="384">by table_ref</text>
+
+  <line class="arrow" x1="970" y1="310" x2="1025" y2="310"/>
+
+  <!-- Step 4 -->
+  <rect class="gold" x="1030" y="225" width="245" height="170" rx="12"/>
+  <text class="head" x="1152" y="260">4. Parse Query</text>
+  <text class="head" x="1152" y="286">Anchors</text>
+  <text class="body" x="1152" y="322">metric, year, column</text>
+  <text class="body" x="1152" y="348">unit, board, table type</text>
+  <rect class="tag" x="1077" y="365" width="150" height="28" rx="14"/>
+  <text class="tagText" x="1152" y="384">intent signals</text>
+
+  <line class="arrow" x1="1280" y1="310" x2="1335" y2="310"/>
+
+  <!-- Step 5 -->
+  <rect class="purple" x="1340" y="225" width="360" height="170" rx="12"/>
+  <text class="head" x="1520" y="260">5. Select Relevant Evidence</text>
+  <text class="body" x="1520" y="300">choose row blocks, cell facts,</text>
+  <text class="body" x="1520" y="326">and small markdown snippets</text>
+  <text class="body" x="1520" y="352">instead of the whole table text</text>
+  <rect class="tag" x="1428" y="365" width="184" height="28" rx="14"/>
+  <text class="tagText" x="1520" y="384">targeted context</text>
+
+  <!-- Evidence construction row -->
+  <rect class="panel" x="100" y="465" width="760" height="345" rx="14"/>
+  <text class="sectionTitle" x="480" y="505">Compact Table Context Sent to Qwen</text>
+
+  <rect class="slate" x="135" y="535" width="690" height="250" rx="10"/>
+  <text class="mono" x="165" y="570">QUESTION:</text>
+  <text class="monoSmall" x="165" y="596">What was the Non-Core Revenue Resource Limit for 2022/23?</text>
+  <text class="mono" x="165" y="632">CONTEXT:</text>
+  <text class="monoSmall" x="165" y="658">[chunk_id=... pages=28 table_ref=RRL_table]</text>
+  <text class="monoSmall" x="165" y="682">Table title: Performance against statutory financial targets</text>
+  <text class="monoSmall" x="165" y="706">Selected fact: Revenue Resource Limit &gt; Non-Core &gt; 2022/23 : GBP ...</text>
+  <text class="monoSmall" x="165" y="730">Selected row: Non-Core | Budget | Actual | Variance | Unit GBP000</text>
+  <text class="monoSmall" x="165" y="754">Citation source: page 28, same retrieved table chunk</text>
+
+  <rect class="tag" x="175" y="776" width="175" height="30" rx="15"/>
+  <text class="tagText" x="262" y="796">small enough to fit</text>
+  <rect class="tag" x="372" y="776" width="175" height="30" rx="15"/>
+  <text class="tagText" x="459" y="796">citation preserved</text>
+  <rect class="tag" x="568" y="776" width="175" height="30" rx="15"/>
+  <text class="tagText" x="655" y="796">row-column linked</text>
+
+  <line class="softArrow" x1="860" y1="638" x2="930" y2="638"/>
+
+  <rect class="green" x="940" y="465" width="360" height="345" rx="14"/>
+  <text class="sectionTitle" x="1120" y="505">Qwen Generation</text>
+  <text class="body" x="1120" y="548">Use only compact context</text>
+  <text class="body" x="1120" y="578">Return JSON only</text>
+  <text class="body" x="1120" y="608">Answer must cite chunk_id/page</text>
+  <text class="body" x="1120" y="638">If unsupported, say insufficient</text>
+  <rect class="slate" x="980" y="680" width="280" height="80" rx="8"/>
+  <text class="monoSmall" x="1000" y="710">{"answer":"Non-Core RRL:</text>
+  <text class="monoSmall" x="1000" y="732">GBP ...","citations":[</text>
+  <text class="monoSmall" x="1000" y="754">{"chunk_id":"...","page":28}]}</text>
+
+  <line class="softArrow" x1="1305" y1="638" x2="1375" y2="638"/>
+
+  <rect class="blue" x="1385" y="465" width="315" height="345" rx="14"/>
+  <text class="sectionTitle" x="1542" y="505">Citation Validation</text>
+  <text class="body" x="1542" y="548">Check cited chunk exists</text>
+  <text class="body" x="1542" y="578">Check cited page is allowed</text>
+  <text class="body" x="1542" y="608">Reject unsupported citations</text>
+  <text class="body" x="1542" y="638">Keep answer only if grounded</text>
+  <g transform="translate(1440 675)">
+    <rect class="gridHead" x="0" y="0" width="205" height="34" rx="4"/>
+    <rect class="gridCell" x="0" y="34" width="205" height="42"/>
+    <rect class="gridCell" x="0" y="76" width="205" height="42"/>
+    <line x1="102" y1="0" x2="102" y2="118" stroke="#CBD5E1" stroke-width="1.5"/>
+    <text class="cellText" x="51" y="22">Check</text>
+    <text class="cellText" x="153" y="22">Result</text>
+    <text class="cellText" x="51" y="60">chunk_id</text>
+    <text class="check" x="153" y="64">OK</text>
+    <text class="cellText" x="51" y="102">page</text>
+    <text class="check" x="153" y="106">OK</text>
+  </g>
+
+  <!-- Bottom comparison -->
+  <rect class="panel" x="60" y="925" width="1680" height="225" rx="18"/>
+  <text class="sectionTitle" x="900" y="965">Why This Fixes the Main Table Generation Weakness</text>
+
+  <rect class="rose" x="105" y="995" width="760" height="120" rx="12"/>
+  <text class="head" x="485" y="1027">Current Generic Generation</text>
+  <text class="body" x="485" y="1060">Long serialized table chunk is clipped by GEN_MAX_CHUNK_CHARS = 2200.</text>
+  <text class="body" x="485" y="1088">The needed row or column may be outside the prompt, even if retrieval found the table.</text>
+  <text class="cross" x="820" y="1062">X</text>
+
+  <rect class="green" x="935" y="995" width="760" height="120" rx="12"/>
+  <text class="head" x="1315" y="1027">Table-Aware Generation</text>
+  <text class="body" x="1315" y="1060">The prompt contains only the relevant row/cell facts plus table identity.</text>
+  <text class="body" x="1315" y="1088">It preserves page citation while reducing truncation, ambiguity, and numeric noise.</text>
+  <text class="check" x="1650" y="1062">OK</text>
+
+  <text class="small" x="900" y="1138">Viva line: retrieval still finds candidate tables, but generation becomes table-aware by selecting compact evidence from structured table facts before Qwen answers.</text>
+</svg>

@@ -1,0 +1,121 @@
+<svg width="1600" height="1000" viewBox="0 0 1600 1000" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Grounded Generation Flow</title>
+  <desc id="desc">Infographic showing how retrieved chunks are converted into a grounded generated answer with validated page citations.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="11" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L11,5 L0,10 Z" fill="#3F4B5B"/>
+    </marker>
+    <marker id="arrowSoft" markerWidth="14" markerHeight="14" refX="11" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L11,5 L0,10 Z" fill="#8A94A6"/>
+    </marker>
+    <style>
+      .bg { fill: #F6F7F9; }
+      .band { fill: #FFFFFF; stroke: #CBD2DC; stroke-width: 2; }
+      .title { font: 700 48px Arial, Helvetica, sans-serif; fill: #111827; }
+      .subtitle { font: 400 22px Arial, Helvetica, sans-serif; fill: #4B5563; }
+      .step { fill: #FFFFFF; stroke: #94A3B8; stroke-width: 2; }
+      .stepAlt { fill: #F4F8FF; stroke: #8AA4D6; stroke-width: 2; }
+      .gate { fill: #FFF9E8; stroke: #D8B34F; stroke-width: 2; }
+      .ok { fill: #EAF7EF; stroke: #5CA878; stroke-width: 2; }
+      .fail { fill: #FFF0F0; stroke: #CF6F6F; stroke-width: 2; }
+      .label { font: 700 24px Arial, Helvetica, sans-serif; fill: #172033; text-anchor: middle; }
+      .small { font: 400 18px Arial, Helvetica, sans-serif; fill: #39465A; text-anchor: middle; }
+      .tiny { font: 400 15px Arial, Helvetica, sans-serif; fill: #4B5563; text-anchor: middle; }
+      .mono { font: 700 17px "Courier New", Courier, monospace; fill: #111827; }
+      .monoSmall { font: 400 15px "Courier New", Courier, monospace; fill: #263244; }
+      .monoTiny { font: 400 13px "Courier New", Courier, monospace; fill: #263244; }
+      .route { stroke: #3F4B5B; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+      .routeSoft { stroke: #8A94A6; stroke-width: 3; fill: none; marker-end: url(#arrowSoft); stroke-dasharray: 8 8; }
+      .badge { fill: #E8EDF5; stroke: #C8D1DF; stroke-width: 1.5; }
+      .badgeText { font: 700 16px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .caption { font: 400 18px Arial, Helvetica, sans-serif; fill: #526071; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1600" height="1000"/>
+
+  <text class="title" x="800" y="70" text-anchor="middle">Grounded Generation: From Chunks to Page Citation</text>
+  <text class="subtitle" x="800" y="108" text-anchor="middle">The generator only sees retrieved evidence blocks, then the service accepts the answer only when its citation maps back to those chunks.</text>
+
+  <rect class="band" x="58" y="145" width="1484" height="720" rx="18"/>
+
+  <!-- Input chunks -->
+  <rect class="step" x="90" y="205" width="265" height="210" rx="14"/>
+  <text class="label" x="222" y="242">Relevant Chunks</text>
+  <text class="small" x="222" y="273">top-k results already ranked</text>
+  <rect class="badge" x="120" y="302" width="205" height="28" rx="7"/>
+  <text class="badgeText" x="222" y="322">chunk_id + pages</text>
+  <text class="monoSmall" x="118" y="358">[chunk_id=c1 pages=28]</text>
+  <text class="monoSmall" x="118" y="381">Core revenue underspend...</text>
+  <text class="monoSmall" x="118" y="404">[chunk_id=c2 pages=29]</text>
+
+  <!-- Context packing -->
+  <rect class="stepAlt" x="435" y="205" width="285" height="210" rx="14"/>
+  <text class="label" x="578" y="242">Context Pack</text>
+  <text class="small" x="578" y="274">trimmed evidence blocks</text>
+  <text class="tiny" x="578" y="307">default: 5 chunks, 9000 chars total</text>
+  <text class="tiny" x="578" y="331">default: 2200 chars per chunk</text>
+  <rect class="badge" x="468" y="358" width="220" height="28" rx="7"/>
+  <text class="badgeText" x="578" y="378">labels kept in prompt</text>
+  <path class="route" d="M355 310 L420 310"/>
+
+  <!-- Prompt rules -->
+  <rect class="step" x="805" y="205" width="305" height="210" rx="14"/>
+  <text class="label" x="958" y="242">Grounded Prompt</text>
+  <text class="small" x="958" y="274">use only CONTEXT</text>
+  <text class="small" x="958" y="303">return JSON only</text>
+  <text class="small" x="958" y="332">do not invent chunk_id or page</text>
+  <text class="monoTiny" x="840" y="362">{"answer":"...",</text>
+  <text class="monoTiny" x="840" y="385"> "citations":[</text>
+  <text class="monoTiny" x="840" y="408">  {"chunk_id":"c1","page":28}]}</text>
+  <path class="route" d="M720 310 L790 310"/>
+
+  <!-- Generation choices -->
+  <rect class="gate" x="1195" y="205" width="285" height="210" rx="14"/>
+  <text class="label" x="1338" y="242">Answer Route</text>
+  <text class="small" x="1338" y="274">numeric questions try</text>
+  <text class="small" x="1338" y="303">deterministic extraction first</text>
+  <text class="small" x="1338" y="342">otherwise local LLM</text>
+  <text class="tiny" x="1338" y="377">Ollama-compatible endpoint</text>
+  <path class="route" d="M1110 310 L1180 310"/>
+
+  <!-- Output JSON -->
+  <rect class="stepAlt" x="435" y="515" width="330" height="200" rx="14"/>
+  <text class="label" x="600" y="552">Model Output</text>
+  <text class="small" x="600" y="584">answer plus claimed citation</text>
+  <text class="monoTiny" x="470" y="616">answer: "Core revenue underspend:"</text>
+  <text class="monoTiny" x="470" y="639">        "GBP 0.769m"</text>
+  <text class="monoTiny" x="470" y="662">citation: chunk_id=c1, page=28</text>
+  <text class="tiny" x="600" y="684">plain text citations are parsed as fallback</text>
+  <path class="route" d="M1338 415 C1338 480 600 470 600 500"/>
+
+  <!-- Citation validation -->
+  <rect class="gate" x="890" y="515" width="320" height="200" rx="14"/>
+  <text class="label" x="1050" y="552">Citation Validation</text>
+  <text class="small" x="1050" y="584">is chunk_id in retrieved results?</text>
+  <text class="small" x="1050" y="615">is page listed for that chunk?</text>
+  <rect class="badge" x="940" y="648" width="220" height="30" rx="7"/>
+  <text class="badgeText" x="1050" y="669">valid: c1 on page 28</text>
+  <path class="route" d="M765 615 L875 615"/>
+
+  <!-- Success answer -->
+  <rect class="ok" x="1165" y="775" width="315" height="118" rx="14"/>
+  <text class="label" x="1322" y="813">Shown to User</text>
+  <text class="small" x="1322" y="845">generated answer accepted</text>
+  <text class="monoTiny" x="1205" y="872">Core revenue underspend: GBP 0.769m</text>
+  <text class="monoTiny" x="1205" y="890">[chunk_id=c1, p28]</text>
+  <path class="route" d="M1125 715 C1160 750 1210 760 1255 770"/>
+
+  <!-- Failure gate -->
+  <rect class="fail" x="90" y="775" width="335" height="118" rx="14"/>
+  <text class="label" x="258" y="813">Grounding Gate</text>
+  <text class="small" x="258" y="845">missing or invalid citation</text>
+  <text class="small" x="258" y="875">status: insufficient_evidence</text>
+  <path class="routeSoft" d="M970 715 C780 800 590 828 445 834"/>
+
+  <!-- Source reference ribbon -->
+  <rect x="90" y="910" width="1390" height="50" rx="12" fill="#EEF2F7" stroke="#D7DEE9" stroke-width="1.5"/>
+  <text class="caption" x="115" y="932">Implemented in SearchService: build prompt from results, call local generation, parse JSON citations, and validate citation chunk/page pairs.</text>
+  <text class="caption" x="115" y="953">Accepted outputs return generated_answer plus generated_citations; failed citation checks become insufficient_evidence.</text>
+</svg>

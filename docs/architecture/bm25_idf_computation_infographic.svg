@@ -1,0 +1,145 @@
+<svg width="1800" height="1200" viewBox="0 0 1800 1200" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">When IDF Is Computed in BM25 Retrieval</title>
+  <desc id="desc">Infographic explaining when inverse document frequency is computed in the BM25 branch: after metadata scope and candidate selection, during BM25Index construction, before query scoring.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="11" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L11,5 L0,10 Z" fill="#334155"/>
+    </marker>
+    <marker id="softArrow" markerWidth="14" markerHeight="14" refX="11" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L11,5 L0,10 Z" fill="#64748B"/>
+    </marker>
+    <style>
+      .bg { fill: #F6F7F9; }
+      .panel { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 2; }
+      .blue { fill: #EEF6FF; stroke: #73A3DC; stroke-width: 2; }
+      .green { fill: #EAF7EF; stroke: #58A273; stroke-width: 2; }
+      .gold { fill: #FFF8E6; stroke: #D2A83E; stroke-width: 2; }
+      .rose { fill: #FFF1F2; stroke: #D46A7A; stroke-width: 2; }
+      .purple { fill: #F3F0FF; stroke: #9B8AD7; stroke-width: 2; }
+      .slate { fill: #EEF2F7; stroke: #94A3B8; stroke-width: 2; }
+      .title { font: 700 50px Arial, Helvetica, sans-serif; fill: #111827; }
+      .subtitle { font: 400 23px Arial, Helvetica, sans-serif; fill: #4B5563; }
+      .head { font: 700 25px Arial, Helvetica, sans-serif; fill: #111827; text-anchor: middle; }
+      .subhead { font: 700 20px Arial, Helvetica, sans-serif; fill: #1F2937; text-anchor: middle; }
+      .body { font: 400 18px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .small { font: 400 15px Arial, Helvetica, sans-serif; fill: #475569; text-anchor: middle; }
+      .mono { font: 400 15px "Courier New", Courier, monospace; fill: #1E293B; }
+      .monoSmall { font: 400 13px "Courier New", Courier, monospace; fill: #1E293B; }
+      .formula { font: 700 19px "Courier New", Courier, monospace; fill: #92400E; text-anchor: middle; }
+      .tag { fill: #E8EEF6; stroke: #C8D2E1; stroke-width: 1.5; }
+      .tagText { font: 700 14px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .arrow { stroke: #334155; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+      .soft { stroke: #64748B; stroke-width: 3; fill: none; marker-end: url(#softArrow); stroke-dasharray: 8 8; }
+      .line { stroke: #CBD5E1; stroke-width: 2; }
+      .tableHead { fill: #DDEBFF; stroke: #A9C4E8; stroke-width: 1.5; }
+      .tableRow { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1.5; }
+      .tableAlt { fill: #F8FAFC; stroke: #CBD5E1; stroke-width: 1.5; }
+      .cell { font: 700 14px Arial, Helvetica, sans-serif; fill: #334155; text-anchor: middle; }
+      .cellMono { font: 400 13px "Courier New", Courier, monospace; fill: #334155; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1800" height="1200"/>
+
+  <text class="title" x="900" y="70" text-anchor="middle">When IDF Is Computed in the BM25 Branch</text>
+  <text class="subtitle" x="900" y="110" text-anchor="middle">IDF is computed when the temporary BM25 corpus is built, before the query is scored against each candidate chunk.</text>
+
+  <rect class="panel" x="58" y="150" width="1684" height="902" rx="22"/>
+
+  <!-- Top row -->
+  <rect class="blue" x="95" y="215" width="300" height="175" rx="14"/>
+  <text class="head" x="245" y="250">1. Query Arrives</text>
+  <text class="body" x="245" y="284">question + retrieval scope</text>
+  <text class="monoSmall" x="128" y="322">doc_id = Grampian-2022-2023</text>
+  <text class="monoSmall" x="128" y="348">q = "revenue resource limit"</text>
+
+  <rect class="green" x="520" y="215" width="330" height="175" rx="14"/>
+  <text class="head" x="685" y="250">2. Metadata Scope</text>
+  <text class="body" x="685" y="284">choose allowed chunk rows</text>
+  <text class="body" x="685" y="314">doc, trust, year, is_table</text>
+  <rect class="tag" x="578" y="338" width="214" height="28" rx="7"/>
+  <text class="tagText" x="685" y="358">candidate_indices = rows</text>
+  <path class="arrow" d="M395 302 L505 302"/>
+
+  <rect class="purple" x="975" y="215" width="330" height="175" rx="14"/>
+  <text class="head" x="1140" y="250">3. Temporary Corpus</text>
+  <text class="body" x="1140" y="284">read chunk_text for each row</text>
+  <text class="monoSmall" x="1030" y="322">local 0 -> metadata row 2</text>
+  <text class="monoSmall" x="1030" y="348">local 1 -> metadata row 5</text>
+  <text class="monoSmall" x="1030" y="374">local N -> metadata row N</text>
+  <path class="arrow" d="M850 302 L960 302"/>
+
+  <rect class="rose" x="1430" y="215" width="270" height="175" rx="14"/>
+  <text class="head" x="1565" y="250">Key Timing</text>
+  <text class="body" x="1565" y="284">IDF is computed here:</text>
+  <text class="body" x="1565" y="314">during BM25Index setup</text>
+  <text class="small" x="1565" y="348">not learned by MiniLM</text>
+  <text class="small" x="1565" y="370">not generated by Qwen</text>
+  <path class="arrow" d="M1305 302 L1415 302"/>
+
+  <!-- BM25 construction -->
+  <path class="arrow" d="M1140 390 C1140 440 465 430 465 485"/>
+
+  <rect class="gold" x="115" y="500" width="700" height="285" rx="14"/>
+  <text class="head" x="465" y="536">4. BM25Index Construction</text>
+  <text class="body" x="465" y="566">the corpus is tokenised and corpus statistics are computed</text>
+
+  <g transform="translate(160 602)">
+    <rect class="tableHead" x="0" y="0" width="610" height="34"/>
+    <text class="cell" x="70" y="23">term</text>
+    <text class="cell" x="210" y="23">df(t)</text>
+    <text class="cell" x="375" y="23">meaning</text>
+    <text class="cell" x="535" y="23">idf effect</text>
+    <rect class="tableRow" x="0" y="34" width="610" height="38"/>
+    <rect class="tableAlt" x="0" y="72" width="610" height="38"/>
+    <rect class="tableRow" x="0" y="110" width="610" height="38"/>
+    <line class="line" x1="140" y1="0" x2="140" y2="148"/>
+    <line class="line" x1="280" y1="0" x2="280" y2="148"/>
+    <line class="line" x1="470" y1="0" x2="470" y2="148"/>
+    <text class="cellMono" x="70" y="59">revenue</text>
+    <text class="cellMono" x="210" y="59">12</text>
+    <text class="cellMono" x="375" y="59">appears in 12 chunks</text>
+    <text class="cellMono" x="535" y="59">medium</text>
+    <text class="cellMono" x="70" y="97">limit</text>
+    <text class="cellMono" x="210" y="97">4</text>
+    <text class="cellMono" x="375" y="97">rarer term</text>
+    <text class="cellMono" x="535" y="97">higher</text>
+    <text class="cellMono" x="70" y="135">the</text>
+    <text class="cellMono" x="210" y="135">many</text>
+    <text class="cellMono" x="375" y="135">common word</text>
+    <text class="cellMono" x="535" y="135">lower</text>
+  </g>
+
+  <text class="formula" x="465" y="765">idf(t) = log(1 + ((N - df(t) + 0.5) / (df(t) + 0.5)))</text>
+
+  <rect class="blue" x="985" y="500" width="650" height="285" rx="14"/>
+  <text class="head" x="1310" y="536">5. Stored BM25 Statistics</text>
+  <text class="body" x="1310" y="566">these are ready before query scoring starts</text>
+  <text class="mono" x="1070" y="612">self.n_docs = number of candidate chunks</text>
+  <text class="mono" x="1070" y="646">self.term_freqs = token counts per chunk</text>
+  <text class="mono" x="1070" y="680">self.doc_freq = number of chunks containing term</text>
+  <text class="mono" x="1070" y="714">self.idf = inverse document frequency per term</text>
+  <text class="mono" x="1070" y="748">self.avgdl = average candidate chunk length</text>
+  <path class="arrow" d="M815 642 L970 642"/>
+
+  <!-- Query scoring -->
+  <path class="arrow" d="M1310 785 C1310 830 900 825 900 860"/>
+
+  <rect class="green" x="175" y="870" width="560" height="145" rx="14"/>
+  <text class="head" x="455" y="905">6. Query Tokens Are Scored</text>
+  <text class="body" x="455" y="936">now the query is tokenised and matched to each chunk</text>
+  <text class="mono" x="245" y="970">["revenue", "resource", "limit"]</text>
+  <text class="small" x="455" y="997">each token uses the IDF already computed from the candidate corpus</text>
+
+  <rect class="gold" x="885" y="870" width="750" height="145" rx="14"/>
+  <text class="head" x="1260" y="905">7. Every Candidate Chunk Gets A Score</text>
+  <text class="formula" x="1260" y="940">score(q,d) = sum IDF(t) * TF_norm(t,d)</text>
+  <text class="body" x="1260" y="972">chunks with no matching query terms still get a score slot, usually 0.0</text>
+  <path class="arrow" d="M735 942 L870 942"/>
+
+  <!-- Bottom row -->
+  <rect class="slate" x="95" y="1072" width="1610" height="72" rx="14"/>
+  <text class="subhead" x="900" y="1100">Viva takeaway</text>
+  <text class="body" x="900" y="1128">IDF is corpus-dependent: if the document scope or filters change, the temporary BM25 corpus changes, so the IDF values are recomputed for that candidate set.</text>
+</svg>
