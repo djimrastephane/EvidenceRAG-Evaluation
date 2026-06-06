@@ -65,6 +65,14 @@ class RerankConfig:
     numeric_density_boost: float = 0.03
     segment_search_hit_boost: float = 0.03
     max_entity_matches: int = 4
+    # Lowercase substrings: table boost only fires when the chunk's section_title
+    # contains at least one of these. Empty tuple = boost applies to all sections.
+    table_boost_allowed_section_patterns: tuple[str, ...] = (
+        "performance report",
+        "financial highlights",
+        "performance analysis",
+        "overview",
+    )
 
 
 def normalize_text(text: str) -> str:
@@ -189,10 +197,26 @@ def segment_search_hit_boost(question: str, segment_has_search_hit: bool, config
     return float(config.segment_search_hit_boost)
 
 
-def table_priority_boost(is_table_chunk: bool, route_intent: str, config: RerankConfig) -> float:
-    """Return table-priority boost for routed table-metric questions."""
+def table_priority_boost(
+    is_table_chunk: bool,
+    route_intent: str,
+    config: RerankConfig,
+    section_title: str = "",
+) -> float:
+    """Return table-priority boost for routed table-metric questions.
+
+    Only fires when the chunk's section_title matches one of
+    config.table_boost_allowed_section_patterns (case-insensitive substring).
+    This prevents deep notes/financial-statement tables from being boosted
+    above performance-report summary pages that use the same terminology.
+    """
     if not is_table_chunk:
         return 0.0
-    if str(route_intent or "").startswith("table_metric_"):
-        return float(config.table_chunk_boost)
-    return 0.0
+    if not str(route_intent or "").startswith("table_metric_"):
+        return 0.0
+    patterns = config.table_boost_allowed_section_patterns
+    if patterns:
+        section_lower = str(section_title or "").lower()
+        if not any(p in section_lower for p in patterns):
+            return 0.0
+    return float(config.table_chunk_boost)

@@ -90,6 +90,7 @@ def apply_post_fusion_rerank(
                 is_table_chunk=bool(row.get("is_table", False)),
                 route_intent=route.intent if route is not None else "generic",
                 config=rerank_cfg,
+                section_title=str(row.get("section_title", "")),
             )
             score += query_overlap_boost(
                 question=question,
