@@ -14,7 +14,7 @@ Four sequential stages: PDF preprocessing → embedding + FAISS indexing → hyb
 
 ### Preprocessing pipeline
 
-![Hybrid preprocessing pipeline](results/figures/hybrid_preprocessing_pipeline_v2.png)
+![Hybrid preprocessing pipeline](docs/architecture/rendered/hybrid_preprocessing_pipeline_v2.png)
 
 PyMuPDF extracts text; PDFPlumber covers low-quality pages as fallback. Header/footer boilerplate is stripped by coordinate crop. Tables are extracted separately via Camelot and injected back as structured markdown chunks. Pages with both table regions and substantial prose are routed to both extractors via **mixed routing**.
 
@@ -44,25 +44,25 @@ Evaluated on 250 queries across 5 Grampian documents (2020–2025), 50 queries p
 
 ### Hybrid vs Dense retrieval (bootstrapped 95% CI)
 
-![Bootstrap CI: Hybrid vs Dense](results/bootstrap_thesis_rag_2026-04-21/paired_bootstrap_ci_panel_Grampian_2020_2025_hybrid_vs_dense.png)
+![Bootstrap CI: Hybrid vs Dense](docs/architecture/rendered/paired_bootstrap_ci_panel_Grampian_2020_2025_hybrid_vs_dense.png)
 
 Hybrid RRF consistently outperforms dense-only retrieval across all k values. Bootstrapped confidence intervals confirm the improvement is statistically reliable.
 
 ### Rank survival curve
 
-![Rank survival curve](data_processed/retrieval_rank_km_curve.png)
+![Rank survival curve](docs/architecture/rendered/retrieval_rank_km_curve.png)
 
 Proportion of queries with their gold page still in the retrieved set as k grows. The pipeline achieves >94% page recall by k=10.
 
 ### Performance by query difficulty
 
-![Difficulty tier method comparison](figures/difficulty_tier_method_comparison.png)
+![Difficulty tier method comparison](docs/architecture/rendered/difficulty_tier_method_comparison.png)
 
 Queries are stratified by difficulty (Easy/Medium/Hard/Very Hard). Hybrid retrieval gains are concentrated in the Medium and Hard tiers where BM25 term matching compensates for dense retrieval misses.
 
 ### Failure analysis (k=1)
 
-![Failure heatmap](docs/figures/fp_failure_heatmap_full50_v4.png)
+![Failure heatmap](docs/architecture/rendered/fp_failure_heatmap_full50_v4.png)
 
 FP taxonomy at k=1 across 50 queries per document. FP2 (missed top rank — answer exists in index but not retrieved first) accounts for the majority of failures, pointing to re-ranking as the primary remaining improvement opportunity.
 
