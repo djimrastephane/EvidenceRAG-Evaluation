@@ -74,10 +74,10 @@ def dense_metrics(ranked_pages: list[int], gold_pages: list[int]) -> dict[str, f
 def bootstrap_delta(a: np.ndarray, b: np.ndarray, seed: int) -> dict:
     n = len(a)
     rng = np.random.default_rng(seed)
-    diffs = np.array([
-        float(np.mean(a[rng.integers(0, n, n)]) - np.mean(b[rng.integers(0, n, n)]))
-        for _ in range(N_BOOT)
-    ])
+    diffs = np.empty(N_BOOT, dtype=np.float64)
+    for i in range(N_BOOT):
+        idx = rng.integers(0, n, n)
+        diffs[i] = float(np.mean(a[idx]) - np.mean(b[idx]))
     obs = float(np.mean(a) - np.mean(b))
     return {
         "observed_delta": obs,
