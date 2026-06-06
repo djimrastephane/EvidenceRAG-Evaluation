@@ -1,0 +1,128 @@
+{
+  "_meta": {
+    "dataset_name": "Shetland-2015-2016 Retrieval Silver Set",
+    "description": "Auto-generated silver evaluation set for NHS Shetland Annual Report 2015/16. Answers produced by the pipeline (retrieval + Ollama generation) and filtered to generation_confidence=1.0. NOT human-verified.",
+    "label_type": "silver",
+    "doc_id": "Shetland-2015-2016",
+    "generated_by": "scripts/generate_silver_eval_sets.py"
+  },
+  "queries": [
+    {
+      "query_id": "Q_16_FIN_01",
+      "question": "What was the total net expenditure for NHS Shetland in 2015/16?",
+      "expected_pages": [
+        5
+      ],
+      "expected_answer": "Total Comprehensive Expenditure: £55,892k",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2015-2016",
+      "year": 2016,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_16_FIN_03",
+      "question": "What was the Core Revenue Resource Limit for NHS Shetland in 2015/16?",
+      "expected_pages": [
+        5
+      ],
+      "expected_answer": "The Core Revenue Resource Limit for NHS Shetland in 2015/16 was £53,206k.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2015-2016",
+      "year": 2016,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_16_FIN_04",
+      "question": "What was the Capital Resource Limit for NHS Shetland in 2015/16?",
+      "expected_pages": [
+        5
+      ],
+      "expected_answer": "The Capital Resource Limit for NHS Shetland in 2015/16 was £362,287,000.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2015-2016",
+      "year": 2016,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_16_FIN_05",
+      "question": "Did NHS Shetland report a surplus or deficit against its resource budget in 2015/16?",
+      "expected_pages": [
+        5
+      ],
+      "expected_answer": "NHS Shetland delivered an under spend against its Core Revenue Resource Limit (RRL) of £396k for 2015/16, indicating a surplus.",
+      "answer_type": "text",
+      "difficulty": "MOD",
+      "doc_id": "Shetland-2015-2016",
+      "year": 2016,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_16_FIN_07",
+      "question": "What was the total operating expenditure for NHS Shetland in 2015/16?",
+      "expected_pages": [
+        71
+      ],
+      "expected_answer": "Net operating cost: £54,464k",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Shetland-2015-2016",
+      "year": 2016,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_16_STF_03",
+      "question": "What was the sickness absence rate for NHS Shetland in 2015/16?",
+      "expected_pages": [
+        68
+      ],
+      "expected_answer": "Sickness absence rate: 4.6%",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Shetland-2015-2016",
+      "year": 2016,
+      "category": "STF"
+    },
+    {
+      "query_id": "Q_16_OPS_01",
+      "question": "What percentage of A&E patients were seen within 4 hours at NHS Shetland in 2015/16?",
+      "expected_pages": [
+        7
+      ],
+      "expected_answer": "96.5%",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2015-2016",
+      "year": 2016,
+      "category": "OPS"
+    },
+    {
+      "query_id": "Q_16_GOV_01",
+      "question": "Who was the Chief Executive of NHS Shetland in 2016?",
+      "expected_pages": [
+        25
+      ],
+      "expected_answer": "The Chief Executive of NHS Shetland in 2016 was Ralph Roberts.",
+      "answer_type": "text",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2015-2016",
+      "year": 2016,
+      "category": "GOV"
+    },
+    {
+      "query_id": "Q_16_GOV_02",
+      "question": "Who was the Chair of NHS Shetland in 2016?",
+      "expected_pages": [
+        20
+      ],
+      "expected_answer": "The Chair of NHS Shetland in 2016 was Ian Kinniburgh.",
+      "answer_type": "text",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2015-2016",
+      "year": 2016,
+      "category": "GOV"
+    }
+  ]
+}

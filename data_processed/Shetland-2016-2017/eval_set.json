@@ -1,0 +1,115 @@
+{
+  "_meta": {
+    "dataset_name": "Shetland-2016-2017 Retrieval Silver Set",
+    "description": "Auto-generated silver evaluation set for NHS Shetland Annual Report 2016/17. Answers produced by the pipeline (retrieval + Ollama generation) and filtered to generation_confidence=1.0. NOT human-verified.",
+    "label_type": "silver",
+    "doc_id": "Shetland-2016-2017",
+    "generated_by": "scripts/generate_silver_eval_sets.py"
+  },
+  "queries": [
+    {
+      "query_id": "Q_17_FIN_01",
+      "question": "What was the total net expenditure for NHS Shetland in 2016/17?",
+      "expected_pages": [
+        55
+      ],
+      "expected_answer": "Net Operating Costs: £65,082k",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2016-2017",
+      "year": 2017,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_17_FIN_02",
+      "question": "What were the total staff costs for NHS Shetland in 2016/17?",
+      "expected_pages": [
+        70
+      ],
+      "expected_answer": "Total staff costs for NHS Shetland in 2016/17 were £29,171k.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2016-2017",
+      "year": 2017,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_17_FIN_03",
+      "question": "What was the Core Revenue Resource Limit for NHS Shetland in 2016/17?",
+      "expected_pages": [
+        6
+      ],
+      "expected_answer": "The Core Revenue Resource Limit for NHS Shetland in 2016/17 was £55,081k.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2016-2017",
+      "year": 2017,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_17_FIN_05",
+      "question": "Did NHS Shetland report a surplus or deficit against its resource budget in 2016/17?",
+      "expected_pages": [
+        6
+      ],
+      "expected_answer": "NHS Shetland delivered an under spend against its Core Revenue Resource Limit (RRL) of £312k for 2016/17, indicating a surplus in the resource budget for ongoing activity. However, there is an underlying recurring deficit in the resource budget for ongoing activity at the close of 2016/17, standing at £1,805k up from £1,462k in 2015/16.",
+      "answer_type": "text",
+      "difficulty": "MOD",
+      "doc_id": "Shetland-2016-2017",
+      "year": 2017,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_17_FIN_06",
+      "question": "What was the Cash Requirement limit for NHS Shetland in 2016/17?",
+      "expected_pages": [
+        6
+      ],
+      "expected_answer": "The Cash Requirement limit for NHS Shetland in 2016/17 was £56,024k.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2016-2017",
+      "year": 2017,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_17_FIN_07",
+      "question": "What was the total operating expenditure for NHS Shetland in 2016/17?",
+      "expected_pages": [
+        55
+      ],
+      "expected_answer": "Total Clinical Services Costs: £47,288k",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Shetland-2016-2017",
+      "year": 2017,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_17_STF_01",
+      "question": "How many whole time equivalent staff did NHS Shetland employ in 2016/17?",
+      "expected_pages": [
+        31
+      ],
+      "expected_answer": "557 Whole time equivalent (WTE)",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2016-2017",
+      "year": 2017,
+      "category": "STF"
+    },
+    {
+      "query_id": "Q_17_OPS_01",
+      "question": "What percentage of A&E patients were seen within 4 hours at NHS Shetland in 2016/17?",
+      "expected_pages": [
+        8
+      ],
+      "expected_answer": "96.0% of patients attending the Accident and Emergency department were either discharged or admitted to a ward within four hours",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2016-2017",
+      "year": 2017,
+      "category": "OPS"
+    }
+  ]
+}

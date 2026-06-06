@@ -1,0 +1,50 @@
+{
+  "_meta": {
+    "dataset_name": "Shetland-2020-2021 Retrieval Silver Set",
+    "description": "Auto-generated silver evaluation set for NHS Shetland Annual Report 2020/21. Answers produced by the pipeline (retrieval + Ollama generation) and filtered to generation_confidence=1.0. NOT human-verified.",
+    "label_type": "silver",
+    "doc_id": "Shetland-2020-2021",
+    "generated_by": "scripts/generate_silver_eval_sets.py"
+  },
+  "queries": [
+    {
+      "query_id": "Q_21_FIN_01",
+      "question": "What was the total net expenditure for NHS Shetland in 2020/21?",
+      "expected_pages": [
+        15
+      ],
+      "expected_answer": "Net expenditure SoCNE £76,421k",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2020-2021",
+      "year": 2021,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_21_FIN_03",
+      "question": "What was the Core Revenue Resource Limit for NHS Shetland in 2020/21?",
+      "expected_pages": [
+        78
+      ],
+      "expected_answer": "Core Revenue Resource Limit (RRL) for NHS Shetland in 2020/21 was 74,356 £000.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2020-2021",
+      "year": 2021,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_21_STF_01",
+      "question": "How many whole time equivalent staff did NHS Shetland employ in 2020/21?",
+      "expected_pages": [
+        53
+      ],
+      "expected_answer": "Whole time equivalent staff count: 1048",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2020-2021",
+      "year": 2021,
+      "category": "STF"
+    }
+  ]
+}

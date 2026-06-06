@@ -1,0 +1,76 @@
+{
+  "_meta": {
+    "dataset_name": "Shetland-2021-2022 Retrieval Silver Set",
+    "description": "Auto-generated silver evaluation set for NHS Shetland Annual Report 2021/22. Answers produced by the pipeline (retrieval + Ollama generation) and filtered to generation_confidence=1.0. NOT human-verified.",
+    "label_type": "silver",
+    "doc_id": "Shetland-2021-2022",
+    "generated_by": "scripts/generate_silver_eval_sets.py"
+  },
+  "queries": [
+    {
+      "query_id": "Q_22_FIN_01",
+      "question": "What was the total net expenditure for NHS Shetland in 2021/22?",
+      "expected_pages": [
+        6
+      ],
+      "expected_answer": "Total net expenditure for the year ended 31 March 2022: £48.576m",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2021-2022",
+      "year": 2022,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_22_STF_01",
+      "question": "How many whole time equivalent staff did NHS Shetland employ in 2021/22?",
+      "expected_pages": [
+        70
+      ],
+      "expected_answer": "Whole Time Equivalent staff 663",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2021-2022",
+      "year": 2022,
+      "category": "STF"
+    },
+    {
+      "query_id": "Q_22_STF_03",
+      "question": "What was the sickness absence rate for NHS Shetland in 2021/22?",
+      "expected_pages": [
+        16
+      ],
+      "expected_answer": "Staff-sickness absence rate is 4.0%",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Shetland-2021-2022",
+      "year": 2022,
+      "category": "STF"
+    },
+    {
+      "query_id": "Q_22_OPS_01",
+      "question": "What percentage of A&E patients were seen within 4 hours at NHS Shetland in 2021/22?",
+      "expected_pages": [
+        24
+      ],
+      "expected_answer": "95.0% of patients attending A&E were seen within 4 hours",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2021-2022",
+      "year": 2022,
+      "category": "OPS"
+    },
+    {
+      "query_id": "Q_22_GOV_01",
+      "question": "Who was the Chief Executive of NHS Shetland in 2022?",
+      "expected_pages": [
+        145
+      ],
+      "expected_answer": "Michael Dickson",
+      "answer_type": "text",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2021-2022",
+      "year": 2022,
+      "category": "GOV"
+    }
+  ]
+}

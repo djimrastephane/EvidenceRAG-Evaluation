@@ -1,0 +1,50 @@
+{
+  "_meta": {
+    "dataset_name": "Shetland-2018-2019 Retrieval Silver Set",
+    "description": "Auto-generated silver evaluation set for NHS Shetland Annual Report 2018/19. Answers produced by the pipeline (retrieval + Ollama generation) and filtered to generation_confidence=1.0. NOT human-verified.",
+    "label_type": "silver",
+    "doc_id": "Shetland-2018-2019",
+    "generated_by": "scripts/generate_silver_eval_sets.py"
+  },
+  "queries": [
+    {
+      "query_id": "Q_19_FIN_04",
+      "question": "What was the Capital Resource Limit for NHS Shetland in 2018/19?",
+      "expected_pages": [
+        10
+      ],
+      "expected_answer": "The Capital Resource Limit for NHS Shetland in 2018/19 was £6k above the gross expenditure on capital assets, which was £699k. Therefore, the approved capital resource limit was £705k.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2018-2019",
+      "year": 2019,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_19_STF_03",
+      "question": "What was the sickness absence rate for NHS Shetland in 2018/19?",
+      "expected_pages": [
+        37
+      ],
+      "expected_answer": "Sickness absence rate: 3.9%",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Shetland-2018-2019",
+      "year": 2019,
+      "category": "STF"
+    },
+    {
+      "query_id": "Q_19_GOV_01",
+      "question": "Who was the Chief Executive of NHS Shetland in 2019?",
+      "expected_pages": [
+        3
+      ],
+      "expected_answer": "Simon Bokor Ingram",
+      "answer_type": "text",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2018-2019",
+      "year": 2019,
+      "category": "GOV"
+    }
+  ]
+}

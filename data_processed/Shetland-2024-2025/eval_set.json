@@ -1,0 +1,89 @@
+{
+  "_meta": {
+    "dataset_name": "Shetland-2024-2025 Retrieval Silver Set",
+    "description": "Auto-generated silver evaluation set for NHS Shetland Annual Report 2024/25. Answers produced by the pipeline (retrieval + Ollama generation) and filtered to generation_confidence=1.0. NOT human-verified.",
+    "label_type": "silver",
+    "doc_id": "Shetland-2024-2025",
+    "generated_by": "scripts/generate_silver_eval_sets.py"
+  },
+  "queries": [
+    {
+      "query_id": "Q_25_FIN_01",
+      "question": "What was the total net expenditure for NHS Shetland in 2024/25?",
+      "expected_pages": [
+        2
+      ],
+      "expected_answer": "Net expenditure for the year ended 31 March 2025: £89,946,000",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2024-2025",
+      "year": 2025,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_25_FIN_03",
+      "question": "What was the Core Revenue Resource Limit for NHS Shetland in 2024/25?",
+      "expected_pages": [
+        14
+      ],
+      "expected_answer": "The Core Revenue Resource Limit for NHS Shetland in 2024/25 was £84,594,000.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2024-2025",
+      "year": 2025,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_25_FIN_05",
+      "question": "Did NHS Shetland report a surplus or deficit against its resource budget in 2024/25?",
+      "expected_pages": [
+        14
+      ],
+      "expected_answer": "NHS Shetland had a surplus against its core Revenue Resource limit (RRL) of £16,000 in 2024/25.",
+      "answer_type": "text",
+      "difficulty": "MOD",
+      "doc_id": "Shetland-2024-2025",
+      "year": 2025,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_25_FIN_07",
+      "question": "What was the total operating expenditure for NHS Shetland in 2024/25?",
+      "expected_pages": [
+        7
+      ],
+      "expected_answer": "Total operating expenditure: £75.692m",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Shetland-2024-2025",
+      "year": 2025,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_25_STF_01",
+      "question": "How many whole time equivalent staff did NHS Shetland employ in 2024/25?",
+      "expected_pages": [
+        25
+      ],
+      "expected_answer": "Whole Time Equivalent staff: 688",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2024-2025",
+      "year": 2025,
+      "category": "STF"
+    },
+    {
+      "query_id": "Q_25_OPS_01",
+      "question": "What percentage of A&E patients were seen within 4 hours at NHS Shetland in 2024/25?",
+      "expected_pages": [
+        25
+      ],
+      "expected_answer": "87.5% of A&E patients were seen within 4 hours",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2024-2025",
+      "year": 2025,
+      "category": "OPS"
+    }
+  ]
+}

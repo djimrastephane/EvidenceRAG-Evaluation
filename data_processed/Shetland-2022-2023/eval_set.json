@@ -1,0 +1,89 @@
+{
+  "_meta": {
+    "dataset_name": "Shetland-2022-2023 Retrieval Silver Set",
+    "description": "Auto-generated silver evaluation set for NHS Shetland Annual Report 2022/23. Answers produced by the pipeline (retrieval + Ollama generation) and filtered to generation_confidence=1.0. NOT human-verified.",
+    "label_type": "silver",
+    "doc_id": "Shetland-2022-2023",
+    "generated_by": "scripts/generate_silver_eval_sets.py"
+  },
+  "queries": [
+    {
+      "query_id": "Q_23_FIN_02",
+      "question": "What were the total staff costs for NHS Shetland in 2022/23?",
+      "expected_pages": [
+        21
+      ],
+      "expected_answer": "The total staff costs for NHS Shetland in 2022/23 were £40.91m.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2022-2023",
+      "year": 2023,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_23_FIN_03",
+      "question": "What was the Core Revenue Resource Limit for NHS Shetland in 2022/23?",
+      "expected_pages": [
+        13
+      ],
+      "expected_answer": "The Core Revenue Resource Limit (RRL) for NHS Shetland in 2022/23 was £78,458,000.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2022-2023",
+      "year": 2023,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_23_FIN_05",
+      "question": "Did NHS Shetland report a surplus or deficit against its resource budget in 2022/23?",
+      "expected_pages": [
+        20
+      ],
+      "expected_answer": "NHS Shetland reported a surplus of £1019 against its resource budget in 2022/23.",
+      "answer_type": "text",
+      "difficulty": "MOD",
+      "doc_id": "Shetland-2022-2023",
+      "year": 2023,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_23_FIN_07",
+      "question": "What was the total operating expenditure for NHS Shetland in 2022/23?",
+      "expected_pages": [
+        140
+      ],
+      "expected_answer": "Total operating expenditure for NHS Shetland in 2022/23 was £49.695m",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Shetland-2022-2023",
+      "year": 2023,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_23_STF_01",
+      "question": "How many whole time equivalent staff did NHS Shetland employ in 2022/23?",
+      "expected_pages": [
+        73
+      ],
+      "expected_answer": "Whole Time Equivalent staff 680",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2022-2023",
+      "year": 2023,
+      "category": "STF"
+    },
+    {
+      "query_id": "Q_23_OPS_01",
+      "question": "What percentage of A&E patients were seen within 4 hours at NHS Shetland in 2022/23?",
+      "expected_pages": [
+        26
+      ],
+      "expected_answer": "91.8%",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2022-2023",
+      "year": 2023,
+      "category": "OPS"
+    }
+  ]
+}

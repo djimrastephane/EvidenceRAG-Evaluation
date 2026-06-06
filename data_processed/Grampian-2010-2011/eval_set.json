@@ -1,0 +1,128 @@
+{
+  "_meta": {
+    "dataset_name": "Grampian-2010-2011 Retrieval Silver Set",
+    "description": "Auto-generated silver evaluation set for NHS Grampian Annual Report 2010/11. Answers produced by the pipeline (retrieval + Ollama generation) and filtered to generation_confidence=1.0. NOT human-verified.",
+    "label_type": "silver",
+    "doc_id": "Grampian-2010-2011",
+    "generated_by": "scripts/generate_silver_eval_sets.py"
+  },
+  "queries": [
+    {
+      "query_id": "Q_11_FIN_01",
+      "question": "What was the total net expenditure for NHS Grampian in 2010/11?",
+      "expected_pages": [
+        47
+      ],
+      "expected_answer": "Net operating cost for the year: £829,289,000",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2010-2011",
+      "year": 2011,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_11_FIN_02",
+      "question": "What were the total staff costs for NHS Grampian in 2010/11?",
+      "expected_pages": [
+        44
+      ],
+      "expected_answer": "The total staff costs for NHS Grampian in 2010/11 were £478,908,000.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2010-2011",
+      "year": 2011,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_11_FIN_03",
+      "question": "What was the Core Revenue Resource Limit for NHS Grampian in 2010/11?",
+      "expected_pages": [
+        10
+      ],
+      "expected_answer": "The Core Revenue Resource Limit for NHS Grampian in 2010/11 was 757,967 £000.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2010-2011",
+      "year": 2011,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_11_FIN_04",
+      "question": "What was the Capital Resource Limit for NHS Grampian in 2010/11?",
+      "expected_pages": [
+        10
+      ],
+      "expected_answer": "The Capital Resource Limit for NHS Grampian in 2010/11 was 59,753 £000.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2010-2011",
+      "year": 2011,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_11_FIN_06",
+      "question": "What was the Cash Requirement limit for NHS Grampian in 2010/11?",
+      "expected_pages": [
+        10
+      ],
+      "expected_answer": "The Cash Requirement limit for NHS Grampian in 2010/11 was £887,000.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2010-2011",
+      "year": 2011,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_11_FIN_07",
+      "question": "What was the total operating expenditure for NHS Grampian in 2010/11?",
+      "expected_pages": [
+        47
+      ],
+      "expected_answer": "Net operating cost for the year: £826,603,000",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Grampian-2010-2011",
+      "year": 2011,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_11_STF_01",
+      "question": "How many whole time equivalent staff did NHS Grampian employ in 2010/11?",
+      "expected_pages": [
+        45
+      ],
+      "expected_answer": "Total Average Staff: 8,267.3",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2010-2011",
+      "year": 2011,
+      "category": "STF"
+    },
+    {
+      "query_id": "Q_11_STF_03",
+      "question": "What was the sickness absence rate for NHS Grampian in 2010/11?",
+      "expected_pages": [
+        12
+      ],
+      "expected_answer": "Sickness absence rate: 20%",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Grampian-2010-2011",
+      "year": 2011,
+      "category": "STF"
+    },
+    {
+      "query_id": "Q_11_SAV_01",
+      "question": "What was NHS Grampian's efficiency savings or cost improvement target for 2010/11?",
+      "expected_pages": [
+        10
+      ],
+      "expected_answer": "Total efficiency savings of £34 million were achieved against a requirement of £34 million.",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Grampian-2010-2011",
+      "year": 2011,
+      "category": "SAV"
+    }
+  ]
+}

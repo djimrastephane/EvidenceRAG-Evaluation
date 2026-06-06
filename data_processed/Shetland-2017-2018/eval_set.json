@@ -1,0 +1,115 @@
+{
+  "_meta": {
+    "dataset_name": "Shetland-2017-2018 Retrieval Silver Set",
+    "description": "Auto-generated silver evaluation set for NHS Shetland Annual Report 2017/18. Answers produced by the pipeline (retrieval + Ollama generation) and filtered to generation_confidence=1.0. NOT human-verified.",
+    "label_type": "silver",
+    "doc_id": "Shetland-2017-2018",
+    "generated_by": "scripts/generate_silver_eval_sets.py"
+  },
+  "queries": [
+    {
+      "query_id": "Q_18_FIN_01",
+      "question": "What was the total net expenditure for NHS Shetland in 2017/18?",
+      "expected_pages": [
+        6
+      ],
+      "expected_answer": "Comprehensive net expenditure: £60,127k",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2017-2018",
+      "year": 2018,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_18_FIN_03",
+      "question": "What was the Core Revenue Resource Limit for NHS Shetland in 2017/18?",
+      "expected_pages": [
+        6
+      ],
+      "expected_answer": "The Core Revenue Resource Limit for NHS Shetland in 2017/18 was £56,854,000.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2017-2018",
+      "year": 2018,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_18_FIN_04",
+      "question": "What was the Capital Resource Limit for NHS Shetland in 2017/18?",
+      "expected_pages": [
+        6
+      ],
+      "expected_answer": "The Capital Resource Limit for NHS Shetland in 2017/18 was £579k.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2017-2018",
+      "year": 2018,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_18_FIN_06",
+      "question": "What was the Cash Requirement limit for NHS Shetland in 2017/18?",
+      "expected_pages": [
+        6
+      ],
+      "expected_answer": "The Cash Requirement limit for NHS Shetland in 2017/18 was £57,988,000.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2017-2018",
+      "year": 2018,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_18_FIN_07",
+      "question": "What was the total operating expenditure for NHS Shetland in 2017/18?",
+      "expected_pages": [
+        3
+      ],
+      "expected_answer": "Gross expenditure for the year: £85,165k",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Shetland-2017-2018",
+      "year": 2018,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_18_OPS_01",
+      "question": "What percentage of A&E patients were seen within 4 hours at NHS Shetland in 2017/18?",
+      "expected_pages": [
+        3
+      ],
+      "expected_answer": "96.5% of A&E patients were seen within 4 hours",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2017-2018",
+      "year": 2018,
+      "category": "OPS"
+    },
+    {
+      "query_id": "Q_18_OPS_02",
+      "question": "What was the 18-week referral to treatment waiting time performance for NHS Shetland in 2017/18?",
+      "expected_pages": [
+        13
+      ],
+      "expected_answer": "The 18-week referral to treatment waiting time performance for NHS Shetland in 2017/18 was 83.6%.",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Shetland-2017-2018",
+      "year": 2018,
+      "category": "OPS"
+    },
+    {
+      "query_id": "Q_18_GOV_01",
+      "question": "Who was the Chief Executive of NHS Shetland in 2018?",
+      "expected_pages": [
+        3
+      ],
+      "expected_answer": "Ralph Roberts",
+      "answer_type": "text",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2017-2018",
+      "year": 2018,
+      "category": "GOV"
+    }
+  ]
+}

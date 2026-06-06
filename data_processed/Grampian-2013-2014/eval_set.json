@@ -1,0 +1,76 @@
+{
+  "_meta": {
+    "dataset_name": "Grampian-2013-2014 Retrieval Silver Set",
+    "description": "Auto-generated silver evaluation set for NHS Grampian Annual Report 2013/14. Answers produced by the pipeline (retrieval + Ollama generation) and filtered to generation_confidence=1.0. NOT human-verified.",
+    "label_type": "silver",
+    "doc_id": "Grampian-2013-2014",
+    "generated_by": "scripts/generate_silver_eval_sets.py"
+  },
+  "queries": [
+    {
+      "query_id": "Q_14_FIN_01",
+      "question": "What was the total net expenditure for NHS Grampian in 2013/14?",
+      "expected_pages": [
+        28
+      ],
+      "expected_answer": "Total Comprehensive Expenditure: £924,285,000",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2013-2014",
+      "year": 2014,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_14_FIN_07",
+      "question": "What was the total operating expenditure for NHS Grampian in 2013/14?",
+      "expected_pages": [
+        28
+      ],
+      "expected_answer": "Net Operating Costs: £924,285,000",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Grampian-2013-2014",
+      "year": 2014,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_14_STF_03",
+      "question": "What was the sickness absence rate for NHS Grampian in 2013/14?",
+      "expected_pages": [
+        68
+      ],
+      "expected_answer": "Sickness absence rate: 4.6%",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Grampian-2013-2014",
+      "year": 2014,
+      "category": "STF"
+    },
+    {
+      "query_id": "Q_14_OPS_01",
+      "question": "What percentage of A&E patients were seen within 4 hours at NHS Grampian in 2013/14?",
+      "expected_pages": [
+        18
+      ],
+      "expected_answer": "95% of people were treated or discharged within the 4 hour target",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2013-2014",
+      "year": 2014,
+      "category": "OPS"
+    },
+    {
+      "query_id": "Q_14_GOV_01",
+      "question": "Who was the Chief Executive of NHS Grampian in 2014?",
+      "expected_pages": [
+        25
+      ],
+      "expected_answer": "Mr Richard Carey",
+      "answer_type": "text",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2013-2014",
+      "year": 2014,
+      "category": "GOV"
+    }
+  ]
+}

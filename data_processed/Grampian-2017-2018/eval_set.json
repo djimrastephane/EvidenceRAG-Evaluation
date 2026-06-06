@@ -1,0 +1,76 @@
+{
+  "_meta": {
+    "dataset_name": "Grampian-2017-2018 Retrieval Silver Set",
+    "description": "Auto-generated silver evaluation set for NHS Grampian Annual Report 2017/18. Answers produced by the pipeline (retrieval + Ollama generation) and filtered to generation_confidence=1.0. NOT human-verified.",
+    "label_type": "silver",
+    "doc_id": "Grampian-2017-2018",
+    "generated_by": "scripts/generate_silver_eval_sets.py"
+  },
+  "queries": [
+    {
+      "query_id": "Q_18_FIN_01",
+      "question": "What was the total net expenditure for NHS Grampian in 2017/18?",
+      "expected_pages": [
+        92
+      ],
+      "expected_answer": "Total Comprehensive Net Expenditure: £1,072,733k",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2017-2018",
+      "year": 2018,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_18_FIN_02",
+      "question": "What were the total staff costs for NHS Grampian in 2017/18?",
+      "expected_pages": [
+        92
+      ],
+      "expected_answer": "The total staff costs for NHS Grampian in 2017/18 were £467,802,000 (467,802 '000).",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2017-2018",
+      "year": 2018,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_18_STF_01",
+      "question": "How many whole time equivalent staff did NHS Grampian employ in 2017/18?",
+      "expected_pages": [
+        45
+      ],
+      "expected_answer": "Total Headcount: 14,463",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2017-2018",
+      "year": 2018,
+      "category": "STF"
+    },
+    {
+      "query_id": "Q_18_STF_03",
+      "question": "What was the sickness absence rate for NHS Grampian in 2017/18?",
+      "expected_pages": [
+        45
+      ],
+      "expected_answer": "Sickness absence rate: 5.13%",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Grampian-2017-2018",
+      "year": 2018,
+      "category": "STF"
+    },
+    {
+      "query_id": "Q_18_OPS_01",
+      "question": "What percentage of A&E patients were seen within 4 hours at NHS Grampian in 2017/18?",
+      "expected_pages": [
+        24
+      ],
+      "expected_answer": "93.6% of patients spent 4 hours or less in an A&E department",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2017-2018",
+      "year": 2018,
+      "category": "OPS"
+    }
+  ]
+}

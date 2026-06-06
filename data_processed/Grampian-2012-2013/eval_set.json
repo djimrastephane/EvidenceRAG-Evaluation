@@ -1,0 +1,154 @@
+{
+  "_meta": {
+    "dataset_name": "Grampian-2012-2013 Retrieval Silver Set",
+    "description": "Auto-generated silver evaluation set for NHS Grampian Annual Report 2012/13. Answers produced by the pipeline (retrieval + Ollama generation) and filtered to generation_confidence=1.0. NOT human-verified.",
+    "label_type": "silver",
+    "doc_id": "Grampian-2012-2013",
+    "generated_by": "scripts/generate_silver_eval_sets.py"
+  },
+  "queries": [
+    {
+      "query_id": "Q_13_FIN_01",
+      "question": "What was the total net expenditure for NHS Grampian in 2012/13?",
+      "expected_pages": [
+        69
+      ],
+      "expected_answer": "Net Operating Costs: £738,409,000",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2012-2013",
+      "year": 2013,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_13_FIN_02",
+      "question": "What were the total staff costs for NHS Grampian in 2012/13?",
+      "expected_pages": [
+        43
+      ],
+      "expected_answer": "The total staff costs for NHS Grampian in 2012/13 were £804,000.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2012-2013",
+      "year": 2013,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_13_FIN_03",
+      "question": "What was the Core Revenue Resource Limit for NHS Grampian in 2012/13?",
+      "expected_pages": [
+        10
+      ],
+      "expected_answer": "The Core Revenue Resource Limit for NHS Grampian in 2012/13 was £800,449,000.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2012-2013",
+      "year": 2013,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_13_FIN_04",
+      "question": "What was the Capital Resource Limit for NHS Grampian in 2012/13?",
+      "expected_pages": [
+        10
+      ],
+      "expected_answer": "Core Capital Resource Limit 54,350",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2012-2013",
+      "year": 2013,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_13_FIN_05",
+      "question": "Did NHS Grampian report a surplus or deficit against its resource budget in 2012/13?",
+      "expected_pages": [
+        10
+      ],
+      "expected_answer": "NHS Grampian reported a net saving against its Revenue Resource Limit of £9 in 2012/13.",
+      "answer_type": "text",
+      "difficulty": "MOD",
+      "doc_id": "Grampian-2012-2013",
+      "year": 2013,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_13_FIN_06",
+      "question": "What was the Cash Requirement limit for NHS Grampian in 2012/13?",
+      "expected_pages": [
+        10
+      ],
+      "expected_answer": "The Cash Requirement limit for NHS Grampian in 2012/13 was £904,000.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2012-2013",
+      "year": 2013,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_13_FIN_07",
+      "question": "What was the total operating expenditure for NHS Grampian in 2012/13?",
+      "expected_pages": [
+        46
+      ],
+      "expected_answer": "Net operating cost: £66,930,000",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Grampian-2012-2013",
+      "year": 2013,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_13_STF_01",
+      "question": "How many whole time equivalent staff did NHS Grampian employ in 2012/13?",
+      "expected_pages": [
+        44
+      ],
+      "expected_answer": "Total whole time equivalent staff: 11,599.6",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2012-2013",
+      "year": 2013,
+      "category": "STF"
+    },
+    {
+      "query_id": "Q_13_STF_03",
+      "question": "What was the sickness absence rate for NHS Grampian in 2012/13?",
+      "expected_pages": [
+        11
+      ],
+      "expected_answer": "Sickness absence rate: 4.41%",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Grampian-2012-2013",
+      "year": 2013,
+      "category": "STF"
+    },
+    {
+      "query_id": "Q_13_OPS_01",
+      "question": "What percentage of A&E patients were seen within 4 hours at NHS Grampian in 2012/13?",
+      "expected_pages": [
+        12
+      ],
+      "expected_answer": "90% within 18 week referral to treatment access time standard",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2012-2013",
+      "year": 2013,
+      "category": "OPS"
+    },
+    {
+      "query_id": "Q_13_GOV_02",
+      "question": "Who was the Chair of NHS Grampian in 2013?",
+      "expected_pages": [
+        16
+      ],
+      "expected_answer": "Mr Michael Scott (Chair)",
+      "answer_type": "text",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2012-2013",
+      "year": 2013,
+      "category": "GOV"
+    }
+  ]
+}

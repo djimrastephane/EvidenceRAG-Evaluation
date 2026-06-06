@@ -1,0 +1,128 @@
+{
+  "_meta": {
+    "dataset_name": "Grampian-2016-2017 Retrieval Silver Set",
+    "description": "Auto-generated silver evaluation set for NHS Grampian Annual Report 2016/17. Answers produced by the pipeline (retrieval + Ollama generation) and filtered to generation_confidence=1.0. NOT human-verified.",
+    "label_type": "silver",
+    "doc_id": "Grampian-2016-2017",
+    "generated_by": "scripts/generate_silver_eval_sets.py"
+  },
+  "queries": [
+    {
+      "query_id": "Q_17_FIN_01",
+      "question": "What was the total net expenditure for NHS Grampian in 2016/17?",
+      "expected_pages": [
+        38
+      ],
+      "expected_answer": "Total Comprehensive Expenditure/(income} £4,072,477,000",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2016-2017",
+      "year": 2017,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_17_FIN_03",
+      "question": "What was the Core Revenue Resource Limit for NHS Grampian in 2016/17?",
+      "expected_pages": [
+        10
+      ],
+      "expected_answer": "The Core Revenue Resource Limit for NHS Grampian in 2016/17 was £984,007,000.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2016-2017",
+      "year": 2017,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_17_FIN_04",
+      "question": "What was the Capital Resource Limit for NHS Grampian in 2016/17?",
+      "expected_pages": [
+        10
+      ],
+      "expected_answer": "The Capital Resource Limit (CRL) for NHS Grampian in 2016/17 was £42,099,000.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2016-2017",
+      "year": 2017,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_17_FIN_05",
+      "question": "Did NHS Grampian report a surplus or deficit against its resource budget in 2016/17?",
+      "expected_pages": [
+        10
+      ],
+      "expected_answer": "An in-year surplus of £0.888 million was recorded for the year against a target of breakeven.",
+      "answer_type": "text",
+      "difficulty": "MOD",
+      "doc_id": "Grampian-2016-2017",
+      "year": 2017,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_17_FIN_07",
+      "question": "What was the total operating expenditure for NHS Grampian in 2016/17?",
+      "expected_pages": [
+        38
+      ],
+      "expected_answer": "Total Hospital & Community Health Service Expenditure: £1,405,957,000",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Grampian-2016-2017",
+      "year": 2017,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_17_STF_01",
+      "question": "How many whole time equivalent staff did NHS Grampian employ in 2016/17?",
+      "expected_pages": [
+        38
+      ],
+      "expected_answer": "Whole Time Equivalent staff employed in 2016/17: 488",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2016-2017",
+      "year": 2017,
+      "category": "STF"
+    },
+    {
+      "query_id": "Q_17_STF_03",
+      "question": "What was the sickness absence rate for NHS Grampian in 2016/17?",
+      "expected_pages": [
+        14
+      ],
+      "expected_answer": "Sickness absence rate: 4.78%",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Grampian-2016-2017",
+      "year": 2017,
+      "category": "STF"
+    },
+    {
+      "query_id": "Q_17_OPS_01",
+      "question": "What percentage of A&E patients were seen within 4 hours at NHS Grampian in 2016/17?",
+      "expected_pages": [
+        19
+      ],
+      "expected_answer": "96.0% of patients should wait no more than 4 hours from arrival to admission, discharge or transfer for accident and emergency treatment by September 2015",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Grampian-2016-2017",
+      "year": 2017,
+      "category": "OPS"
+    },
+    {
+      "query_id": "Q_17_SAV_01",
+      "question": "What was NHS Grampian's efficiency savings or cost improvement target for 2016/17?",
+      "expected_pages": [
+        12
+      ],
+      "expected_answer": "NHS Grampian's efficiency savings target for 2016/17 was £26.470 million.",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Grampian-2016-2017",
+      "year": 2017,
+      "category": "SAV"
+    }
+  ]
+}

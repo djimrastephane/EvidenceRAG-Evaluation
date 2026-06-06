@@ -1,0 +1,102 @@
+{
+  "_meta": {
+    "dataset_name": "Shetland-2019-2020 Retrieval Silver Set",
+    "description": "Auto-generated silver evaluation set for NHS Shetland Annual Report 2019/20. Answers produced by the pipeline (retrieval + Ollama generation) and filtered to generation_confidence=1.0. NOT human-verified.",
+    "label_type": "silver",
+    "doc_id": "Shetland-2019-2020",
+    "generated_by": "scripts/generate_silver_eval_sets.py"
+  },
+  "queries": [
+    {
+      "query_id": "Q_20_FIN_01",
+      "question": "What was the total net expenditure for NHS Shetland in 2019/20?",
+      "expected_pages": [
+        15
+      ],
+      "expected_answer": "Net expenditure: £95k",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2019-2020",
+      "year": 2020,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_20_FIN_04",
+      "question": "What was the Capital Resource Limit for NHS Shetland in 2019/20?",
+      "expected_pages": [
+        11
+      ],
+      "expected_answer": "The Capital Resource Limit for NHS Shetland in 2019/20 was £985k.",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2019-2020",
+      "year": 2020,
+      "category": "FIN"
+    },
+    {
+      "query_id": "Q_20_STF_01",
+      "question": "How many whole time equivalent staff did NHS Shetland employ in 2019/20?",
+      "expected_pages": [
+        41
+      ],
+      "expected_answer": "Whole time equivalent staff employed: 14",
+      "answer_type": "number",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2019-2020",
+      "year": 2020,
+      "category": "STF"
+    },
+    {
+      "query_id": "Q_20_STF_03",
+      "question": "What was the sickness absence rate for NHS Shetland in 2019/20?",
+      "expected_pages": [
+        48
+      ],
+      "expected_answer": "Sickness absence rate for NHS Shetland in 2019/20: 4.3%",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Shetland-2019-2020",
+      "year": 2020,
+      "category": "STF"
+    },
+    {
+      "query_id": "Q_20_OPS_02",
+      "question": "What was the 18-week referral to treatment waiting time performance for NHS Shetland in 2019/20?",
+      "expected_pages": [
+        18
+      ],
+      "expected_answer": "Against the access target of 18 weeks Referral to Treatment for specialist Child and Adolescent Mental Health Services (CAMHS), the overall performance across the year was good at just under 95% of patients treated within 18 weeks. The average waiting period in 2019-20 was 8.9 weeks (2018-19, 10.2 weeks)",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Shetland-2019-2020",
+      "year": 2020,
+      "category": "OPS"
+    },
+    {
+      "query_id": "Q_20_GOV_01",
+      "question": "Who was the Chief Executive of NHS Shetland in 2020?",
+      "expected_pages": [
+        4
+      ],
+      "expected_answer": "Michael Dickson",
+      "answer_type": "text",
+      "difficulty": "LEX",
+      "doc_id": "Shetland-2019-2020",
+      "year": 2020,
+      "category": "GOV"
+    },
+    {
+      "query_id": "Q_20_SAV_01",
+      "question": "What was NHS Shetland's efficiency savings or cost improvement target for 2019/20?",
+      "expected_pages": [
+        21
+      ],
+      "expected_answer": "NHS Shetland delivered an efficiency programme that released £0.8m (2018- 19, £1.6m) recurrent savings in 2019-20.",
+      "answer_type": "number",
+      "difficulty": "MOD",
+      "doc_id": "Shetland-2019-2020",
+      "year": 2020,
+      "category": "SAV"
+    }
+  ]
+}
