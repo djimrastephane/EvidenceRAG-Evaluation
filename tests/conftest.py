@@ -8,8 +8,9 @@ SRC_PATH = Path(__file__).resolve().parents[1] / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
-# Stub heavy ML packages so tests collect without requiring GPU/large installs.
-for _name in ("torch", "faiss", "sentence_transformers"):
+# Stub heavy/binary packages so tests collect without requiring GPU or system libs.
+for _name in ("torch", "faiss", "sentence_transformers", "pymupdf", "fitz",
+              "camelot", "ghostscript", "pdf2image", "pytesseract"):
     if _name not in sys.modules:
         sys.modules[_name] = types.ModuleType(_name)
 
