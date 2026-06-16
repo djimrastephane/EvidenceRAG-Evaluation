@@ -74,9 +74,8 @@ FP taxonomy at k=1 across 50 queries per document. FP2 (missed top rank — answ
 |---|---|---|
 | NHS Grampian | 21 | 2004/05 – 2024/25 |
 | NHS Shetland | 10 | 2015/16 – 2024/25 |
-| Scottish Budget | 1 | 2024/25 |
 
-32 documents indexed. 5 documents have labelled evaluation sets (250 questions total).
+31 documents indexed. 5 documents have labelled evaluation sets (250 questions total).
 
 ---
 
