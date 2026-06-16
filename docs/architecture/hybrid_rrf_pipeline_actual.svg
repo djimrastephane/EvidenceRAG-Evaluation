@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="860" viewBox="0 0 1400 860" role="img" aria-labelledby="title desc">
-  <title id="title">Hybrid retrieval and weighted RRF fusion in the thesis pipeline</title>
+  <title id="title">Hybrid retrieval and weighted RRF fusion</title>
   <desc id="desc">A figure showing BM25 and dense FAISS retrieval lists, weighted reciprocal rank fusion with k equals 20, and the final hybrid ranking with optional reranking.</desc>
 
   <defs>
@@ -32,7 +32,7 @@
     RRFscore(d) = 0.5 / (20 + r_dense(d)) + 2.0 / (20 + r_bm25(d))
   </text>
   <text class="subtitle" x="700" y="96" text-anchor="middle">
-    Current thesis pipeline: dense MiniLM retrieval over FAISS IndexFlatIP plus BM25 lexical retrieval, fused by weighted reciprocal rank fusion.
+    Current pipeline: dense MiniLM retrieval over FAISS IndexFlatIP plus BM25 lexical retrieval, fused by weighted reciprocal rank fusion.
   </text>
 
   <rect class="panel" x="48" y="150" width="460" height="300" rx="14" ry="14"/>
@@ -99,7 +99,7 @@
   <text class="mono" x="1235" y="404" text-anchor="middle">chunk 1</text>
 
   <text class="caption" x="700" y="508" text-anchor="middle">
-    Figure X: Hybrid retrieval in the thesis pipeline. BM25 and dense FAISS retrieval produce separate ranked chunk lists;
+    Figure X: Hybrid retrieval pipeline. BM25 and dense FAISS retrieval produce separate ranked chunk lists;
   </text>
   <text class="caption" x="700" y="531" text-anchor="middle">
     weighted reciprocal rank fusion combines them, with BM25 given higher weight than dense retrieval in the tuned default configuration.

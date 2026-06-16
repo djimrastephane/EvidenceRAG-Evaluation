@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
   <title id="title">Horizontal page-level hybrid retrieval figure</title>
-  <desc id="desc">A compact horizontal thesis figure showing BM25 and dense FAISS page rankings, weighted reciprocal rank fusion, and the final page rank under competition.</desc>
+  <desc id="desc">A compact horizontal figure showing BM25 and dense FAISS page rankings, weighted reciprocal rank fusion, and the final page rank under competition.</desc>
 
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
@@ -26,7 +26,7 @@
 
   <rect class="bg" x="0" y="0" width="1280" height="760"/>
 
-  <text class="title" x="640" y="38" text-anchor="middle">Page-Level Hybrid Retrieval Used in the Thesis Pipeline</text>
+  <text class="title" x="640" y="38" text-anchor="middle">Page-Level Hybrid Retrieval</text>
   <text class="formula" x="640" y="72" text-anchor="middle">RRF_score(p) = w_dense / (k + r_dense(p)) + w_bm25 / (k + r_bm25(p))</text>
   <text class="small" x="640" y="92" text-anchor="middle">k = 20, w_dense = 0.5, w_bm25 = 2.0</text>
   <text class="small" x="640" y="110" text-anchor="middle">Here, k + r_dense(p) = 20 + dense rank and k + r_bm25(p) = 20 + BM25 rank.</text>

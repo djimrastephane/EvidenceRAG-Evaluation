@@ -1,6 +1,6 @@
 <svg width="1300" height="900" viewBox="0 0 1300 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
   <title id="title">Contextual Encoding in the NHS Corpus</title>
-  <desc id="desc">Compact thesis-safe conceptual figure showing why contextual embeddings distinguish similar financial phrases and why hybrid retrieval is still needed.</desc>
+  <desc id="desc">Compact conceptual figure showing why contextual embeddings distinguish similar financial phrases and why hybrid retrieval is still needed.</desc>
   <defs>
     <style>
       .bg { fill: #FFFFFF; }
@@ -66,7 +66,7 @@
 
   <g transform="translate(664,160)">
     <rect class="panel" x="0" y="0" width="560" height="610" rx="10"/>
-    <text class="panelHead" x="24" y="34">(b) Why hybrid retrieval is still needed in this thesis</text>
+    <text class="panelHead" x="24" y="34">(b) Why hybrid retrieval is still needed</text>
 
     <text class="body" x="24" y="86">Dense embeddings capture semantic context, but NHS reports</text>
     <text class="body" x="24" y="116">also contain repeated templates, table wording, and near-duplicate</text>

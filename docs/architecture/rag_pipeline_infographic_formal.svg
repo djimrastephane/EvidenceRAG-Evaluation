@@ -1,6 +1,6 @@
 <svg width="1800" height="1080" viewBox="0 0 1800 1080" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
-  <title id="title">Thesis Retrieval Pipeline Overview</title>
-  <desc id="desc">Formal architecture diagram showing preprocessing, indexing, hybrid retrieval, and grounded answering in the thesis pipeline.</desc>
+  <title id="title">RAG Pipeline Overview</title>
+  <desc id="desc">Formal architecture diagram showing preprocessing, indexing, hybrid retrieval, and grounded answering in the RAG pipeline.</desc>
   <defs>
     <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="4.5" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L9,4.5 L0,9 Z" fill="#4B5563"/>
@@ -93,6 +93,6 @@
     <text class="small" x="0" y="96">Example: question → retrieve page 28 → answer with citation.</text>
   </g>
 
-  <text class="small" x="84" y="992">The diagram reflects the thesis pipeline: preprocessing and indexing are completed offline.</text>
+  <text class="small" x="84" y="992">The diagram reflects the RAG pipeline: preprocessing and indexing are completed offline.</text>
   <text class="small" x="84" y="1018">Hybrid retrieval and grounded answering occur at query time.</text>
 </svg>

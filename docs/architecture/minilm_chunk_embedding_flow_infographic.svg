@@ -1,6 +1,6 @@
 <svg width="1700" height="1100" viewBox="0 0 1700 1100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
   <title id="title">MiniLM Chunk Embedding Flow</title>
-  <desc id="desc">Infographic showing how thesis RAG chunks are converted into MiniLM embeddings, normalized, aligned with metadata, and stored in FAISS.</desc>
+  <desc id="desc">Infographic showing how RAG chunks are converted into MiniLM embeddings, normalized, aligned with metadata, and stored in FAISS.</desc>
 
   <defs>
     <marker id="arrow" markerWidth="14" markerHeight="14" refX="11" refY="5" orient="auto" markerUnits="strokeWidth">
@@ -32,7 +32,7 @@
   <rect class="bg" x="0" y="0" width="1700" height="1100"/>
 
   <text class="title" x="850" y="72" text-anchor="middle">How Chunks Become MiniLM Embeddings</text>
-  <text class="subtitle" x="850" y="110" text-anchor="middle">The thesis index stage turns page-grounded chunks into 384-dimensional vectors, normalizes them, and stores them beside page metadata.</text>
+  <text class="subtitle" x="850" y="110" text-anchor="middle">The index stage turns page-grounded chunks into 384-dimensional vectors, normalizes them, and stores them beside page metadata.</text>
 
   <rect class="panel" x="58" y="150" width="1584" height="820" rx="20"/>
 

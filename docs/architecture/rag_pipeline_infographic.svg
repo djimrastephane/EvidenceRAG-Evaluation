@@ -1,6 +1,6 @@
 <svg width="1800" height="1200" viewBox="0 0 1800 1200" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
   <title id="title">Inside RAG Pipeline</title>
-  <desc id="desc">Infographic showing the main stages of the thesis retrieval pipeline from PDF reports to grounded answers.</desc>
+  <desc id="desc">Infographic showing the main stages of the RAG pipeline from PDF reports to grounded answers.</desc>
   <defs>
     <marker id="arrow" markerWidth="14" markerHeight="14" refX="10" refY="5" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L10,5 L0,10 Z" fill="#6B7280"/>
