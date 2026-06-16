@@ -1649,8 +1649,8 @@ with tabs[0]:
                             "top1_fused": round(s1, 6),
                             "top2_fused": round(s2, 6),
                             "margin": round(s1 - s2, 6),
-                            "top1_cosine_est": c1,
-                            "top2_cosine_est": c2,
+                            "top1_cosine_est": round(float(c1), 6) if pd.notna(c1) else None,
+                            "top2_cosine_est": round(float(c2), 6) if pd.notna(c2) else None,
                         }
                     )
 
