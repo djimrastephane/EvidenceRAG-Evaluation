@@ -177,8 +177,8 @@ bash scripts/run_streamlit_demo.sh
 
 <table>
 <tr>
-<td style="width:50%"><img src="docs/ui_screenshots/ui_doc_selector_stats.png" alt="Document selector with corpus statistics"><br><sub><b>Document selector</b> — pick any of the 31 indexed NHS annual reports; the stats strip shows page count, chunk count, table chunks extracted, and structured tables</sub></td>
-<td style="width:50%"><img src="docs/ui_screenshots/ui_retrieval_results.png" alt="Hybrid retrieval results with ranking margin diagnostics"><br><sub><b>Retrieval tab</b> — ranked results from the hybrid RRF pipeline; the <em>Ranking margin</em> panel (Examiner Mode) shows fused scores and per-retriever raw scores, with <code>NULL</code> distinguishing BM25-only hits from genuine zero cosine scores</sub></td>
+<td width="50%"><img src="docs/ui_screenshots/ui_doc_selector_stats.png" alt="Document selector with corpus statistics"><br><sub><b>Document selector</b> — pick any of the 31 indexed NHS annual reports; the stats strip shows page count, chunk count, table chunks extracted, and structured tables</sub></td>
+<td width="50%"><img src="docs/ui_screenshots/ui_retrieval_results.png" alt="Hybrid retrieval results with ranking margin diagnostics"><br><sub><b>Retrieval tab</b> — ranked results from the hybrid RRF pipeline; the <em>Ranking margin</em> panel (Examiner Mode) shows fused scores and per-retriever raw scores, with <code>NULL</code> distinguishing BM25-only hits from genuine zero cosine scores</sub></td>
 </tr>
 <tr>
 <td colspan="2"><img src="docs/ui_screenshots/ui_debug_workbench.png" alt="RAG Retrieval Debug UI full view"><br><sub><b>Full workbench view</b> — all 8 tabs visible: Retrieval, Tables, Chunk Inspector, Failure Audit, Embedding Diagnostics, Run Info, Pipeline Architecture, System Metrics</sub></td>
