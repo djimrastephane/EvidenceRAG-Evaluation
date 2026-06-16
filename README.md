@@ -42,6 +42,17 @@ Retrieved chunks are ranked, gated for citation quality and numeric consistency,
 
 Evaluated on 250 queries across 5 Grampian documents (2020–2025), 50 queries per document.
 
+### Summary (hybrid RRF, page-level)
+
+| Document | Hit@1 | Hit@3 | Hit@5 | Hit@10 | MRR |
+|---|---|---|---|---|---|
+| Grampian 2020–2021 | 0.680 | 0.880 | 0.900 | 0.940 | 0.777 |
+| Grampian 2021–2022 | 0.740 | 0.800 | 0.840 | 0.900 | 0.786 |
+| Grampian 2022–2023 | 0.640 | 0.820 | 0.860 | 0.900 | 0.747 |
+| Grampian 2023–2024 | 0.700 | 0.900 | 0.920 | 0.960 | 0.811 |
+| Grampian 2024–2025 | 0.600 | 0.880 | 0.920 | 0.920 | 0.745 |
+| **Mean** | **0.672** | **0.856** | **0.888** | **0.924** | **0.773** |
+
 ### Hybrid vs Dense retrieval (bootstrapped 95% CI)
 
 ![Bootstrap CI: Hybrid vs Dense](docs/architecture/rendered/paired_bootstrap_ci_panel_Grampian_2020_2025_hybrid_vs_dense.png)
@@ -65,6 +76,12 @@ Queries are stratified by difficulty (Easy/Medium/Hard/Very Hard). Hybrid retrie
 ![Failure heatmap](docs/architecture/rendered/fp_failure_heatmap_full50_v4.png)
 
 FP taxonomy at k=1 across 50 queries per document. FP2 (missed top rank — answer exists in index but not retrieved first) accounts for the majority of failures, pointing to re-ranking as the primary remaining improvement opportunity.
+
+### Embedding space (PCA by section type)
+
+![PCA projection of chunk embeddings](docs/architecture/rendered/vector_pca_section_Grampian-2024-2025.png)
+
+PCA projection of all 423 chunk embeddings from the 2024–2025 Grampian report, coloured by section type. Financial Statements chunks (red) cluster on the right; Performance Report and Accountability Report chunks (blue/orange) occupy the left. The spatial separation validates that MiniLM captures document structure without fine-tuning. An interactive Wizmap projection is available in the **Embedding Diagnostics** tab of the diagnostic UI.
 
 ---
 
