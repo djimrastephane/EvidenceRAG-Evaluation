@@ -1,6 +1,6 @@
 # NHS Annual Report RAG Pipeline
 
-A local Retrieval-Augmented Generation pipeline for NHS Scotland annual accounts. Extracts, chunks, indexes, and retrieves answers from PDF annual reports across NHS Grampian and NHS Shetland (32 documents, 2004–2025).
+A local Retrieval-Augmented Generation pipeline for NHS Scotland annual accounts. Extracts, chunks, indexes, and retrieves answers from PDF annual reports across NHS Grampian and NHS Shetland (31 documents, 2004–2025).
 
 ---
 
