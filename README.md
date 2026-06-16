@@ -167,7 +167,15 @@ bash scripts/run_streamlit_demo.sh
 
 > **This UI is a retrieval-reliability workbench for diagnosis only — it is not an end-user product.** It exists to upload and inspect processed reports, run controlled retrieval checks, and diagnose ranking behaviour during development and evaluation. It surfaces internal pipeline state (chunk metadata, RRF scores, table-boost decisions, embedding projections, generation debug fields) that would be irrelevant or confusing to an end user asking questions of an annual report.
 
-![RAG Retrieval Debug UI](docs/ui_screenshots/ui_debug_workbench.png)
+<table>
+<tr>
+<td style="width:50%"><img src="docs/ui_screenshots/ui_doc_selector_stats.png" alt="Document selector with corpus statistics"><br><sub><b>Document selector</b> — pick any of the 31 indexed NHS annual reports; the stats strip shows page count, chunk count, table chunks extracted, and structured tables</sub></td>
+<td style="width:50%"><img src="docs/ui_screenshots/ui_retrieval_results.png" alt="Hybrid retrieval results with ranking margin diagnostics"><br><sub><b>Retrieval tab</b> — ranked results from the hybrid RRF pipeline; the <em>Ranking margin</em> panel (Examiner Mode) shows fused scores and per-retriever raw scores, with <code>NULL</code> distinguishing BM25-only hits from genuine zero cosine scores</sub></td>
+</tr>
+<tr>
+<td colspan="2"><img src="docs/ui_screenshots/ui_debug_workbench.png" alt="RAG Retrieval Debug UI full view"><br><sub><b>Full workbench view</b> — all 8 tabs visible: Retrieval, Tables, Chunk Inspector, Failure Audit, Embedding Diagnostics, Run Info, Pipeline Architecture, System Metrics</sub></td>
+</tr>
+</table>
 
 The Streamlit app (`app/ui/streamlit_app.py`) is organised around a single document at a time, with tabs for:
 
