@@ -23,3 +23,9 @@ Thesis submitted. Now productionising and documenting the RAG pipeline on GitHub
   - #21 query routing/intent classification, #22 numeric extraction/normalisation
 - README additions: retrieval performance summary table (Hit@1–10, MRR across 5 cohorts), PCA embedding space plot, Limitations section, Future Improvements section
 - All issues closed; repo has no open issues
+
+## Recent session work (2026-06-17)
+
+- Fixed `qa/test_preprocessing.py` and `qa/test2_preprocessing.py`: both referenced a never-processed `nhs-england-annual-report-and-accounts-2024-to-2025` doc_id; repointed to the existing `data_processed/Grampian-2024-2025` artifacts (commit `0fe5e25`)
+- Documented the `qa/` diagnostic scripts in README's Tests section, noting they are standalone scripts (not pytest cases) and require the doc to be preprocessed first (commit `4fc5953`)
+- Verified: full `pytest tests/ qa/` suite passes (32/32), both qa scripts run cleanly standalone, CI and Docker GitHub Actions green on both commits, repo clean and in sync with `origin/main`
