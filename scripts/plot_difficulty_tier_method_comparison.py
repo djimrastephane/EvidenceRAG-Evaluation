@@ -154,7 +154,7 @@ OUTPUT_DIRS = [
     ),
     Path(
         "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/"
-        "RAG_Pipeline_Project/figures"
+        "EvidenceRAG-Evaluation/figures"
     ),
 ]
 

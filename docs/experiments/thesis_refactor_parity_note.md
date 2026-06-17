@@ -6,8 +6,8 @@ This note records the final parity status of the `src/thesis_rag/` refactor agai
 
 - Corpus: `Grampian-2022-2023`
 - Query subset: first 10 queries from `data_processed/Grampian-2022-2023/eval_set.json`
-- Final benchmark run: [runs/parity_validation/manual_2026-04-15_grampian_subset10_fix10b](/Users/djimra/MSc%20Data%20Science%20Jan%202025/Thesis%20documents/RAG_Pipeline_Project/runs/parity_validation/manual_2026-04-15_grampian_subset10_fix10b:1)
-- Final benchmark summary: [parity_report_fix10b.json](/Users/djimra/MSc%20Data%20Science%20Jan%202025/Thesis%20documents/RAG_Pipeline_Project/runs/parity_validation/manual_2026-04-15_grampian_subset10_fix10b/parity_report_fix10b.json:1)
+- Final benchmark run: [runs/parity_validation/manual_2026-04-15_grampian_subset10_fix10b](/Users/djimra/MSc%20Data%20Science%20Jan%202025/Thesis%20documents/EvidenceRAG-Evaluation/runs/parity_validation/manual_2026-04-15_grampian_subset10_fix10b:1)
+- Final benchmark summary: [parity_report_fix10b.json](/Users/djimra/MSc%20Data%20Science%20Jan%202025/Thesis%20documents/EvidenceRAG-Evaluation/runs/parity_validation/manual_2026-04-15_grampian_subset10_fix10b/parity_report_fix10b.json:1)
 
 ## Final Outcome
 

@@ -1228,7 +1228,7 @@ def _generate_wizmap_files(
 DEFAULT_DOCS = ["Grampian-2022-2023", "Grampian-2023-2024", "Grampian-2024-2025"]
 SIDEBAR_RESULTS_DIR_DEFAULT = (
     "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/"
-    "RAG_Pipeline_Project/results"
+    "EvidenceRAG-Evaluation/results"
 )
 DEFAULT_RESULTS_DIR = os.getenv("RAG_RESULTS_DIR", SIDEBAR_RESULTS_DIR_DEFAULT)
 DATA_ROOT = project_root() / "data_processed"

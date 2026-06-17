@@ -15,8 +15,8 @@ import camelot
 
 # CONFIG
 DOC_ID = "Grampian-2022-2023"
-OUT_ROOT = Path("/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed")
-PDF_PATH = Path("/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/Data/Annual Accounts NHS Grampian/Preliminary_Test/Grampian-2022-2023.pdf")
+OUT_ROOT = Path("/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed")
+PDF_PATH = Path("/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/Data/Annual Accounts NHS Grampian/Preliminary_Test/Grampian-2022-2023.pdf")
 
 
 def extract_table_to_csv(

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-LOG="/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/rebuild_indexes.log"
-PROJ="/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project"
+LOG="/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/rebuild_indexes.log"
+PROJ="/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation"
 
 echo "[$(date)] Waiting for preprocess_hybrid.py to finish..." | tee "$LOG"
 

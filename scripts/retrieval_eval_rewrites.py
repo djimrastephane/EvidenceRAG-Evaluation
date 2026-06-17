@@ -77,7 +77,7 @@ except Exception as e:
 # CONFIG
 # =============================================================================
 DATA_DIR = Path(
-    "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/"
+    "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/"
     "nhs-england-annual-report-and-accounts-2023-to-2024"
 )
 

@@ -158,12 +158,12 @@ class StepTimer:
 # CONFIG
 # =============================================================================
 PDF_PATH = Path(
-    "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/Data/Annual Accounts NHS Grampian/Preliminary_Test/Grampian-2022-2023.pdf"
+    "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/Data/Annual Accounts NHS Grampian/Preliminary_Test/Grampian-2022-2023.pdf"
 )
 DOC_ID = PDF_PATH.stem
 
 OUT_ROOT = Path(
-    "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed"
+    "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed"
 )
 
 # Optional: use a stable identifier for multi-document experiments.

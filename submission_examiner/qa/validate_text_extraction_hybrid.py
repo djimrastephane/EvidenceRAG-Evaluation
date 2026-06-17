@@ -3,7 +3,7 @@ from pathlib import Path
 from collections import Counter
 
 DOC_ID = "Grampian-2022-2023"
-OUT_DIR = Path(f"/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/{DOC_ID}")
+OUT_DIR = Path(f"/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/{DOC_ID}")
 
 
 def validate_text_quality():
@@ -169,7 +169,7 @@ def compare_with_source_pdf():
     import fitz
 
     pdf_path = Path(
-        "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/Data/Annual Accounts NHS Grampian/Preliminary_Test/Grampian-2022-2023.pdf")
+        "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/Data/Annual Accounts NHS Grampian/Preliminary_Test/Grampian-2022-2023.pdf")
 
     if not pdf_path.exists():
         print("\n⚠️ PDF not found, skipping source comparison")

@@ -5,7 +5,7 @@ import json
 
 
 base = Path(
-    "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed"
+    "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed"
 )
 
 

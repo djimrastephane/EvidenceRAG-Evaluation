@@ -1,7 +1,7 @@
 # check_empty_pages.py
 import pandas as pd
 
-pages_df = pd.read_parquet("/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/Grampian-2022-2023/pages.parquet")
+pages_df = pd.read_parquet("/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2022-2023/pages.parquet")
 
 empty_pages = [18, 53, 90, 113, 114, 115, 117, 118, 119, 120, 123, 125, 126, 127, 128, 136, 137, 144, 149, 150, 151,
                153, 154]

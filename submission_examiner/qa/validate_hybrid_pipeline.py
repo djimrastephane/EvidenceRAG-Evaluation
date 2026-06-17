@@ -13,7 +13,7 @@ import pandas as pd
 import json
 
 DOC_ID = "Grampian-2022-2023"
-OUT_ROOT = Path("/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed")
+OUT_ROOT = Path("/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed")
 
 
 def load_and_validate():

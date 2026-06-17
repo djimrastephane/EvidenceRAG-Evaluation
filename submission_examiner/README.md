@@ -1,4 +1,4 @@
-# RAG_Pipeline_Project
+# EvidenceRAG-Evaluation
 
 A lightweight, local Retrieval-Augmented Generation (RAG) pipeline for PDF reports. It covers:
 

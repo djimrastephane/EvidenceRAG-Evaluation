@@ -126,7 +126,7 @@ from runtime_env import collect_runtime_provenance, critical_environment_checks
 # CONFIG
 # =============================================================================
 DATA_DIR = Path(
-    "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/"
+    "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/"
     "Grampian-2022-2023"
 )
 
