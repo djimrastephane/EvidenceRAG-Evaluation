@@ -345,6 +345,13 @@ pytest tests/ -q
 # 32 passed, 0 failed
 ```
 
+`qa/test_preprocessing.py` and `qa/test2_preprocessing.py` are standalone diagnostic scripts (not pytest cases) that inspect a processed document's chunks and metrics for ligature artifacts and normalization settings. They point at `data_processed/Grampian-2024-2025` and require that doc to have been preprocessed first (see [Quickstart](#quickstart)):
+
+```bash
+python qa/test_preprocessing.py
+python qa/test2_preprocessing.py
+```
+
 ---
 
 ## Notes
