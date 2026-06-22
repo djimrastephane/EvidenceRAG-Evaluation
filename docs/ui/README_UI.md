@@ -123,7 +123,7 @@ Metrics endpoint notes:
 - Uploaded PDFs are processed into `data_processed_ui/<DOC_ID>/`.
 - Indexing uses your local model path: `models/all-MiniLM-L6-v2`.
 - Per-document pipeline logs are written to `data_processed_ui/<DOC_ID>/ui_pipeline.log`.
-- Upload preprocessing uses `UI_TABLE_CHUNKING_MODE` and defaults to `row_blocks`.
+- Upload preprocessing uses `UI_TABLE_CHUNKING_MODE` and defaults to `baseline`.
 - Demo mode can be pointed at any processed artifact root via `UI_DATA_ROOT`; the repo wrappers default to the validated `row_blocks` ablation artifacts.
 - Processing calls existing scripts:
   - `preprocess_hybrid.py`

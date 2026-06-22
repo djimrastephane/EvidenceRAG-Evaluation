@@ -27,6 +27,6 @@ Recommended placement for new files:
 - new experiment notes: `docs/experiments/`
 - new machine-readable configs: `configs/`
 - new one-off run outputs: `runs/`
-- new tracked documentation figures: `docs/figures/`
+- new tracked documentation figures: `docs/architecture/`
 - new final charts/tables: `results/`
 - new ablation summaries/selections: `results/ablations/`

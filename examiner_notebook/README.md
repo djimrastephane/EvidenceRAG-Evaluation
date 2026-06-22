@@ -132,16 +132,16 @@ The five reports used in this study are the 2020/21 through 2024/25 annual accou
 
 ### Step 2 — Place the files
 
-Create a `Data/` folder in the project root and save each downloaded PDF there. You may keep the original filename — the document identifier is passed separately via the `--doc_id` flag.
+Create a `Data/` folder in the project root and save each downloaded PDF there. The document identifier (`doc_id`) used throughout the pipeline is derived from the PDF filename (its stem), so rename each file to match the `Grampian-<start year>-<end year>` convention before processing:
 
 ```
 project-root/
 └── Data/
-    ├── nhs_grampian_2020-21_annual_report.pdf
-    ├── nhs_grampian_2021-22_annual_report.pdf
-    ├── nhs_grampian_2022-23_annual_report.pdf
-    ├── nhs_grampian_2023-24_annual_report.pdf
-    └── nhs_grampian_2024-25_annual_report.pdf
+    ├── Grampian-2020-2021.pdf
+    ├── Grampian-2021-2022.pdf
+    ├── Grampian-2022-2023.pdf
+    ├── Grampian-2023-2024.pdf
+    └── Grampian-2024-2025.pdf
 ```
 
 ### Step 3 — Run preprocessing (one command per report)
@@ -149,23 +149,22 @@ project-root/
 ```bash
 conda activate rag-pipeline
 python scripts/preprocess_hybrid.py \
-    --config configs/thesis_rag.yaml \
-    --pdf_path Data/nhs_grampian_2024-25_annual_report.pdf \
-    --doc_id Grampian-2024-2025
+    --pdf-path Data/Grampian-2024-2025.pdf \
+    --mixed-routing
 ```
 
-Repeat for each report, substituting the correct filename and doc_id (`Grampian-2020-2021`, `Grampian-2021-2022`, etc.). Each run writes its outputs to `data_processed/<doc_id>/`.
+Repeat for each report, substituting the correct filename (`Grampian-2020-2021.pdf`, `Grampian-2021-2022.pdf`, etc.). Each run writes its outputs to `data_processed/<doc_id>/`, where `<doc_id>` is the PDF filename stem.
 
 ### Step 4 — Rebuild the FAISS index
 
 ```bash
-python scripts/build_index.py --config configs/thesis_rag.yaml
+python scripts/build_index.py --data-dir data_processed --device cpu
 ```
 
 ### Step 5 — Re-run evaluation
 
 ```bash
-python scripts/retrieval_eval.py --config configs/thesis_rag.yaml
+python scripts/retrieval_eval.py --data-dir data_processed/Grampian-2024-2025 --device cpu
 ```
 
 > **Windows note:** Stage 1 preprocessing uses `camelot-py` for table extraction, which requires [Ghostscript](https://www.ghostscript.com/releases/gsdnld.html) to be installed separately on Windows. The notebook walkthrough does not require Ghostscript.

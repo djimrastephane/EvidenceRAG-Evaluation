@@ -28,7 +28,7 @@ What this does:
 For thesis-facing outputs, treat these as canonical:
 
 - `results/thesis_rebuild_freeze/thesis_rebuild_freeze_smoke_2026-03-18/`
-- `results/reproducibility/grampian_5docs_repro.json`
+- `results/reproducibility/examiner_repro_check.json`
 - `results/reproducibility/retrieval_parity_batch_smoke.json`
 - `results/reproducibility/evaluation_protocol_audit.json`
 - `docs/EXAMINER_SUBMISSION_MANIFEST.md`

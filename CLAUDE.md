@@ -102,7 +102,7 @@ app/ui/               # Streamlit and FastAPI demo apps
 |---|---|
 | `chunking` | `chunk_size_tokens: 224`, `chunk_overlap_tokens: 56`, `min_chunk_words: 20` |
 | `embedding` | `model_name`, `apply_l2_normalization: true`, `expected_dimension: 384` |
-| `retrieval` | `dense_top_k`, `sparse_top_k`, `hybrid_top_k`, `rrf_k: 60`, `dense_weight`, `sparse_weight` |
+| `retrieval` | `dense_top_k`, `sparse_top_k`, `hybrid_top_k`; production/eval default overrides to `rrf_k: 20`, `dense_weight: 0.5`, `sparse_weight: 2.0` (see `docs/experiments/HYBRID_RRF_DEFAULTS.md`) |
 | `bm25` | `k1: 1.5`, `b: 0.75` |
 | `evaluation` | `ks: [1, 3, 5, 10]` |
 

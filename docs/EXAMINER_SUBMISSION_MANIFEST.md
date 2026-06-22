@@ -140,7 +140,7 @@ Include these lightweight checks:
 Include these config files:
 
 - `configs/README.md`
-- `configs/thesis_rag.yaml` — primary pipeline config (224/56 tokens, MiniLM-L6-v2, RRF k=60)
+- `configs/thesis_rag.yaml` — primary pipeline config (224/56 tokens, MiniLM-L6-v2, RRF k=20)
 - `configs/retrieval_tuning_minilm_cap_5docs.yaml` — promoted config used for frozen bundle rebuild
 - `configs/retrieval_tuning_thesis_5docs_q50.yaml` — tuning exploration config (50 queries)
 - `configs/retrieval_tuning_224_56_5docs.yaml` — focused 224/56 sanity comparison config
