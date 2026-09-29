@@ -68,13 +68,19 @@ def apply_post_fusion_rerank(
     chunk_text_by_id: dict[str, str],
     rerank_cfg: RerankConfig,
     enable_lexical_rerank: bool,
-    expected_section: str,
-    expected_subsection: str,
-    enable_subsection_boost: bool,
-    subsection_boost: float,
+    expected_section: str = "",
+    expected_subsection: str = "",
+    enable_subsection_boost: bool = False,
+    subsection_boost: float = 0.0,
     cross_page_out_of_section_penalty: float = 0.0,
 ) -> tuple[list[int], dict[int, float]]:
-    """Apply lexical re-ranking boosts (table, overlap, numeric, segment, subsection) to the fused list."""
+    """Apply lexical re-ranking boosts (table, overlap, numeric, segment) to the fused list.
+
+    ORACLE WARNING: ``expected_section`` / ``expected_subsection`` are gold labels from the
+    eval set. The subsection boost and the cross-page out-of-section penalty read them, so
+    they leak the answer location into ranking. Both are off by default and must only be
+    enabled for explicitly labelled oracle ablations, never for reported system results.
+    """
     ranked = list(fused_ranked)
     updated_scores = {int(idx): float(score) for idx, score in scores_map.items()}
 

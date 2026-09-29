@@ -37,7 +37,6 @@ from rag_pdf.retrieval.rerank import RerankConfig
 from rag_pdf.retrieval.hybrid_utils import l2_normalize
 from rag_pdf.services.search_service import (
     ENABLE_LEXICAL_RERANK,
-    ENABLE_SUBSECTION_BOOST,
     ENTITY_MATCH_BOOST,
     FUSION_STRATEGY,
     MAX_ENTITY_MATCHES,
@@ -46,7 +45,6 @@ from rag_pdf.services.search_service import (
     RRF_DENSE_WEIGHT,
     RRF_K,
     SEGMENT_SEARCH_HIT_BOOST,
-    SUBSECTION_BOOST,
     TABLE_CHUNK_BOOST,
     SearchService,
 )
@@ -91,8 +89,6 @@ def _evaluator_ranked_chunk_ids(data_dir: Path, model_path: Path, query_item: di
     index = faiss.read_index(str(data_dir / "faiss.index"))
     model = SentenceTransformer(str(model_path))
     question = str(query_item.get("question") or "").strip()
-    expected_section = str(query_item.get("expected_section") or "").strip()
-    expected_subsection = str(query_item.get("expected_subsection") or "").strip()
     text_by_id = _chunk_text_map(chunks)
     corpus_texts = []
     for _, row in meta.iterrows():
@@ -132,11 +128,6 @@ def _evaluator_ranked_chunk_ids(data_dir: Path, model_path: Path, query_item: di
         chunk_text_by_id=text_by_id,
         rerank_cfg=rerank_cfg,
         enable_lexical_rerank=bool(ENABLE_LEXICAL_RERANK),
-        expected_section=expected_section,
-        expected_subsection=expected_subsection,
-        enable_subsection_boost=bool(ENABLE_SUBSECTION_BOOST),
-        subsection_boost=SUBSECTION_BOOST,
-        cross_page_out_of_section_penalty=0.08,
     )
     out: list[str] = []
     for idx in fused_ranked[:k]:

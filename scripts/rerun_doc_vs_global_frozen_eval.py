@@ -162,7 +162,7 @@ def run_global_boost_on(gold_map: dict) -> dict:
         bm25_weight=RETRIEVAL_CFG.sparse_weight,
         rrf_k=RETRIEVAL_CFG.rrf_k,
         enable_lexical_rerank=True,
-        enable_subsection_boost=True,
+        enable_subsection_boost=False,  # oracle boost removed from reported results
         subsection_boost=0.05,
         cross_page_out_of_section_penalty=0.08,
     )

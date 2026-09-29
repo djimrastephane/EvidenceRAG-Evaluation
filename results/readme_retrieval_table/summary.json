@@ -1,0 +1,168 @@
+{
+  "n_queries": 250,
+  "docs": [
+    "Grampian-2020-2021",
+    "Grampian-2021-2022",
+    "Grampian-2022-2023",
+    "Grampian-2023-2024",
+    "Grampian-2024-2025"
+  ],
+  "manifest": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/results/frozen/gold_eval_artifacts_manifest.json",
+  "per_doc_production": [
+    {
+      "doc": "Grampian-2020-2021",
+      "n": 50,
+      "hit@1": 0.64,
+      "hit@3": 0.78,
+      "hit@5": 0.82,
+      "hit@10": 0.9,
+      "mrr@10": 0.7200238095238095
+    },
+    {
+      "doc": "Grampian-2021-2022",
+      "n": 50,
+      "hit@1": 0.52,
+      "hit@3": 0.76,
+      "hit@5": 0.86,
+      "hit@10": 0.88,
+      "mrr@10": 0.6563333333333334
+    },
+    {
+      "doc": "Grampian-2022-2023",
+      "n": 50,
+      "hit@1": 0.48,
+      "hit@3": 0.78,
+      "hit@5": 0.8,
+      "hit@10": 0.82,
+      "mrr@10": 0.6268571428571428
+    },
+    {
+      "doc": "Grampian-2023-2024",
+      "n": 50,
+      "hit@1": 0.64,
+      "hit@3": 0.84,
+      "hit@5": 0.92,
+      "hit@10": 0.96,
+      "mrr@10": 0.7628571428571428
+    },
+    {
+      "doc": "Grampian-2024-2025",
+      "n": 50,
+      "hit@1": 0.58,
+      "hit@3": 0.84,
+      "hit@5": 0.9,
+      "hit@10": 0.92,
+      "mrr@10": 0.7123333333333334
+    }
+  ],
+  "methods": [
+    {
+      "variant": "production",
+      "label": "Hybrid RRF + lexical rerank (production)",
+      "n": 250,
+      "hit@1": 0.572,
+      "hit@3": 0.8,
+      "hit@5": 0.86,
+      "hit@10": 0.896,
+      "mrr@10": 0.6956809523809524,
+      "hit@1_wilson95": [
+        0.5100318342948803,
+        0.6317888917011739
+      ],
+      "hit@5_wilson95": [
+        0.8115192932332553,
+        0.8975843367470158
+      ]
+    },
+    {
+      "variant": "rrf_no_rerank",
+      "label": "Hybrid RRF, no rerank",
+      "n": 250,
+      "hit@1": 0.64,
+      "hit@3": 0.816,
+      "hit@5": 0.856,
+      "hit@10": 0.892,
+      "mrr@10": 0.7400587301587302,
+      "hit@1_wilson95": [
+        0.5787938053589917,
+        0.6969687174111138
+      ],
+      "hit@5_wilson95": [
+        0.8070866646773006,
+        0.8941380360809675
+      ],
+      "vs_production_hit@1": {
+        "delta_production_minus_variant": -0.06800000000000006,
+        "production_only_hits": 7,
+        "variant_only_hits": 24,
+        "mcnemar_exact_p": 0.003326892852783203
+      },
+      "vs_production_hit@5": {
+        "delta_production_minus_variant": 0.0040000000000000036,
+        "production_only_hits": 4,
+        "variant_only_hits": 3,
+        "mcnemar_exact_p": 1.0
+      }
+    },
+    {
+      "variant": "dense",
+      "label": "Dense only (MiniLM)",
+      "n": 250,
+      "hit@1": 0.568,
+      "hit@3": 0.732,
+      "hit@5": 0.8,
+      "hit@10": 0.888,
+      "mrr@10": 0.6718412698412698,
+      "hit@1_wilson95": [
+        0.5060238561876421,
+        0.6279179405864089
+      ],
+      "hit@5_wilson95": [
+        0.7460429604530917,
+        0.8448767311971342
+      ],
+      "vs_production_hit@1": {
+        "delta_production_minus_variant": 0.0040000000000000036,
+        "production_only_hits": 36,
+        "variant_only_hits": 35,
+        "mcnemar_exact_p": 1.0
+      },
+      "vs_production_hit@5": {
+        "delta_production_minus_variant": 0.05999999999999994,
+        "production_only_hits": 36,
+        "variant_only_hits": 21,
+        "mcnemar_exact_p": 0.06273668035582848
+      }
+    },
+    {
+      "variant": "bm25",
+      "label": "BM25 only",
+      "n": 250,
+      "hit@1": 0.62,
+      "hit@3": 0.792,
+      "hit@5": 0.824,
+      "hit@10": 0.868,
+      "mrr@10": 0.7154444444444444,
+      "hit@1_wilson95": [
+        0.5584442321707381,
+        0.6779236444893522
+      ],
+      "hit@5_wilson95": [
+        0.7719923442315464,
+        0.8662009227506975
+      ],
+      "vs_production_hit@1": {
+        "delta_production_minus_variant": -0.04800000000000004,
+        "production_only_hits": 13,
+        "variant_only_hits": 25,
+        "mcnemar_exact_p": 0.07295138851623051
+      },
+      "vs_production_hit@5": {
+        "delta_production_minus_variant": 0.03600000000000003,
+        "production_only_hits": 10,
+        "variant_only_hits": 1,
+        "mcnemar_exact_p": 0.01171875
+      }
+    }
+  ]
+}

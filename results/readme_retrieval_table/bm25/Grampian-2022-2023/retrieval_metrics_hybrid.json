@@ -1,0 +1,310 @@
+{
+  "run_info": {
+    "run_utc": "2026-09-29T23:28:57+00:00",
+    "data_dir": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2022-2023",
+    "method": "hybrid_rrf_dense_bm25",
+    "runtime": {
+      "python_executable": "/opt/anaconda3/envs/rag-pipeline/bin/python",
+      "python_version": "3.11.15",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "system": "Darwin",
+      "machine": "arm64",
+      "cwd": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation",
+      "conda_prefix": "/opt/anaconda3/envs/rag-pipeline",
+      "conda_default_env": "rag-pipeline",
+      "virtual_env": null,
+      "dependency_report": {
+        "modules": {
+          "camelot": {
+            "installed": true,
+            "version": "1.0.9",
+            "module": "camelot",
+            "distribution": "camelot-py",
+            "error": null
+          },
+          "faiss": {
+            "installed": true,
+            "version": "1.13.2",
+            "module": "faiss",
+            "distribution": "faiss-cpu",
+            "error": null
+          },
+          "ghostscript": {
+            "installed": true,
+            "version": "0.8.1",
+            "module": "ghostscript",
+            "distribution": "ghostscript",
+            "error": null
+          },
+          "numpy": {
+            "installed": true,
+            "version": "2.4.6",
+            "module": "numpy",
+            "distribution": "numpy",
+            "error": null
+          },
+          "pandas": {
+            "installed": true,
+            "version": "2.3.3",
+            "module": "pandas",
+            "distribution": "pandas",
+            "error": null
+          },
+          "pdfplumber": {
+            "installed": true,
+            "version": "0.11.9",
+            "module": "pdfplumber",
+            "distribution": "pdfplumber",
+            "error": null
+          },
+          "pyarrow": {
+            "installed": true,
+            "version": "23.0.0",
+            "module": "pyarrow",
+            "distribution": "pyarrow",
+            "error": null
+          },
+          "pymupdf": {
+            "installed": true,
+            "version": "1.26.7",
+            "module": "pymupdf",
+            "distribution": "PyMuPDF",
+            "error": null
+          },
+          "sentence_transformers": {
+            "installed": true,
+            "version": "5.2.2",
+            "module": "sentence_transformers",
+            "distribution": "sentence-transformers",
+            "error": null
+          },
+          "tiktoken": {
+            "installed": true,
+            "version": "0.12.0",
+            "module": "tiktoken",
+            "distribution": "tiktoken",
+            "error": null
+          },
+          "torch": {
+            "installed": true,
+            "version": "2.5.1",
+            "module": "torch",
+            "distribution": "torch",
+            "error": null
+          }
+        },
+        "commands": {
+          "gs": {
+            "available": true,
+            "path": "/opt/anaconda3/envs/rag-pipeline/bin/gs"
+          },
+          "pdftoppm": {
+            "available": true,
+            "path": "/opt/anaconda3/envs/rag-pipeline/bin/pdftoppm"
+          },
+          "tesseract": {
+            "available": true,
+            "path": "/opt/homebrew/bin/tesseract"
+          }
+        }
+      }
+    },
+    "critical_environment_checks": [
+      {
+        "name": "tiktoken_available",
+        "ok": true,
+        "detail": "Required for exact preprocessing token counts."
+      },
+      {
+        "name": "camelot_available",
+        "ok": true,
+        "detail": "Required for the structured table extraction branch."
+      },
+      {
+        "name": "ghostscript_python_wrapper_available",
+        "ok": true,
+        "detail": "Needed by Camelot on many environments."
+      },
+      {
+        "name": "ghostscript_binary_available",
+        "ok": true,
+        "detail": "Ghostscript binary used by Camelot."
+      },
+      {
+        "name": "faiss_available",
+        "ok": true,
+        "detail": "Required for dense index build and retrieval."
+      },
+      {
+        "name": "sentence_transformers_available",
+        "ok": true,
+        "detail": "Required for MiniLM embeddings."
+      },
+      {
+        "name": "torch_available",
+        "ok": true,
+        "detail": "Required backend for sentence-transformers."
+      }
+    ],
+    "embedding_model": "models/all-MiniLM-L6-v2",
+    "bm25_k1": 1.5,
+    "bm25_b": 0.75,
+    "rrf_k": 20,
+    "dense_weight": 0.0,
+    "bm25_weight": 1.0,
+    "enable_lexical_rerank": false,
+    "enable_subsection_boost": false,
+    "oracle_labels_in_ranking": false,
+    "enable_cross_encoder_rerank": false,
+    "cross_encoder_model": null,
+    "cross_encoder_topn": 50,
+    "cross_encoder_weight": 0.2,
+    "table_chunk_boost": 0.08,
+    "entity_match_boost": 0.04,
+    "numeric_density_boost": 0.03,
+    "subsection_boost": 0.05,
+    "k_list": [
+      1,
+      3,
+      5,
+      10
+    ],
+    "num_queries": 50,
+    "num_chunks_indexed": 355,
+    "pipeline_settings": {
+      "source_metrics_path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2022-2023/metrics.json",
+      "source_metrics_exists": true,
+      "doc_id": "Grampian-2022-2023",
+      "corpus_id": "Grampian-2022-2023",
+      "report_year": "2022-2023",
+      "preprocess_run_utc": "2026-06-16T09:43:30+00:00",
+      "preprocess_git_commit_short": "3e729e9",
+      "embedding_model_preprocess": "sentence-transformers/all-MiniLM-L6-v2",
+      "chunk_size_tokens": 224,
+      "chunk_overlap_tokens": 56,
+      "segment_aware_chunking": true,
+      "whole_doc_markdown_mode": false,
+      "markdown_header_carry_forward": true,
+      "markdown_table_injection": true,
+      "primary_extractor": "pymupdf",
+      "min_chunk_words": 20
+    },
+    "eval_set": {
+      "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2022-2023/eval_set.json",
+      "sha1": "837f31151db4c7475f93e35082a7b8bac98ec89b",
+      "size_bytes": 36604,
+      "modified_utc": "2026-06-16T08:45:22+00:00",
+      "query_count": 50,
+      "meta_dataset_name": "Grampian-2022-2023 Retrieval Gold Set",
+      "meta_doc_id": "Grampian-2022-2023",
+      "meta_version": null
+    },
+    "artifact_sha256": {
+      "faiss.index": "4410c92a2a2425efdb0bf716f28a43302794178510cdf49f64e7e40a3cfcf01e",
+      "chunk_meta.parquet": "b151a13c130943d9633f076b12d351c9737384b0ba3825bc263799b3ccc91ccc",
+      "chunks.parquet": "e143d73319552c5c59f93b065b07645a5e396269ed780bec450b22e887043799",
+      "eval_set.json": "740b910c62779d2ee62b024ac8ab996dfd85e54bed0ddab65f8524f775d27167"
+    },
+    "verified_manifest": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/results/frozen/gold_eval_artifacts_manifest.json"
+  },
+  "metrics_by_k": {
+    "1": {
+      "num_queries": 50,
+      "page_hit_rate_at_k": 0.5,
+      "mean_page_recall_at_k": 0.5,
+      "mean_page_precision_at_k": 0.5,
+      "mean_page_mrr_at_k": 0.5,
+      "chunk_hit_rate_at_k": 0.5,
+      "mean_chunk_precision_at_k": 0.5,
+      "mean_chunk_mrr_at_k": 0.5,
+      "table_query_count": 11,
+      "table_recall_at_k": 0.09090909090909091,
+      "table_page_recall_at_k": 0.2727272727272727
+    },
+    "3": {
+      "num_queries": 50,
+      "page_hit_rate_at_k": 0.74,
+      "mean_page_recall_at_k": 0.74,
+      "mean_page_precision_at_k": 0.29333333333333333,
+      "mean_page_mrr_at_k": 0.6166666666666667,
+      "chunk_hit_rate_at_k": 0.74,
+      "mean_chunk_precision_at_k": 0.29333333333333333,
+      "mean_chunk_mrr_at_k": 0.6,
+      "table_query_count": 11,
+      "table_recall_at_k": 0.09090909090909091,
+      "table_page_recall_at_k": 0.6363636363636364
+    },
+    "5": {
+      "num_queries": 50,
+      "page_hit_rate_at_k": 0.8,
+      "mean_page_recall_at_k": 0.8,
+      "mean_page_precision_at_k": 0.1966666666666666,
+      "mean_page_mrr_at_k": 0.6323333333333333,
+      "chunk_hit_rate_at_k": 0.8,
+      "mean_chunk_precision_at_k": 0.21599999999999994,
+      "mean_chunk_mrr_at_k": 0.614,
+      "table_query_count": 11,
+      "table_recall_at_k": 0.18181818181818182,
+      "table_page_recall_at_k": 0.7272727272727273
+    },
+    "10": {
+      "num_queries": 50,
+      "page_hit_rate_at_k": 0.82,
+      "mean_page_recall_at_k": 0.82,
+      "mean_page_precision_at_k": 0.1018174603174603,
+      "mean_page_mrr_at_k": 0.6345555555555555,
+      "chunk_hit_rate_at_k": 0.82,
+      "mean_chunk_precision_at_k": 0.122,
+      "mean_chunk_mrr_at_k": 0.616,
+      "table_query_count": 11,
+      "table_recall_at_k": 0.18181818181818182,
+      "table_page_recall_at_k": 0.7272727272727273
+    }
+  },
+  "failure_counts_by_k": {
+    "1": {
+      "hit": 25,
+      "missed_top_ranked": 25
+    },
+    "3": {
+      "hit": 37,
+      "missed_top_ranked": 13
+    },
+    "5": {
+      "hit": 40,
+      "missed_top_ranked": 10
+    },
+    "10": {
+      "hit": 41,
+      "missed_top_ranked": 9
+    }
+  },
+  "leakage_counts_by_k": {
+    "1": {
+      "num_queries": 50,
+      "any_leakage_rate_at_k": 0.0,
+      "mean_leakage_rate_at_k": 0.0
+    },
+    "3": {
+      "num_queries": 50,
+      "any_leakage_rate_at_k": 0.0,
+      "mean_leakage_rate_at_k": 0.0
+    },
+    "5": {
+      "num_queries": 50,
+      "any_leakage_rate_at_k": 0.0,
+      "mean_leakage_rate_at_k": 0.0
+    },
+    "10": {
+      "num_queries": 50,
+      "any_leakage_rate_at_k": 0.0,
+      "mean_leakage_rate_at_k": 0.0
+    }
+  },
+  "answer_scoring": {
+    "num_queries_total": 50,
+    "num_queries_scored": 0,
+    "answer_accuracy": null,
+    "answer_status_counts": {}
+  }
+}

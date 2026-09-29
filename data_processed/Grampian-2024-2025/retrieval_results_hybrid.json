@@ -1,17 +1,17 @@
 {
   "run_info": {
-    "run_utc": "2026-06-06T14:23:57+00:00",
-    "data_dir": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/Grampian-2024-2025",
+    "run_utc": "2026-09-29T23:28:06+00:00",
+    "data_dir": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2024-2025",
     "method": "hybrid_rrf_dense_bm25",
     "runtime": {
       "python_executable": "/opt/anaconda3/envs/rag-pipeline/bin/python",
       "python_version": "3.11.15",
-      "platform": "macOS-26.5.1-arm64-arm-64bit",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
       "system": "Darwin",
       "machine": "arm64",
-      "cwd": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project",
-      "conda_prefix": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv",
-      "conda_default_env": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv",
+      "cwd": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation",
+      "conda_prefix": "/opt/anaconda3/envs/rag-pipeline",
+      "conda_default_env": "rag-pipeline",
       "virtual_env": null,
       "dependency_report": {
         "modules": {
@@ -96,11 +96,11 @@
         "commands": {
           "gs": {
             "available": true,
-            "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv/bin/gs"
+            "path": "/opt/anaconda3/envs/rag-pipeline/bin/gs"
           },
           "pdftoppm": {
             "available": true,
-            "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv/bin/pdftoppm"
+            "path": "/opt/anaconda3/envs/rag-pipeline/bin/pdftoppm"
           },
           "tesseract": {
             "available": true,
@@ -154,6 +154,7 @@
     "bm25_weight": 2.0,
     "enable_lexical_rerank": true,
     "enable_subsection_boost": false,
+    "oracle_labels_in_ranking": false,
     "enable_cross_encoder_rerank": false,
     "cross_encoder_model": null,
     "cross_encoder_topn": 50,
@@ -169,35 +170,42 @@
       10
     ],
     "num_queries": 50,
-    "num_chunks_indexed": 389,
+    "num_chunks_indexed": 423,
     "pipeline_settings": {
-      "source_metrics_path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/Grampian-2024-2025/metrics.json",
+      "source_metrics_path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2024-2025/metrics.json",
       "source_metrics_exists": true,
       "doc_id": "Grampian-2024-2025",
       "corpus_id": "Grampian-2024-2025",
       "report_year": "2024-2025",
-      "preprocess_run_utc": null,
-      "preprocess_git_commit_short": null,
-      "embedding_model_preprocess": null,
+      "preprocess_run_utc": "2026-06-16T09:06:14+00:00",
+      "preprocess_git_commit_short": "3e729e9",
+      "embedding_model_preprocess": "sentence-transformers/all-MiniLM-L6-v2",
       "chunk_size_tokens": 224,
       "chunk_overlap_tokens": 56,
-      "segment_aware_chunking": null,
-      "whole_doc_markdown_mode": null,
-      "markdown_header_carry_forward": null,
-      "markdown_table_injection": null,
+      "segment_aware_chunking": true,
+      "whole_doc_markdown_mode": false,
+      "markdown_header_carry_forward": true,
+      "markdown_table_injection": true,
       "primary_extractor": "pymupdf",
       "min_chunk_words": 20
     },
     "eval_set": {
-      "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/Grampian-2024-2025/eval_set.json",
+      "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2024-2025/eval_set.json",
       "sha1": "e2944908f5fd7ab7ec98281715072f683fe75731",
       "size_bytes": 37009,
-      "modified_utc": "2026-04-07T09:26:38+00:00",
+      "modified_utc": "2026-06-16T08:45:22+00:00",
       "query_count": 50,
       "meta_dataset_name": "Grampian-2024-2025 Retrieval Gold Set",
       "meta_doc_id": "Grampian-2024-2025",
       "meta_version": null
-    }
+    },
+    "artifact_sha256": {
+      "faiss.index": "e11d5418a3eb9608b7b558881e035a89328f7c12a350a769aff58f7491aa55a8",
+      "chunk_meta.parquet": "4c958b15dffdb07fa727cdee557f0e8d1c8a20ede83be62bede8e20bf3cbdb3b",
+      "chunks.parquet": "2ae2c7a4657cac0cedd8f1a11e9b685eb21ebf8cee56bf42e8595cc610900e2f",
+      "eval_set.json": "ded2e17d4984f03baa9dadc74cf90dabc5a149d1b4e3ae7f47b982f2a56ab8b9"
+    },
+    "verified_manifest": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/results/frozen/gold_eval_artifacts_manifest.json"
   },
   "results": [
     {
@@ -288,7 +296,7 @@
             "Grampian-2024-2025:p0030_000",
             "Grampian-2024-2025:p0029_002",
             "Grampian-2024-2025:p0062_000",
-            "Grampian-2024-2025:p0028_001"
+            "Grampian-2024-2025:p0009_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -301,23 +309,23 @@
             29,
             30,
             62,
-            28
+            9
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
-          "page_mrr_at_k": 0.25,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 0.2,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
             0,
             0,
             0,
             0,
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
@@ -328,12 +336,12 @@
             "Grampian-2024-2025:p0030_000",
             "Grampian-2024-2025:p0029_002",
             "Grampian-2024-2025:p0062_000",
-            "Grampian-2024-2025:p0028_001",
             "Grampian-2024-2025:p0009_001",
             "Grampian-2024-2025:p0043_001",
-            "Grampian-2024-2025:p0164_001",
+            "Grampian-2024-2025:p0030_002",
             "Grampian-2024-2025:p0035_001",
-            "Grampian-2024-2025:p0134_000"
+            "Grampian-2024-2025:p0164_001",
+            "Grampian-2024-2025:p0134_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -351,25 +359,24 @@
             29,
             30,
             62,
-            28,
             9,
             43,
-            164,
             35,
+            164,
             134
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.1111111111111111,
-          "page_mrr_at_k": 0.25,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.1,
-          "chunk_mrr_at_k": 0.2,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
             0,
             0,
             0,
             0,
-            1,
+            0,
             0,
             0,
             0,
@@ -377,7 +384,7 @@
             0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
@@ -405,40 +412,40 @@
         "prefer_evidence_layout": "table",
         "prefer_table_chunks": true
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0028_001"
+            "Grampian-2024-2025:p0029_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            28
+            29
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0028_001",
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0028_000"
+            "Grampian-2024-2025:p0028_004",
+            "Grampian-2024-2025:p0030_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -446,19 +453,20 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
+            29,
             28,
-            29
+            30
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
             0,
-            1
+            1,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -468,11 +476,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0028_001",
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0028_000",
+            "Grampian-2024-2025:p0028_004",
             "Grampian-2024-2025:p0030_003",
-            "Grampian-2024-2025:p0045_000"
+            "Grampian-2024-2025:p0029_002",
+            "Grampian-2024-2025:p0003_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -482,21 +490,21 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            28,
             29,
+            28,
             30,
-            45
+            3
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
-          "page_mrr_at_k": 1.0,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
             0,
             1,
+            0,
             0,
             0
           ],
@@ -508,16 +516,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0028_001",
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0028_000",
+            "Grampian-2024-2025:p0028_004",
             "Grampian-2024-2025:p0030_003",
-            "Grampian-2024-2025:p0045_000",
-            "Grampian-2024-2025:p0003_000",
             "Grampian-2024-2025:p0029_002",
-            "Grampian-2024-2025:p0014_000",
-            "Grampian-2024-2025:p0030_002",
-            "Grampian-2024-2025:p0004_000"
+            "Grampian-2024-2025:p0003_000",
+            "Grampian-2024-2025:p0004_000",
+            "Grampian-2024-2025:p0026_000",
+            "Grampian-2024-2025:p0014_001",
+            "Grampian-2024-2025:p0094_002",
+            "Grampian-2024-2025:p0109_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -532,24 +540,26 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            28,
             29,
+            28,
             30,
-            45,
             3,
+            4,
+            26,
             14,
-            4
+            94,
+            109
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.1111111111111111,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.1,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
             0,
             1,
+            0,
             0,
             0,
             0,
@@ -587,27 +597,60 @@
         "prefer_evidence_layout": "table",
         "prefer_table_chunks": true
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0028_001"
+            "Grampian-2024-2025:p0029_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
+            29
+          ],
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
+          "chunk_hit_flags": [
+            0
+          ],
+          "table_chunk_hit_at_k": 0.0,
+          "failure_stage": "missed_top_ranked",
+          "leakage_count_top_k": 0,
+          "leakage_doc_ids_top_k": [],
+          "leakage_rate_top_k": 0.0
+        },
+        "3": {
+          "retrieved_chunk_ids": [
+            "Grampian-2024-2025:p0029_000",
+            "Grampian-2024-2025:p0094_002",
+            "Grampian-2024-2025:p0028_004"
+          ],
+          "retrieved_doc_ids_top_k": [
+            "Grampian-2024-2025",
+            "Grampian-2024-2025",
+            "Grampian-2024-2025"
+          ],
+          "retrieved_pages_ranked": [
+            29,
+            94,
             28
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
+            0,
+            0,
             1
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -616,89 +659,12 @@
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
-        "3": {
-          "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0028_001",
-            "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:table_p0028"
-          ],
-          "retrieved_doc_ids_top_k": [
-            "Grampian-2024-2025",
-            "Grampian-2024-2025",
-            "Grampian-2024-2025"
-          ],
-          "retrieved_pages_ranked": [
-            28,
-            29
-          ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
-          "chunk_mrr_at_k": 1.0,
-          "chunk_hit_flags": [
-            1,
-            0,
-            1
-          ],
-          "table_chunk_hit_at_k": 1.0,
-          "failure_stage": "hit",
-          "leakage_count_top_k": 0,
-          "leakage_doc_ids_top_k": [],
-          "leakage_rate_top_k": 0.0
-        },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0028_001",
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:table_p0028",
-            "Grampian-2024-2025:p0045_000",
-            "Grampian-2024-2025:p0094_002"
-          ],
-          "retrieved_doc_ids_top_k": [
-            "Grampian-2024-2025",
-            "Grampian-2024-2025",
-            "Grampian-2024-2025",
-            "Grampian-2024-2025",
-            "Grampian-2024-2025"
-          ],
-          "retrieved_pages_ranked": [
-            28,
-            29,
-            45,
-            94
-          ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 1.0,
-          "chunk_hit_flags": [
-            1,
-            0,
-            1,
-            0,
-            0
-          ],
-          "table_chunk_hit_at_k": 1.0,
-          "failure_stage": "hit",
-          "leakage_count_top_k": 0,
-          "leakage_doc_ids_top_k": [],
-          "leakage_rate_top_k": 0.0
-        },
-        "10": {
-          "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0028_001",
-            "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:table_p0028",
-            "Grampian-2024-2025:p0045_000",
             "Grampian-2024-2025:p0094_002",
-            "Grampian-2024-2025:p0028_000",
+            "Grampian-2024-2025:p0028_004",
             "Grampian-2024-2025:p0109_000",
-            "Grampian-2024-2025:p0095_000",
-            "Grampian-2024-2025:p0029_002",
             "Grampian-2024-2025:p0109_001"
           ],
           "retrieved_doc_ids_top_k": [
@@ -706,6 +672,51 @@
             "Grampian-2024-2025",
             "Grampian-2024-2025",
             "Grampian-2024-2025",
+            "Grampian-2024-2025"
+          ],
+          "retrieved_pages_ranked": [
+            29,
+            94,
+            28,
+            109
+          ],
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 0.25,
+          "page_mrr_at_k": 0.3333333333333333,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.3333333333333333,
+          "chunk_hit_flags": [
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "table_chunk_hit_at_k": 0.0,
+          "failure_stage": "hit",
+          "leakage_count_top_k": 0,
+          "leakage_doc_ids_top_k": [],
+          "leakage_rate_top_k": 0.0
+        },
+        "10": {
+          "retrieved_chunk_ids": [
+            "Grampian-2024-2025:p0029_000",
+            "Grampian-2024-2025:p0094_002",
+            "Grampian-2024-2025:p0028_004",
+            "Grampian-2024-2025:p0109_000",
+            "Grampian-2024-2025:p0109_001",
+            "Grampian-2024-2025:p0095_000",
+            "Grampian-2024-2025:p0029_002",
+            "Grampian-2024-2025:p0026_000",
+            "Grampian-2024-2025:p0033_004",
+            "Grampian-2024-2025:p0132_001"
+          ],
+          "retrieved_doc_ids_top_k": [
+            "Grampian-2024-2025",
+            "Grampian-2024-2025",
+            "Grampian-2024-2025",
+            "Grampian-2024-2025",
             "Grampian-2024-2025",
             "Grampian-2024-2025",
             "Grampian-2024-2025",
@@ -714,32 +725,34 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            28,
             29,
-            45,
             94,
+            28,
             109,
-            95
+            95,
+            26,
+            33,
+            132
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.16666666666666666,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.125,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.1,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
-            1,
-            0,
-            1,
             0,
             0,
             1,
+            0,
+            0,
+            0,
             0,
             0,
             0,
             0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -768,40 +781,40 @@
         "prefer_evidence_layout": "table",
         "prefer_table_chunks": true
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0028_001"
+            "Grampian-2024-2025:p0095_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            28
+            95
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0028_001",
+            "Grampian-2024-2025:p0095_000",
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0095_000"
+            "Grampian-2024-2025:p0028_005"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -809,20 +822,20 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            28,
+            95,
             29,
-            95
+            28
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 1.0,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
-            1,
             0,
-            0
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -832,11 +845,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0028_001",
-            "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0095_000",
-            "Grampian-2024-2025:p0026_001",
-            "Grampian-2024-2025:p0028_000"
+            "Grampian-2024-2025:p0029_000",
+            "Grampian-2024-2025:p0028_005",
+            "Grampian-2024-2025:p0028_004",
+            "Grampian-2024-2025:table_p0105"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -846,23 +859,23 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            28,
-            29,
             95,
-            26
+            29,
+            28,
+            105
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
-          "page_mrr_at_k": 1.0,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
+            0,
+            0,
             1,
-            0,
-            0,
-            0,
-            1
+            1,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -872,16 +885,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0028_001",
-            "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0095_000",
-            "Grampian-2024-2025:p0026_001",
-            "Grampian-2024-2025:p0028_000",
-            "Grampian-2024-2025:table_p0028",
+            "Grampian-2024-2025:p0029_000",
+            "Grampian-2024-2025:p0028_005",
+            "Grampian-2024-2025:p0028_004",
             "Grampian-2024-2025:table_p0105",
-            "Grampian-2024-2025:p0051_001",
             "Grampian-2024-2025:p0051_000",
-            "Grampian-2024-2025:p0026_000"
+            "Grampian-2024-2025:p0026_000",
+            "Grampian-2024-2025:p0072_002",
+            "Grampian-2024-2025:p0051_001",
+            "Grampian-2024-2025:p0035_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -896,32 +909,34 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            28,
-            29,
             95,
-            26,
+            29,
+            28,
             105,
-            51
+            51,
+            26,
+            72,
+            35
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.16666666666666666,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.125,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
-            1,
-            0,
             0,
             0,
             1,
             1,
+            0,
+            0,
             0,
             0,
             0,
             0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -982,8 +997,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:table_p0028",
-            "Grampian-2024-2025:p0028_001"
+            "Grampian-2024-2025:p0029_002",
+            "Grampian-2024-2025:p0028_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -998,11 +1013,11 @@
           "page_precision_at_k": 0.5,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3333333333333333,
+          "chunk_precision_at_k": 0.6666666666666666,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            0,
+            1,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -1014,10 +1029,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:table_p0028",
-            "Grampian-2024-2025:p0028_001",
             "Grampian-2024-2025:p0029_002",
-            "Grampian-2024-2025:p0028_000"
+            "Grampian-2024-2025:p0028_004",
+            "Grampian-2024-2025:p0109_000",
+            "Grampian-2024-2025:p0026_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -1028,19 +1043,21 @@
           ],
           "retrieved_pages_ranked": [
             29,
-            28
+            28,
+            109,
+            26
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
+          "page_precision_at_k": 0.25,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.4,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            0,
-            0,
             1,
+            0,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -1052,15 +1069,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:table_p0028",
-            "Grampian-2024-2025:p0028_001",
             "Grampian-2024-2025:p0029_002",
-            "Grampian-2024-2025:p0028_000",
+            "Grampian-2024-2025:p0028_004",
             "Grampian-2024-2025:p0109_000",
             "Grampian-2024-2025:p0026_000",
-            "Grampian-2024-2025:p0030_002",
             "Grampian-2024-2025:p0030_001",
-            "Grampian-2024-2025:p0033_002"
+            "Grampian-2024-2025:p0033_004",
+            "Grampian-2024-2025:p0004_000",
+            "Grampian-2024-2025:p0062_000",
+            "Grampian-2024-2025:p0079_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -1080,19 +1097,22 @@
             109,
             26,
             30,
-            33
+            33,
+            4,
+            62,
+            79
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.16666666666666666,
+          "page_precision_at_k": 0.1111111111111111,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            0,
-            0,
             1,
+            0,
+            0,
             0,
             0,
             0,
@@ -1161,7 +1181,7 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0028_001",
+            "Grampian-2024-2025:p0028_004",
             "Grampian-2024-2025:p0026_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -1194,7 +1214,7 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0028_001",
+            "Grampian-2024-2025:p0028_004",
             "Grampian-2024-2025:p0026_000",
             "Grampian-2024-2025:p0029_002",
             "Grampian-2024-2025:p0095_000"
@@ -1234,15 +1254,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0028_001",
+            "Grampian-2024-2025:p0028_004",
             "Grampian-2024-2025:p0026_000",
             "Grampian-2024-2025:p0029_002",
             "Grampian-2024-2025:p0095_000",
             "Grampian-2024-2025:p0165_000",
-            "Grampian-2024-2025:p0009_001",
             "Grampian-2024-2025:p0094_002",
+            "Grampian-2024-2025:p0009_001",
             "Grampian-2024-2025:p0022_000",
-            "Grampian-2024-2025:p0028_000"
+            "Grampian-2024-2025:p0028_005"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -1262,8 +1282,8 @@
             26,
             95,
             165,
-            9,
             94,
+            9,
             22
           ],
           "page_recall_at_k": 1.0,
@@ -1379,8 +1399,8 @@
             "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0029_002",
             "Grampian-2024-2025:p0004_000",
-            "Grampian-2024-2025:p0149_000",
-            "Grampian-2024-2025:p0035_001"
+            "Grampian-2024-2025:p0035_001",
+            "Grampian-2024-2025:p0062_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -1392,8 +1412,8 @@
           "retrieved_pages_ranked": [
             29,
             4,
-            149,
-            35
+            35,
+            62
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -1419,13 +1439,13 @@
             "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0029_002",
             "Grampian-2024-2025:p0004_000",
-            "Grampian-2024-2025:p0149_000",
             "Grampian-2024-2025:p0035_001",
             "Grampian-2024-2025:p0062_000",
             "Grampian-2024-2025:p0030_002",
             "Grampian-2024-2025:p0043_001",
-            "Grampian-2024-2025:p0134_000",
-            "Grampian-2024-2025:p0030_000"
+            "Grampian-2024-2025:p0134_002",
+            "Grampian-2024-2025:p0030_000",
+            "Grampian-2024-2025:p0079_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -1442,12 +1462,12 @@
           "retrieved_pages_ranked": [
             29,
             4,
-            149,
             35,
             62,
             30,
             43,
-            134
+            134,
+            79
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
@@ -1563,7 +1583,7 @@
             "Grampian-2024-2025:p0030_001",
             "Grampian-2024-2025:p0030_002",
             "Grampian-2024-2025:p0062_000",
-            "Grampian-2024-2025:p0047_000"
+            "Grampian-2024-2025:p0027_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -1576,7 +1596,7 @@
             29,
             30,
             62,
-            47
+            27
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -1603,12 +1623,12 @@
             "Grampian-2024-2025:p0030_001",
             "Grampian-2024-2025:p0030_002",
             "Grampian-2024-2025:p0062_000",
+            "Grampian-2024-2025:p0027_001",
             "Grampian-2024-2025:p0047_000",
             "Grampian-2024-2025:p0029_001",
-            "Grampian-2024-2025:p0043_001",
             "Grampian-2024-2025:p0029_002",
-            "Grampian-2024-2025:p0078_002",
-            "Grampian-2024-2025:p0079_000"
+            "Grampian-2024-2025:p0043_001",
+            "Grampian-2024-2025:p0078_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -1626,10 +1646,10 @@
             29,
             30,
             62,
+            27,
             47,
             43,
-            78,
-            79
+            78
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.14285714285714285,
@@ -1643,8 +1663,8 @@
             0,
             0,
             0,
-            1,
             0,
+            1,
             1,
             0,
             0
@@ -1684,13 +1704,13 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0025_001"
+            "Grampian-2024-2025:p0035_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            25
+            35
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -1709,9 +1729,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0025_001",
             "Grampian-2024-2025:p0035_001",
-            "Grampian-2024-2025:p0028_001"
+            "Grampian-2024-2025:p0132_000",
+            "Grampian-2024-2025:p0025_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -1719,9 +1739,9 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            25,
             35,
-            28
+            132,
+            25
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -1742,11 +1762,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0025_001",
             "Grampian-2024-2025:p0035_001",
-            "Grampian-2024-2025:p0028_001",
             "Grampian-2024-2025:p0132_000",
-            "Grampian-2024-2025:p0095_000"
+            "Grampian-2024-2025:p0025_003",
+            "Grampian-2024-2025:p0095_000",
+            "Grampian-2024-2025:p0072_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -1756,11 +1776,11 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            25,
             35,
-            28,
             132,
-            95
+            25,
+            95,
+            72
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -1783,16 +1803,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0025_001",
             "Grampian-2024-2025:p0035_001",
-            "Grampian-2024-2025:p0028_001",
             "Grampian-2024-2025:p0132_000",
+            "Grampian-2024-2025:p0025_003",
             "Grampian-2024-2025:p0095_000",
             "Grampian-2024-2025:p0072_000",
-            "Grampian-2024-2025:p0033_002",
+            "Grampian-2024-2025:p0157_000",
             "Grampian-2024-2025:p0003_000",
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0045_000"
+            "Grampian-2024-2025:p0094_001",
+            "Grampian-2024-2025:p0165_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -1807,16 +1827,16 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            25,
             35,
-            28,
             132,
+            25,
             95,
             72,
-            33,
+            157,
             3,
             29,
-            45
+            94,
+            165
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -1871,7 +1891,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0031_001"
+            "Grampian-2024-2025:p0031_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
@@ -1896,9 +1916,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0031_001",
-            "Grampian-2024-2025:p0031_002",
-            "Grampian-2024-2025:p0033_001"
+            "Grampian-2024-2025:p0031_003",
+            "Grampian-2024-2025:p0139_001",
+            "Grampian-2024-2025:p0033_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -1907,17 +1927,18 @@
           ],
           "retrieved_pages_ranked": [
             31,
+            139,
             33
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -1928,11 +1949,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0031_001",
-            "Grampian-2024-2025:p0031_002",
-            "Grampian-2024-2025:p0033_001",
-            "Grampian-2024-2025:p0024_002",
-            "Grampian-2024-2025:table_p0130"
+            "Grampian-2024-2025:p0031_003",
+            "Grampian-2024-2025:p0139_001",
+            "Grampian-2024-2025:p0033_002",
+            "Grampian-2024-2025:table_p0130",
+            "Grampian-2024-2025:p0024_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -1943,19 +1964,20 @@
           ],
           "retrieved_pages_ranked": [
             31,
+            139,
             33,
-            24,
-            130
+            130,
+            24
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
+          "page_precision_at_k": 0.2,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0,
             0,
             0
@@ -1968,16 +1990,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0031_001",
-            "Grampian-2024-2025:p0031_002",
-            "Grampian-2024-2025:p0033_001",
-            "Grampian-2024-2025:p0024_002",
-            "Grampian-2024-2025:table_p0130",
-            "Grampian-2024-2025:p0025_001",
-            "Grampian-2024-2025:p0139_002",
-            "Grampian-2024-2025:p0045_000",
+            "Grampian-2024-2025:p0031_003",
+            "Grampian-2024-2025:p0139_001",
             "Grampian-2024-2025:p0033_002",
-            "Grampian-2024-2025:p0126_001"
+            "Grampian-2024-2025:table_p0130",
+            "Grampian-2024-2025:p0024_004",
+            "Grampian-2024-2025:p0157_000",
+            "Grampian-2024-2025:p0025_003",
+            "Grampian-2024-2025:p0139_000",
+            "Grampian-2024-2025:table_p0169",
+            "Grampian-2024-2025:p0082_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -1993,23 +2015,24 @@
           ],
           "retrieved_pages_ranked": [
             31,
-            33,
-            24,
-            130,
-            25,
             139,
-            45,
-            126
+            33,
+            130,
+            24,
+            157,
+            25,
+            169,
+            82
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
+          "page_precision_at_k": 0.1111111111111111,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
+          "chunk_precision_at_k": 0.1,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0,
             0,
             0,
@@ -2048,27 +2071,59 @@
         "prefer_evidence_layout": "table",
         "prefer_table_chunks": true
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0028_001"
+            "Grampian-2024-2025:p0029_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
+            29
+          ],
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
+          "chunk_hit_flags": [
+            0
+          ],
+          "table_chunk_hit_at_k": 0.0,
+          "failure_stage": "missed_top_ranked",
+          "leakage_count_top_k": 0,
+          "leakage_doc_ids_top_k": [],
+          "leakage_rate_top_k": 0.0
+        },
+        "3": {
+          "retrieved_chunk_ids": [
+            "Grampian-2024-2025:p0029_000",
+            "Grampian-2024-2025:p0029_002",
+            "Grampian-2024-2025:p0028_004"
+          ],
+          "retrieved_doc_ids_top_k": [
+            "Grampian-2024-2025",
+            "Grampian-2024-2025",
+            "Grampian-2024-2025"
+          ],
+          "retrieved_pages_ranked": [
+            29,
             28
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.5,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
+            0,
+            0,
             1
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -2077,45 +2132,13 @@
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
-        "3": {
-          "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0028_001",
-            "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:table_p0028"
-          ],
-          "retrieved_doc_ids_top_k": [
-            "Grampian-2024-2025",
-            "Grampian-2024-2025",
-            "Grampian-2024-2025"
-          ],
-          "retrieved_pages_ranked": [
-            28,
-            29
-          ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
-          "chunk_mrr_at_k": 1.0,
-          "chunk_hit_flags": [
-            1,
-            0,
-            1
-          ],
-          "table_chunk_hit_at_k": 1.0,
-          "failure_stage": "hit",
-          "leakage_count_top_k": 0,
-          "leakage_doc_ids_top_k": [],
-          "leakage_rate_top_k": 0.0
-        },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0028_001",
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:table_p0028",
             "Grampian-2024-2025:p0029_002",
-            "Grampian-2024-2025:p0028_000"
+            "Grampian-2024-2025:p0028_004",
+            "Grampian-2024-2025:p0033_004",
+            "Grampian-2024-2025:p0109_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -2125,23 +2148,25 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
+            29,
             28,
-            29
+            33,
+            109
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.25,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
-            1,
+            0,
             0,
             1,
             0,
-            1
+            0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -2149,16 +2174,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0028_001",
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:table_p0028",
             "Grampian-2024-2025:p0029_002",
-            "Grampian-2024-2025:p0028_000",
+            "Grampian-2024-2025:p0028_004",
+            "Grampian-2024-2025:p0033_004",
             "Grampian-2024-2025:p0109_000",
-            "Grampian-2024-2025:p0033_002",
             "Grampian-2024-2025:p0094_002",
             "Grampian-2024-2025:table_p0128",
-            "Grampian-2024-2025:table_p0157"
+            "Grampian-2024-2025:table_p0157",
+            "Grampian-2024-2025:p0096_000",
+            "Grampian-2024-2025:p0025_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -2173,33 +2198,35 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            28,
             29,
-            109,
+            28,
             33,
+            109,
             94,
             128,
-            157
+            157,
+            96,
+            25
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.1111111111111111,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.1,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
-            1,
+            0,
             0,
             1,
             0,
-            1,
+            0,
             0,
             0,
             0,
             0,
             0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -2234,13 +2261,13 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0158_002"
+            "Grampian-2024-2025:p0043_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            158
+            43
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -2259,9 +2286,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0158_002",
             "Grampian-2024-2025:p0043_001",
-            "Grampian-2024-2025:p0025_000"
+            "Grampian-2024-2025:p0158_002",
+            "Grampian-2024-2025:p0029_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -2269,9 +2296,9 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            158,
             43,
-            25
+            158,
+            29
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -2292,11 +2319,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0158_002",
             "Grampian-2024-2025:p0043_001",
-            "Grampian-2024-2025:p0025_000",
+            "Grampian-2024-2025:p0158_002",
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0045_000"
+            "Grampian-2024-2025:p0025_003",
+            "Grampian-2024-2025:p0157_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -2306,11 +2333,11 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            158,
             43,
-            25,
+            158,
             29,
-            45
+            25,
+            157
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -2333,16 +2360,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0158_002",
             "Grampian-2024-2025:p0043_001",
-            "Grampian-2024-2025:p0025_000",
+            "Grampian-2024-2025:p0158_002",
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0045_000",
+            "Grampian-2024-2025:p0025_003",
+            "Grampian-2024-2025:p0157_000",
+            "Grampian-2024-2025:p0031_001",
             "Grampian-2024-2025:p0095_000",
             "Grampian-2024-2025:p0094_002",
-            "Grampian-2024-2025:p0003_000",
             "Grampian-2024-2025:p0096_002",
-            "Grampian-2024-2025:p0032_000"
+            "Grampian-2024-2025:p0133_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -2357,37 +2384,37 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            158,
             43,
-            25,
+            158,
             29,
-            45,
+            25,
+            157,
+            31,
             95,
             94,
-            3,
             96,
-            32
+            133
           ],
-          "page_recall_at_k": 0.0,
-          "page_precision_at_k": 0.0,
-          "page_mrr_at_k": 0.0,
-          "chunk_hit_at_k": 0.0,
-          "chunk_precision_at_k": 0.0,
-          "chunk_mrr_at_k": 0.0,
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 0.1,
+          "page_mrr_at_k": 0.16666666666666666,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 0.1,
+          "chunk_mrr_at_k": 0.16666666666666666,
           "chunk_hit_flags": [
             0,
             0,
             0,
             0,
             0,
-            0,
+            1,
             0,
             0,
             0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "missed_top_ranked",
+          "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
@@ -2447,8 +2474,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0125_002",
-            "Grampian-2024-2025:p0072_000",
-            "Grampian-2024-2025:table_p0139"
+            "Grampian-2024-2025:p0025_003",
+            "Grampian-2024-2025:p0072_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -2457,8 +2484,8 @@
           ],
           "retrieved_pages_ranked": [
             125,
-            72,
-            139
+            25,
+            72
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -2480,10 +2507,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0125_002",
+            "Grampian-2024-2025:p0025_003",
             "Grampian-2024-2025:p0072_000",
-            "Grampian-2024-2025:table_p0139",
             "Grampian-2024-2025:p0089_003",
-            "Grampian-2024-2025:p0025_000"
+            "Grampian-2024-2025:p0133_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -2494,10 +2521,10 @@
           ],
           "retrieved_pages_ranked": [
             125,
+            25,
             72,
-            139,
             89,
-            25
+            133
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -2521,15 +2548,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0125_002",
+            "Grampian-2024-2025:p0025_003",
             "Grampian-2024-2025:p0072_000",
-            "Grampian-2024-2025:table_p0139",
             "Grampian-2024-2025:p0089_003",
-            "Grampian-2024-2025:p0025_000",
-            "Grampian-2024-2025:p0134_001",
+            "Grampian-2024-2025:p0133_002",
+            "Grampian-2024-2025:p0095_000",
             "Grampian-2024-2025:p0039_000",
-            "Grampian-2024-2025:p0158_002",
-            "Grampian-2024-2025:p0003_000",
-            "Grampian-2024-2025:table_p0143"
+            "Grampian-2024-2025:table_p0143",
+            "Grampian-2024-2025:p0089_002",
+            "Grampian-2024-2025:p0158_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -2545,15 +2572,14 @@
           ],
           "retrieved_pages_ranked": [
             125,
-            72,
-            139,
-            89,
             25,
-            134,
+            72,
+            89,
+            133,
+            95,
             39,
-            158,
-            3,
-            143
+            143,
+            158
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -2635,7 +2661,7 @@
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0029_001",
-            "Grampian-2024-2025:p0031_001"
+            "Grampian-2024-2025:p0016_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -2644,21 +2670,21 @@
           ],
           "retrieved_pages_ranked": [
             29,
-            31
+            16
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 0.5,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 0.3333333333333333,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
             0,
             0,
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
@@ -2667,9 +2693,9 @@
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0029_001",
-            "Grampian-2024-2025:p0031_001",
             "Grampian-2024-2025:p0016_001",
-            "Grampian-2024-2025:p0033_002"
+            "Grampian-2024-2025:p0031_002",
+            "Grampian-2024-2025:p0033_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -2680,21 +2706,21 @@
           ],
           "retrieved_pages_ranked": [
             29,
-            31,
             16,
+            31,
             33
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 0.25,
           "chunk_hit_flags": [
             0,
             0,
-            1,
             0,
+            1,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -2707,14 +2733,14 @@
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0029_001",
-            "Grampian-2024-2025:p0031_001",
             "Grampian-2024-2025:p0016_001",
-            "Grampian-2024-2025:p0033_002",
+            "Grampian-2024-2025:p0031_002",
+            "Grampian-2024-2025:p0033_004",
             "Grampian-2024-2025:p0158_003",
-            "Grampian-2024-2025:p0045_000",
             "Grampian-2024-2025:table_p0128",
             "Grampian-2024-2025:p0004_001",
-            "Grampian-2024-2025:p0142_000"
+            "Grampian-2024-2025:p0014_001",
+            "Grampian-2024-2025:p0090_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -2730,26 +2756,26 @@
           ],
           "retrieved_pages_ranked": [
             29,
-            31,
             16,
+            31,
             33,
             158,
-            45,
             128,
             4,
-            142
+            14,
+            90
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.1111111111111111,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.1,
-          "chunk_mrr_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 0.25,
           "chunk_hit_flags": [
             0,
             0,
-            1,
             0,
+            1,
             0,
             0,
             0,
@@ -2792,7 +2818,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0031_001"
+            "Grampian-2024-2025:p0031_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
@@ -2817,9 +2843,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0031_001",
-            "Grampian-2024-2025:p0045_000",
-            "Grampian-2024-2025:p0029_000"
+            "Grampian-2024-2025:p0031_002",
+            "Grampian-2024-2025:p0029_000",
+            "Grampian-2024-2025:p0004_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -2828,8 +2854,8 @@
           ],
           "retrieved_pages_ranked": [
             31,
-            45,
-            29
+            29,
+            4
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
@@ -2850,11 +2876,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0031_001",
-            "Grampian-2024-2025:p0045_000",
+            "Grampian-2024-2025:p0031_002",
             "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0004_001",
-            "Grampian-2024-2025:p0031_000"
+            "Grampian-2024-2025:p0031_001",
+            "Grampian-2024-2025:p0051_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -2865,9 +2891,9 @@
           ],
           "retrieved_pages_ranked": [
             31,
-            45,
             29,
-            4
+            4,
+            51
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -2879,8 +2905,8 @@
             1,
             0,
             0,
-            0,
-            1
+            1,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -2890,16 +2916,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0031_001",
-            "Grampian-2024-2025:p0045_000",
+            "Grampian-2024-2025:p0031_002",
             "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0004_001",
-            "Grampian-2024-2025:p0031_000",
+            "Grampian-2024-2025:p0031_001",
             "Grampian-2024-2025:p0051_000",
+            "Grampian-2024-2025:p0031_000",
             "Grampian-2024-2025:table_p0128",
-            "Grampian-2024-2025:p0032_000",
             "Grampian-2024-2025:p0004_002",
-            "Grampian-2024-2025:p0142_000"
+            "Grampian-2024-2025:p0032_000",
+            "Grampian-2024-2025:p0094_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -2915,27 +2941,26 @@
           ],
           "retrieved_pages_ranked": [
             31,
-            45,
             29,
             4,
             51,
             128,
             32,
-            142
+            94
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
+          "page_precision_at_k": 0.14285714285714285,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
+          "chunk_precision_at_k": 0.3,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
             0,
-            0,
             1,
             0,
+            1,
             0,
             0,
             0,
@@ -2976,7 +3001,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0031_000"
+            "Grampian-2024-2025:p0031_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
@@ -3001,9 +3026,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0031_000",
+            "Grampian-2024-2025:p0031_001",
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0031_001"
+            "Grampian-2024-2025:p0033_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -3012,18 +3037,19 @@
           ],
           "retrieved_pages_ranked": [
             31,
-            29
+            29,
+            33
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -3033,11 +3059,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0031_000",
-            "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0031_001",
-            "Grampian-2024-2025:p0033_002",
-            "Grampian-2024-2025:p0004_001"
+            "Grampian-2024-2025:p0029_000",
+            "Grampian-2024-2025:p0033_004",
+            "Grampian-2024-2025:p0004_001",
+            "Grampian-2024-2025:p0029_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -3056,12 +3082,12 @@
           "page_precision_at_k": 0.25,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
-            1,
+            0,
             0,
             0
           ],
@@ -3073,16 +3099,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0031_000",
-            "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0031_001",
-            "Grampian-2024-2025:p0033_002",
+            "Grampian-2024-2025:p0029_000",
+            "Grampian-2024-2025:p0033_004",
             "Grampian-2024-2025:p0004_001",
             "Grampian-2024-2025:p0029_001",
+            "Grampian-2024-2025:p0031_000",
             "Grampian-2024-2025:p0004_002",
-            "Grampian-2024-2025:p0043_001",
             "Grampian-2024-2025:p0003_000",
-            "Grampian-2024-2025:p0024_001"
+            "Grampian-2024-2025:p0032_000",
+            "Grampian-2024-2025:p0043_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -3101,9 +3127,9 @@
             29,
             33,
             4,
-            43,
             3,
-            24
+            32,
+            43
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.14285714285714285,
@@ -3114,10 +3140,10 @@
           "chunk_hit_flags": [
             1,
             0,
+            0,
+            0,
+            0,
             1,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -3185,7 +3211,7 @@
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0035_001",
-            "Grampian-2024-2025:p0031_000"
+            "Grampian-2024-2025:p0031_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -3218,9 +3244,9 @@
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0035_001",
-            "Grampian-2024-2025:p0031_000",
+            "Grampian-2024-2025:p0031_001",
             "Grampian-2024-2025:p0003_000",
-            "Grampian-2024-2025:p0045_000"
+            "Grampian-2024-2025:p0004_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -3234,7 +3260,7 @@
             35,
             31,
             3,
-            45
+            4
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.2,
@@ -3259,13 +3285,13 @@
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0035_001",
-            "Grampian-2024-2025:p0031_000",
+            "Grampian-2024-2025:p0031_001",
             "Grampian-2024-2025:p0003_000",
-            "Grampian-2024-2025:p0045_000",
             "Grampian-2024-2025:p0004_000",
-            "Grampian-2024-2025:p0079_000",
+            "Grampian-2024-2025:p0028_004",
             "Grampian-2024-2025:p0004_001",
-            "Grampian-2024-2025:p0014_000",
+            "Grampian-2024-2025:p0079_000",
+            "Grampian-2024-2025:p0014_001",
             "Grampian-2024-2025:table_p0166"
           ],
           "retrieved_doc_ids_top_k": [
@@ -3285,8 +3311,8 @@
             35,
             31,
             3,
-            45,
             4,
+            28,
             79,
             14,
             166
@@ -3344,7 +3370,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0026_001"
+            "Grampian-2024-2025:p0026_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
@@ -3369,9 +3395,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0026_001",
             "Grampian-2024-2025:p0026_002",
-            "Grampian-2024-2025:p0084_002"
+            "Grampian-2024-2025:p0024_002",
+            "Grampian-2024-2025:p0165_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -3380,17 +3406,18 @@
           ],
           "retrieved_pages_ranked": [
             26,
-            84
+            24,
+            165
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -3401,11 +3428,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0026_001",
             "Grampian-2024-2025:p0026_002",
-            "Grampian-2024-2025:p0084_002",
             "Grampian-2024-2025:p0024_002",
-            "Grampian-2024-2025:p0024_001"
+            "Grampian-2024-2025:p0165_000",
+            "Grampian-2024-2025:p0024_003",
+            "Grampian-2024-2025:p0027_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -3416,18 +3443,19 @@
           ],
           "retrieved_pages_ranked": [
             26,
-            84,
-            24
+            24,
+            165,
+            27
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
+          "page_precision_at_k": 0.25,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0,
             0,
             0
@@ -3440,16 +3468,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0026_001",
             "Grampian-2024-2025:p0026_002",
-            "Grampian-2024-2025:p0084_002",
             "Grampian-2024-2025:p0024_002",
-            "Grampian-2024-2025:p0024_001",
             "Grampian-2024-2025:p0165_000",
-            "Grampian-2024-2025:p0027_000",
+            "Grampian-2024-2025:p0024_003",
+            "Grampian-2024-2025:p0027_001",
             "Grampian-2024-2025:p0032_000",
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0032_001"
+            "Grampian-2024-2025:p0032_001",
+            "Grampian-2024-2025:p0086_007",
+            "Grampian-2024-2025:p0026_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -3465,12 +3493,12 @@
           ],
           "retrieved_pages_ranked": [
             26,
-            84,
             24,
             165,
             27,
             32,
-            29
+            29,
+            86
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.14285714285714285,
@@ -3480,7 +3508,6 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
             0,
             0,
             0,
@@ -3488,7 +3515,8 @@
             0,
             0,
             0,
-            0
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -3525,7 +3553,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0026_001"
+            "Grampian-2024-2025:p0026_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
@@ -3550,8 +3578,8 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0026_001",
             "Grampian-2024-2025:p0026_002",
+            "Grampian-2024-2025:p0026_000",
             "Grampian-2024-2025:p0032_001"
           ],
           "retrieved_doc_ids_top_k": [
@@ -3582,11 +3610,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0026_001",
             "Grampian-2024-2025:p0026_002",
-            "Grampian-2024-2025:p0032_001",
             "Grampian-2024-2025:p0026_000",
-            "Grampian-2024-2025:p0165_000"
+            "Grampian-2024-2025:p0032_001",
+            "Grampian-2024-2025:p0165_000",
+            "Grampian-2024-2025:p0032_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -3604,13 +3632,13 @@
           "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6,
+          "chunk_precision_at_k": 0.4,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             1,
             0,
-            1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -3621,16 +3649,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0026_001",
             "Grampian-2024-2025:p0026_002",
-            "Grampian-2024-2025:p0032_001",
             "Grampian-2024-2025:p0026_000",
+            "Grampian-2024-2025:p0032_001",
             "Grampian-2024-2025:p0165_000",
             "Grampian-2024-2025:p0032_000",
             "Grampian-2024-2025:p0165_001",
-            "Grampian-2024-2025:p0084_002",
-            "Grampian-2024-2025:p0024_001",
-            "Grampian-2024-2025:p0032_002"
+            "Grampian-2024-2025:p0026_001",
+            "Grampian-2024-2025:p0024_002",
+            "Grampian-2024-2025:p0083_000",
+            "Grampian-2024-2025:p0086_007"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -3648,11 +3676,12 @@
             26,
             32,
             165,
-            84,
-            24
+            24,
+            83,
+            86
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.2,
+          "page_precision_at_k": 0.16666666666666666,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.3,
@@ -3661,10 +3690,10 @@
             1,
             1,
             0,
+            0,
+            0,
+            0,
             1,
-            0,
-            0,
-            0,
             0,
             0,
             0
@@ -3730,8 +3759,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0024_002",
-            "Grampian-2024-2025:p0024_001",
-            "Grampian-2024-2025:p0165_000"
+            "Grampian-2024-2025:p0165_000",
+            "Grampian-2024-2025:p0027_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -3740,7 +3769,8 @@
           ],
           "retrieved_pages_ranked": [
             24,
-            165
+            165,
+            27
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -3762,10 +3792,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0024_002",
-            "Grampian-2024-2025:p0024_001",
             "Grampian-2024-2025:p0165_000",
-            "Grampian-2024-2025:p0026_002",
-            "Grampian-2024-2025:p0027_000"
+            "Grampian-2024-2025:p0027_000",
+            "Grampian-2024-2025:p0026_001",
+            "Grampian-2024-2025:p0029_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -3777,12 +3807,13 @@
           "retrieved_pages_ranked": [
             24,
             165,
+            27,
             26,
-            27
+            29
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
-          "page_mrr_at_k": 0.3333333333333333,
+          "page_precision_at_k": 0.2,
+          "page_mrr_at_k": 0.25,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 0.25,
@@ -3802,15 +3833,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0024_002",
-            "Grampian-2024-2025:p0024_001",
             "Grampian-2024-2025:p0165_000",
-            "Grampian-2024-2025:p0026_002",
             "Grampian-2024-2025:p0027_000",
             "Grampian-2024-2025:p0026_001",
+            "Grampian-2024-2025:p0029_000",
+            "Grampian-2024-2025:p0026_000",
             "Grampian-2024-2025:p0079_000",
-            "Grampian-2024-2025:p0084_002",
-            "Grampian-2024-2025:p0084_001",
-            "Grampian-2024-2025:p0026_000"
+            "Grampian-2024-2025:p0030_001",
+            "Grampian-2024-2025:table_p0106",
+            "Grampian-2024-2025:p0032_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -3827,16 +3858,19 @@
           "retrieved_pages_ranked": [
             24,
             165,
-            26,
             27,
+            26,
+            29,
             79,
-            84
+            30,
+            106,
+            32
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.16666666666666666,
-          "page_mrr_at_k": 0.3333333333333333,
+          "page_precision_at_k": 0.1111111111111111,
+          "page_mrr_at_k": 0.25,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 0.25,
           "chunk_hit_flags": [
             0,
@@ -3848,7 +3882,7 @@
             0,
             0,
             0,
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -3885,7 +3919,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0027_000"
+            "Grampian-2024-2025:p0027_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
@@ -3910,9 +3944,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0027_000",
             "Grampian-2024-2025:p0027_001",
-            "Grampian-2024-2025:p0029_000"
+            "Grampian-2024-2025:p0029_000",
+            "Grampian-2024-2025:p0026_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -3921,17 +3955,18 @@
           ],
           "retrieved_pages_ranked": [
             27,
-            29
+            29,
+            26
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -3942,11 +3977,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0027_000",
             "Grampian-2024-2025:p0027_001",
             "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0026_002",
-            "Grampian-2024-2025:p0084_003"
+            "Grampian-2024-2025:p0024_002",
+            "Grampian-2024-2025:p0026_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -3959,17 +3994,17 @@
             27,
             29,
             26,
-            84
+            24
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0,
             0,
             0
@@ -3982,16 +4017,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0027_000",
             "Grampian-2024-2025:p0027_001",
             "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0026_002",
-            "Grampian-2024-2025:p0084_003",
-            "Grampian-2024-2025:p0026_001",
-            "Grampian-2024-2025:p0084_002",
-            "Grampian-2024-2025:p0084_001",
             "Grampian-2024-2025:p0024_002",
-            "Grampian-2024-2025:p0165_000"
+            "Grampian-2024-2025:p0026_003",
+            "Grampian-2024-2025:p0027_000",
+            "Grampian-2024-2025:p0165_000",
+            "Grampian-2024-2025:p0024_003",
+            "Grampian-2024-2025:table_p0166",
+            "Grampian-2024-2025:p0032_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -4009,23 +4044,24 @@
             27,
             29,
             26,
-            84,
             24,
-            165
+            165,
+            166,
+            32
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.16666666666666666,
+          "page_precision_at_k": 0.14285714285714285,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
+            0,
+            0,
+            0,
+            0,
             1,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -4066,7 +4102,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0026_001"
+            "Grampian-2024-2025:p0026_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
@@ -4091,9 +4127,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0026_001",
             "Grampian-2024-2025:p0026_002",
-            "Grampian-2024-2025:p0024_002"
+            "Grampian-2024-2025:p0026_003",
+            "Grampian-2024-2025:p0027_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -4102,7 +4138,7 @@
           ],
           "retrieved_pages_ranked": [
             26,
-            24
+            27
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
@@ -4123,11 +4159,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0026_001",
             "Grampian-2024-2025:p0026_002",
-            "Grampian-2024-2025:p0024_002",
-            "Grampian-2024-2025:p0027_000",
-            "Grampian-2024-2025:p0084_002"
+            "Grampian-2024-2025:p0026_003",
+            "Grampian-2024-2025:p0027_001",
+            "Grampian-2024-2025:p0024_003",
+            "Grampian-2024-2025:p0024_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -4138,12 +4174,11 @@
           ],
           "retrieved_pages_ranked": [
             26,
-            24,
             27,
-            84
+            24
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.4,
@@ -4163,14 +4198,14 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0026_001",
             "Grampian-2024-2025:p0026_002",
+            "Grampian-2024-2025:p0026_003",
+            "Grampian-2024-2025:p0027_001",
+            "Grampian-2024-2025:p0024_003",
             "Grampian-2024-2025:p0024_002",
-            "Grampian-2024-2025:p0027_000",
-            "Grampian-2024-2025:p0084_002",
-            "Grampian-2024-2025:p0024_001",
-            "Grampian-2024-2025:table_p0166",
+            "Grampian-2024-2025:p0086_007",
             "Grampian-2024-2025:p0165_000",
+            "Grampian-2024-2025:table_p0166",
             "Grampian-2024-2025:table_p0167",
             "Grampian-2024-2025:p0165_001"
           ],
@@ -4188,11 +4223,11 @@
           ],
           "retrieved_pages_ranked": [
             26,
-            24,
             27,
-            84,
-            166,
+            24,
+            86,
             165,
+            166,
             167
           ],
           "page_recall_at_k": 1.0,
@@ -4242,40 +4277,40 @@
         "prefer_evidence_layout": "paragraph",
         "prefer_table_chunks": false
       },
-      "page_hit": 0,
-      "failure_type": "FP2_MISSED_TOP_RANK",
-      "failure_stage": "retrieval",
+      "page_hit": 1,
+      "failure_type": "HIT",
+      "failure_stage": "none",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0026_001"
+            "Grampian-2024-2025:p0027_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            26
+            27
           ],
-          "page_recall_at_k": 0.0,
-          "page_precision_at_k": 0.0,
-          "page_mrr_at_k": 0.0,
-          "chunk_hit_at_k": 0.0,
-          "chunk_precision_at_k": 0.0,
-          "chunk_mrr_at_k": 0.0,
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 1.0,
+          "page_mrr_at_k": 1.0,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 1.0,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "missed_top_ranked",
+          "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0026_001",
-            "Grampian-2024-2025:p0027_000",
-            "Grampian-2024-2025:p0027_001"
+            "Grampian-2024-2025:p0027_001",
+            "Grampian-2024-2025:p0026_000",
+            "Grampian-2024-2025:p0032_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -4283,19 +4318,20 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
+            27,
             26,
-            27
+            32
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_precision_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
             1,
-            1
+            0,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -4305,11 +4341,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0026_001",
-            "Grampian-2024-2025:p0027_000",
             "Grampian-2024-2025:p0027_001",
+            "Grampian-2024-2025:p0026_000",
             "Grampian-2024-2025:p0032_001",
-            "Grampian-2024-2025:p0026_000"
+            "Grampian-2024-2025:p0026_002",
+            "Grampian-2024-2025:p0026_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -4319,20 +4355,20 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            26,
             27,
+            26,
             32
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
+            1,
             0,
-            1,
-            1,
+            0,
             0,
             0
           ],
@@ -4344,15 +4380,15 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0026_001",
-            "Grampian-2024-2025:p0027_000",
             "Grampian-2024-2025:p0027_001",
-            "Grampian-2024-2025:p0032_001",
             "Grampian-2024-2025:p0026_000",
+            "Grampian-2024-2025:p0032_001",
             "Grampian-2024-2025:p0026_002",
+            "Grampian-2024-2025:p0026_001",
             "Grampian-2024-2025:p0032_000",
-            "Grampian-2024-2025:p0084_003",
-            "Grampian-2024-2025:p0032_002",
+            "Grampian-2024-2025:p0027_000",
+            "Grampian-2024-2025:p0024_002",
+            "Grampian-2024-2025:p0165_000",
             "Grampian-2024-2025:p0016_001"
           ],
           "retrieved_doc_ids_top_k": [
@@ -4368,26 +4404,27 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            26,
             27,
+            26,
             32,
-            84,
+            24,
+            165,
             16
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.2,
-          "page_mrr_at_k": 0.5,
+          "page_precision_at_k": 0.16666666666666666,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
-            1,
             1,
             0,
             0,
             0,
             0,
+            0,
+            1,
             0,
             0,
             0
@@ -4453,7 +4490,7 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0024_002",
-            "Grampian-2024-2025:p0027_000",
+            "Grampian-2024-2025:p0027_001",
             "Grampian-2024-2025:p0032_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -4486,10 +4523,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0024_002",
-            "Grampian-2024-2025:p0027_000",
+            "Grampian-2024-2025:p0027_001",
             "Grampian-2024-2025:p0032_000",
-            "Grampian-2024-2025:p0024_001",
-            "Grampian-2024-2025:p0026_001"
+            "Grampian-2024-2025:p0030_002",
+            "Grampian-2024-2025:p0026_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -4502,10 +4539,11 @@
             24,
             27,
             32,
+            30,
             26
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
+          "page_precision_at_k": 0.2,
           "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
@@ -4526,15 +4564,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0024_002",
-            "Grampian-2024-2025:p0027_000",
+            "Grampian-2024-2025:p0027_001",
             "Grampian-2024-2025:p0032_000",
-            "Grampian-2024-2025:p0024_001",
-            "Grampian-2024-2025:p0026_001",
-            "Grampian-2024-2025:p0026_002",
             "Grampian-2024-2025:p0030_002",
-            "Grampian-2024-2025:p0045_000",
+            "Grampian-2024-2025:p0026_002",
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:table_p0105"
+            "Grampian-2024-2025:table_p0105",
+            "Grampian-2024-2025:p0026_000",
+            "Grampian-2024-2025:p0165_000",
+            "Grampian-2024-2025:p0093_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -4552,14 +4590,15 @@
             24,
             27,
             32,
-            26,
             30,
-            45,
+            26,
             29,
-            105
+            105,
+            165,
+            93
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
+          "page_precision_at_k": 0.1111111111111111,
           "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.1,
@@ -4638,7 +4677,7 @@
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0009_000",
             "Grampian-2024-2025:p0071_002",
-            "Grampian-2024-2025:p0003_000"
+            "Grampian-2024-2025:p0015_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -4648,7 +4687,7 @@
           "retrieved_pages_ranked": [
             9,
             71,
-            3
+            15
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -4671,8 +4710,8 @@
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0009_000",
             "Grampian-2024-2025:p0071_002",
-            "Grampian-2024-2025:p0003_000",
             "Grampian-2024-2025:p0015_000",
+            "Grampian-2024-2025:p0003_000",
             "Grampian-2024-2025:p0022_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -4685,8 +4724,8 @@
           "retrieved_pages_ranked": [
             9,
             71,
-            3,
             15,
+            3,
             22
           ],
           "page_recall_at_k": 0.0,
@@ -4712,12 +4751,12 @@
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0009_000",
             "Grampian-2024-2025:p0071_002",
-            "Grampian-2024-2025:p0003_000",
             "Grampian-2024-2025:p0015_000",
+            "Grampian-2024-2025:p0003_000",
             "Grampian-2024-2025:p0022_000",
-            "Grampian-2024-2025:p0022_001",
-            "Grampian-2024-2025:p0079_001",
             "Grampian-2024-2025:p0074_001",
+            "Grampian-2024-2025:p0079_001",
+            "Grampian-2024-2025:p0022_001",
             "Grampian-2024-2025:p0088_000",
             "Grampian-2024-2025:p0035_002"
           ],
@@ -4736,11 +4775,11 @@
           "retrieved_pages_ranked": [
             9,
             71,
-            3,
             15,
+            3,
             22,
-            79,
             74,
+            79,
             88,
             35
           ],
@@ -4797,7 +4836,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0014_000"
+            "Grampian-2024-2025:p0014_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
@@ -4822,7 +4861,7 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0014_000",
+            "Grampian-2024-2025:p0014_001",
             "Grampian-2024-2025:p0015_000",
             "Grampian-2024-2025:p0072_003"
           ],
@@ -4855,11 +4894,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0014_000",
+            "Grampian-2024-2025:p0014_001",
             "Grampian-2024-2025:p0015_000",
             "Grampian-2024-2025:p0072_003",
-            "Grampian-2024-2025:p0158_002",
-            "Grampian-2024-2025:p0158_001"
+            "Grampian-2024-2025:p0158_001",
+            "Grampian-2024-2025:p0158_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -4895,16 +4934,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0014_000",
+            "Grampian-2024-2025:p0014_001",
             "Grampian-2024-2025:p0015_000",
             "Grampian-2024-2025:p0072_003",
-            "Grampian-2024-2025:p0158_002",
             "Grampian-2024-2025:p0158_001",
-            "Grampian-2024-2025:p0009_000",
-            "Grampian-2024-2025:p0056_001",
+            "Grampian-2024-2025:p0158_002",
             "Grampian-2024-2025:p0072_002",
-            "Grampian-2024-2025:p0073_001",
-            "Grampian-2024-2025:p0084_000"
+            "Grampian-2024-2025:p0056_001",
+            "Grampian-2024-2025:p0009_000",
+            "Grampian-2024-2025:p0086_000",
+            "Grampian-2024-2025:p0073_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -4923,10 +4962,10 @@
             15,
             72,
             158,
-            9,
             56,
-            73,
-            84
+            9,
+            86,
+            73
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
@@ -5007,46 +5046,10 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0014_001",
-            "Grampian-2024-2025:p0014_000",
-            "Grampian-2024-2025:p0142_001"
-          ],
-          "retrieved_doc_ids_top_k": [
-            "Grampian-2024-2025",
-            "Grampian-2024-2025",
-            "Grampian-2024-2025"
-          ],
-          "retrieved_pages_ranked": [
-            14,
-            142
-          ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
-          "chunk_mrr_at_k": 1.0,
-          "chunk_hit_flags": [
-            1,
-            1,
-            0
-          ],
-          "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
-          "leakage_count_top_k": 0,
-          "leakage_doc_ids_top_k": [],
-          "leakage_rate_top_k": 0.0
-        },
-        "5": {
-          "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0014_001",
-            "Grampian-2024-2025:p0014_000",
-            "Grampian-2024-2025:p0142_001",
             "Grampian-2024-2025:p0142_000",
             "Grampian-2024-2025:p0016_001"
           ],
           "retrieved_doc_ids_top_k": [
-            "Grampian-2024-2025",
-            "Grampian-2024-2025",
             "Grampian-2024-2025",
             "Grampian-2024-2025",
             "Grampian-2024-2025"
@@ -5060,11 +5063,49 @@
           "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
+            0,
+            0
+          ],
+          "table_chunk_hit_at_k": 0.0,
+          "failure_stage": "hit",
+          "leakage_count_top_k": 0,
+          "leakage_doc_ids_top_k": [],
+          "leakage_rate_top_k": 0.0
+        },
+        "5": {
+          "retrieved_chunk_ids": [
+            "Grampian-2024-2025:p0014_001",
+            "Grampian-2024-2025:p0142_000",
+            "Grampian-2024-2025:p0016_001",
+            "Grampian-2024-2025:p0016_000",
+            "Grampian-2024-2025:p0015_000"
+          ],
+          "retrieved_doc_ids_top_k": [
+            "Grampian-2024-2025",
+            "Grampian-2024-2025",
+            "Grampian-2024-2025",
+            "Grampian-2024-2025",
+            "Grampian-2024-2025"
+          ],
+          "retrieved_pages_ranked": [
+            14,
+            142,
+            16,
+            15
+          ],
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 0.25,
+          "page_mrr_at_k": 1.0,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 1.0,
+          "chunk_hit_flags": [
             1,
+            0,
             0,
             0,
             0
@@ -5078,15 +5119,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0014_001",
-            "Grampian-2024-2025:p0014_000",
-            "Grampian-2024-2025:p0142_001",
             "Grampian-2024-2025:p0142_000",
             "Grampian-2024-2025:p0016_001",
             "Grampian-2024-2025:p0016_000",
             "Grampian-2024-2025:p0015_000",
             "Grampian-2024-2025:p0163_000",
-            "Grampian-2024-2025:p0095_001",
-            "Grampian-2024-2025:p0024_002"
+            "Grampian-2024-2025:p0024_004",
+            "Grampian-2024-2025:p0165_002",
+            "Grampian-2024-2025:p0003_002",
+            "Grampian-2024-2025:p0011_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -5106,18 +5147,20 @@
             16,
             15,
             163,
-            95,
-            24
+            24,
+            165,
+            3,
+            11
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
+          "page_precision_at_k": 0.1111111111111111,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
+          "chunk_precision_at_k": 0.1,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0,
             0,
             0,
@@ -5188,8 +5231,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0014_001",
-            "Grampian-2024-2025:p0014_000",
-            "Grampian-2024-2025:p0142_001"
+            "Grampian-2024-2025:p0016_000",
+            "Grampian-2024-2025:p0016_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -5198,17 +5241,17 @@
           ],
           "retrieved_pages_ranked": [
             14,
-            142
+            16
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -5220,10 +5263,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0014_001",
-            "Grampian-2024-2025:p0014_000",
-            "Grampian-2024-2025:p0142_001",
+            "Grampian-2024-2025:p0016_000",
+            "Grampian-2024-2025:p0016_001",
             "Grampian-2024-2025:p0142_000",
-            "Grampian-2024-2025:p0016_001"
+            "Grampian-2024-2025:p0015_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -5234,18 +5277,19 @@
           ],
           "retrieved_pages_ranked": [
             14,
+            16,
             142,
-            16
+            15
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
+          "page_precision_at_k": 0.25,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0,
             0,
             0
@@ -5259,15 +5303,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0014_001",
-            "Grampian-2024-2025:p0014_000",
-            "Grampian-2024-2025:p0142_001",
-            "Grampian-2024-2025:p0142_000",
-            "Grampian-2024-2025:p0016_001",
             "Grampian-2024-2025:p0016_000",
+            "Grampian-2024-2025:p0016_001",
+            "Grampian-2024-2025:p0142_000",
             "Grampian-2024-2025:p0015_000",
             "Grampian-2024-2025:p0163_000",
-            "Grampian-2024-2025:p0095_001",
-            "Grampian-2024-2025:p0024_002"
+            "Grampian-2024-2025:p0011_002",
+            "Grampian-2024-2025:p0024_004",
+            "Grampian-2024-2025:p0003_002",
+            "Grampian-2024-2025:p0165_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -5283,22 +5327,24 @@
           ],
           "retrieved_pages_ranked": [
             14,
-            142,
             16,
+            142,
             15,
             163,
-            95,
-            24
+            11,
+            24,
+            3,
+            165
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
+          "page_precision_at_k": 0.1111111111111111,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
+          "chunk_precision_at_k": 0.1,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0,
             0,
             0,
@@ -5343,7 +5389,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0014_000"
+            "Grampian-2024-2025:p0014_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
@@ -5368,9 +5414,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0014_000",
-            "Grampian-2024-2025:p0045_000",
-            "Grampian-2024-2025:p0018_000"
+            "Grampian-2024-2025:p0014_001",
+            "Grampian-2024-2025:p0018_000",
+            "Grampian-2024-2025:p0035_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -5379,8 +5425,8 @@
           ],
           "retrieved_pages_ranked": [
             14,
-            45,
-            18
+            18,
+            35
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
@@ -5401,11 +5447,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0014_000",
-            "Grampian-2024-2025:p0045_000",
+            "Grampian-2024-2025:p0014_001",
             "Grampian-2024-2025:p0018_000",
             "Grampian-2024-2025:p0035_002",
-            "Grampian-2024-2025:p0093_002"
+            "Grampian-2024-2025:p0026_000",
+            "Grampian-2024-2025:p0043_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -5416,10 +5462,10 @@
           ],
           "retrieved_pages_ranked": [
             14,
-            45,
             18,
             35,
-            93
+            26,
+            43
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.2,
@@ -5442,16 +5488,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0014_000",
-            "Grampian-2024-2025:p0045_000",
+            "Grampian-2024-2025:p0014_001",
             "Grampian-2024-2025:p0018_000",
             "Grampian-2024-2025:p0035_002",
-            "Grampian-2024-2025:p0093_002",
-            "Grampian-2024-2025:p0081_001",
             "Grampian-2024-2025:p0026_000",
             "Grampian-2024-2025:p0043_000",
             "Grampian-2024-2025:p0082_000",
-            "Grampian-2024-2025:p0127_000"
+            "Grampian-2024-2025:p0127_000",
+            "Grampian-2024-2025:table_p0157",
+            "Grampian-2024-2025:table_p0128",
+            "Grampian-2024-2025:p0027_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -5467,15 +5513,15 @@
           ],
           "retrieved_pages_ranked": [
             14,
-            45,
             18,
             35,
-            93,
-            81,
             26,
             43,
             82,
-            127
+            127,
+            157,
+            128,
+            27
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.1,
@@ -5524,40 +5570,40 @@
         "prefer_evidence_layout": "paragraph",
         "prefer_table_chunks": false
       },
-      "page_hit": 0,
-      "failure_type": "FP2_MISSED_TOP_RANK",
-      "failure_stage": "retrieval",
+      "page_hit": 1,
+      "failure_type": "HIT",
+      "failure_stage": "none",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0012_000"
+            "Grampian-2024-2025:p0011_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            12
+            11
           ],
-          "page_recall_at_k": 0.0,
-          "page_precision_at_k": 0.0,
-          "page_mrr_at_k": 0.0,
-          "chunk_hit_at_k": 0.0,
-          "chunk_precision_at_k": 0.0,
-          "chunk_mrr_at_k": 0.0,
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 1.0,
+          "page_mrr_at_k": 1.0,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 1.0,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "missed_top_ranked",
+          "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0012_000",
             "Grampian-2024-2025:p0011_002",
-            "Grampian-2024-2025:p0011_001"
+            "Grampian-2024-2025:p0011_001",
+            "Grampian-2024-2025:p0062_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -5565,19 +5611,19 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            12,
-            11
+            11,
+            62
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.6666666666666666,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
             1,
-            1
+            1,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -5587,11 +5633,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0012_000",
             "Grampian-2024-2025:p0011_002",
             "Grampian-2024-2025:p0011_001",
-            "Grampian-2024-2025:p0012_001",
-            "Grampian-2024-2025:p0062_000"
+            "Grampian-2024-2025:p0062_000",
+            "Grampian-2024-2025:p0043_000",
+            "Grampian-2024-2025:p0013_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -5601,20 +5647,21 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            12,
             11,
-            62
+            62,
+            43,
+            13
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 0.5,
+          "page_precision_at_k": 0.25,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
+            1,
+            1,
             0,
-            1,
-            1,
             0,
             0
           ],
@@ -5626,16 +5673,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0012_000",
             "Grampian-2024-2025:p0011_002",
             "Grampian-2024-2025:p0011_001",
-            "Grampian-2024-2025:p0012_001",
             "Grampian-2024-2025:p0062_000",
             "Grampian-2024-2025:p0043_000",
             "Grampian-2024-2025:p0013_000",
             "Grampian-2024-2025:p0007_000",
             "Grampian-2024-2025:p0072_002",
-            "Grampian-2024-2025:p0071_002"
+            "Grampian-2024-2025:p0025_006",
+            "Grampian-2024-2025:p0071_002",
+            "Grampian-2024-2025:p0072_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -5650,25 +5697,25 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            12,
             11,
             62,
             43,
             13,
             7,
             72,
+            25,
             71
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
+            1,
+            1,
             0,
-            1,
-            1,
             0,
             0,
             0,
@@ -5706,40 +5753,40 @@
         "prefer_evidence_layout": "paragraph",
         "prefer_table_chunks": false
       },
-      "page_hit": 0,
-      "failure_type": "FP2_MISSED_TOP_RANK",
-      "failure_stage": "retrieval",
+      "page_hit": 1,
+      "failure_type": "HIT",
+      "failure_stage": "none",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0012_000"
+            "Grampian-2024-2025:p0011_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            12
+            11
           ],
-          "page_recall_at_k": 0.0,
-          "page_precision_at_k": 0.0,
-          "page_mrr_at_k": 0.0,
-          "chunk_hit_at_k": 0.0,
-          "chunk_precision_at_k": 0.0,
-          "chunk_mrr_at_k": 0.0,
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 1.0,
+          "page_mrr_at_k": 1.0,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 1.0,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "missed_top_ranked",
+          "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0012_000",
             "Grampian-2024-2025:p0011_002",
-            "Grampian-2024-2025:p0012_001"
+            "Grampian-2024-2025:p0011_001",
+            "Grampian-2024-2025:p0013_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -5747,17 +5794,17 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            12,
-            11
+            11,
+            13
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
+            1,
             1,
             0
           ],
@@ -5769,11 +5816,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0012_000",
             "Grampian-2024-2025:p0011_002",
-            "Grampian-2024-2025:p0012_001",
             "Grampian-2024-2025:p0011_001",
-            "Grampian-2024-2025:p0016_001"
+            "Grampian-2024-2025:p0013_000",
+            "Grampian-2024-2025:p0016_001",
+            "Grampian-2024-2025:p0007_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -5783,21 +5830,22 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            12,
             11,
-            16
+            13,
+            16,
+            7
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 0.5,
+          "page_precision_at_k": 0.25,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
+            1,
             1,
             0,
-            1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -5808,16 +5856,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0012_000",
             "Grampian-2024-2025:p0011_002",
-            "Grampian-2024-2025:p0012_001",
             "Grampian-2024-2025:p0011_001",
-            "Grampian-2024-2025:p0016_001",
             "Grampian-2024-2025:p0013_000",
+            "Grampian-2024-2025:p0016_001",
             "Grampian-2024-2025:p0007_000",
             "Grampian-2024-2025:p0015_000",
             "Grampian-2024-2025:p0062_000",
-            "Grampian-2024-2025:table_p0044"
+            "Grampian-2024-2025:table_p0044",
+            "Grampian-2024-2025:p0072_002",
+            "Grampian-2024-2025:p0014_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -5832,26 +5880,27 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            12,
             11,
-            16,
             13,
+            16,
             7,
             15,
             62,
-            44
+            44,
+            72,
+            14
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
-          "page_mrr_at_k": 0.5,
+          "page_precision_at_k": 0.1111111111111111,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
+            1,
             1,
             0,
-            1,
+            0,
             0,
             0,
             0,
@@ -5920,7 +5969,7 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0011_002",
-            "Grampian-2024-2025:p0012_000",
+            "Grampian-2024-2025:p0016_001",
             "Grampian-2024-2025:p0011_001"
           ],
           "retrieved_doc_ids_top_k": [
@@ -5930,7 +5979,7 @@
           ],
           "retrieved_pages_ranked": [
             11,
-            12
+            16
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
@@ -5952,10 +6001,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0011_002",
-            "Grampian-2024-2025:p0012_000",
+            "Grampian-2024-2025:p0016_001",
             "Grampian-2024-2025:p0011_001",
-            "Grampian-2024-2025:p0012_001",
-            "Grampian-2024-2025:p0016_001"
+            "Grampian-2024-2025:p0013_000",
+            "Grampian-2024-2025:p0016_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -5966,8 +6015,8 @@
           ],
           "retrieved_pages_ranked": [
             11,
-            12,
-            16
+            16,
+            13
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
@@ -5991,15 +6040,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0011_002",
-            "Grampian-2024-2025:p0012_000",
-            "Grampian-2024-2025:p0011_001",
-            "Grampian-2024-2025:p0012_001",
             "Grampian-2024-2025:p0016_001",
+            "Grampian-2024-2025:p0011_001",
             "Grampian-2024-2025:p0013_000",
             "Grampian-2024-2025:p0016_000",
-            "Grampian-2024-2025:p0014_000",
+            "Grampian-2024-2025:p0014_001",
+            "Grampian-2024-2025:table_p0044",
             "Grampian-2024-2025:p0015_000",
-            "Grampian-2024-2025:p0018_000"
+            "Grampian-2024-2025:p0018_000",
+            "Grampian-2024-2025:p0026_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -6015,15 +6064,16 @@
           ],
           "retrieved_pages_ranked": [
             11,
-            12,
             16,
             13,
             14,
+            44,
             15,
-            18
+            18,
+            26
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
+          "page_precision_at_k": 0.125,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
@@ -6069,40 +6119,40 @@
         "prefer_evidence_layout": "paragraph",
         "prefer_table_chunks": false
       },
-      "page_hit": 0,
-      "failure_type": "FP2_MISSED_TOP_RANK",
-      "failure_stage": "retrieval",
+      "page_hit": 1,
+      "failure_type": "HIT",
+      "failure_stage": "none",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0012_000"
+            "Grampian-2024-2025:p0011_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            12
+            11
           ],
-          "page_recall_at_k": 0.0,
-          "page_precision_at_k": 0.0,
-          "page_mrr_at_k": 0.0,
-          "chunk_hit_at_k": 0.0,
-          "chunk_precision_at_k": 0.0,
-          "chunk_mrr_at_k": 0.0,
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 1.0,
+          "page_mrr_at_k": 1.0,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 1.0,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "missed_top_ranked",
+          "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0012_000",
             "Grampian-2024-2025:p0011_002",
-            "Grampian-2024-2025:p0012_001"
+            "Grampian-2024-2025:p0016_001",
+            "Grampian-2024-2025:p0011_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -6110,19 +6160,19 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            12,
-            11
+            11,
+            16
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
             1,
-            0
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -6132,11 +6182,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0012_000",
             "Grampian-2024-2025:p0011_002",
-            "Grampian-2024-2025:p0012_001",
+            "Grampian-2024-2025:p0016_001",
             "Grampian-2024-2025:p0011_001",
-            "Grampian-2024-2025:p0016_001"
+            "Grampian-2024-2025:p0013_000",
+            "Grampian-2024-2025:p0016_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -6146,21 +6196,21 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            12,
             11,
-            16
+            16,
+            13
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
             1,
             0,
             1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -6171,16 +6221,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0012_000",
             "Grampian-2024-2025:p0011_002",
-            "Grampian-2024-2025:p0012_001",
-            "Grampian-2024-2025:p0011_001",
             "Grampian-2024-2025:p0016_001",
+            "Grampian-2024-2025:p0011_001",
             "Grampian-2024-2025:p0013_000",
             "Grampian-2024-2025:p0016_000",
-            "Grampian-2024-2025:p0014_000",
+            "Grampian-2024-2025:p0014_001",
+            "Grampian-2024-2025:table_p0044",
+            "Grampian-2024-2025:p0018_000",
             "Grampian-2024-2025:p0015_000",
-            "Grampian-2024-2025:p0018_000"
+            "Grampian-2024-2025:p0026_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -6195,25 +6245,26 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            12,
             11,
             16,
             13,
             14,
+            44,
+            18,
             15,
-            18
+            26
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
-          "page_mrr_at_k": 0.5,
+          "page_precision_at_k": 0.125,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
             1,
             0,
             1,
+            0,
             0,
             0,
             0,
@@ -6360,10 +6411,10 @@
             "Grampian-2024-2025:p0011_000",
             "Grampian-2024-2025:p0074_001",
             "Grampian-2024-2025:p0054_001",
-            "Grampian-2024-2025:p0055_000",
             "Grampian-2024-2025:p0062_001",
-            "Grampian-2024-2025:p0061_000",
+            "Grampian-2024-2025:p0055_000",
             "Grampian-2024-2025:p0023_000",
+            "Grampian-2024-2025:p0061_001",
             "Grampian-2024-2025:p0009_001"
           ],
           "retrieved_doc_ids_top_k": [
@@ -6385,8 +6436,8 @@
             74,
             54,
             55,
-            61,
             23,
+            61,
             9
           ],
           "page_recall_at_k": 1.0,
@@ -6469,7 +6520,7 @@
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0007_000",
             "Grampian-2024-2025:p0062_000",
-            "Grampian-2024-2025:p0072_002"
+            "Grampian-2024-2025:p0061_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -6479,7 +6530,7 @@
           "retrieved_pages_ranked": [
             7,
             62,
-            72
+            61
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
@@ -6502,8 +6553,8 @@
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0007_000",
             "Grampian-2024-2025:p0062_000",
+            "Grampian-2024-2025:p0061_001",
             "Grampian-2024-2025:p0072_002",
-            "Grampian-2024-2025:p0061_000",
             "Grampian-2024-2025:p0023_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -6516,8 +6567,8 @@
           "retrieved_pages_ranked": [
             7,
             62,
-            72,
             61,
+            72,
             23
           ],
           "page_recall_at_k": 1.0,
@@ -6543,13 +6594,13 @@
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0007_000",
             "Grampian-2024-2025:p0062_000",
+            "Grampian-2024-2025:p0061_001",
             "Grampian-2024-2025:p0072_002",
-            "Grampian-2024-2025:p0061_000",
             "Grampian-2024-2025:p0023_000",
             "Grampian-2024-2025:p0057_001",
             "Grampian-2024-2025:p0054_001",
-            "Grampian-2024-2025:p0003_000",
             "Grampian-2024-2025:p0058_000",
+            "Grampian-2024-2025:p0003_000",
             "Grampian-2024-2025:p0158_002"
           ],
           "retrieved_doc_ids_top_k": [
@@ -6567,13 +6618,13 @@
           "retrieved_pages_ranked": [
             7,
             62,
-            72,
             61,
+            72,
             23,
             57,
             54,
-            3,
             58,
+            3,
             158
           ],
           "page_recall_at_k": 1.0,
@@ -6733,9 +6784,9 @@
             "Grampian-2024-2025:p0004_000",
             "Grampian-2024-2025:p0156_000",
             "Grampian-2024-2025:p0047_000",
-            "Grampian-2024-2025:p0066_002",
             "Grampian-2024-2025:p0078_002",
-            "Grampian-2024-2025:p0056_001"
+            "Grampian-2024-2025:p0066_002",
+            "Grampian-2024-2025:p0171_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -6756,9 +6807,9 @@
             4,
             156,
             47,
-            66,
             78,
-            56
+            66,
+            171
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.1111111111111111,
@@ -6873,8 +6924,8 @@
             "Grampian-2024-2025:p0030_000",
             "Grampian-2024-2025:p0004_000",
             "Grampian-2024-2025:p0004_001",
-            "Grampian-2024-2025:p0079_000",
-            "Grampian-2024-2025:p0071_001"
+            "Grampian-2024-2025:p0031_001",
+            "Grampian-2024-2025:p0079_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -6886,8 +6937,8 @@
           "retrieved_pages_ranked": [
             30,
             4,
-            79,
-            71
+            31,
+            79
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -6913,13 +6964,13 @@
             "Grampian-2024-2025:p0030_000",
             "Grampian-2024-2025:p0004_000",
             "Grampian-2024-2025:p0004_001",
+            "Grampian-2024-2025:p0031_001",
             "Grampian-2024-2025:p0079_000",
             "Grampian-2024-2025:p0071_001",
-            "Grampian-2024-2025:p0031_000",
             "Grampian-2024-2025:p0062_000",
             "Grampian-2024-2025:p0030_001",
-            "Grampian-2024-2025:p0070_000",
-            "Grampian-2024-2025:p0075_000"
+            "Grampian-2024-2025:p0070_001",
+            "Grampian-2024-2025:p0030_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -6936,15 +6987,14 @@
           "retrieved_pages_ranked": [
             30,
             4,
+            31,
             79,
             71,
-            31,
             62,
-            70,
-            75
+            70
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
+          "page_precision_at_k": 0.14285714285714285,
           "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
@@ -7022,8 +7072,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0030_000",
-            "Grampian-2024-2025:p0004_001",
-            "Grampian-2024-2025:p0004_000"
+            "Grampian-2024-2025:p0004_000",
+            "Grampian-2024-2025:p0004_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -7054,8 +7104,8 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0030_000",
-            "Grampian-2024-2025:p0004_001",
             "Grampian-2024-2025:p0004_000",
+            "Grampian-2024-2025:p0004_001",
             "Grampian-2024-2025:p0079_000",
             "Grampian-2024-2025:p0030_001"
           ],
@@ -7093,15 +7143,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0030_000",
-            "Grampian-2024-2025:p0004_001",
             "Grampian-2024-2025:p0004_000",
+            "Grampian-2024-2025:p0004_001",
             "Grampian-2024-2025:p0079_000",
             "Grampian-2024-2025:p0030_001",
-            "Grampian-2024-2025:p0067_000",
             "Grampian-2024-2025:p0066_000",
             "Grampian-2024-2025:p0062_001",
-            "Grampian-2024-2025:p0031_000",
-            "Grampian-2024-2025:p0076_000"
+            "Grampian-2024-2025:p0031_001",
+            "Grampian-2024-2025:p0067_001",
+            "Grampian-2024-2025:p0076_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -7119,10 +7169,10 @@
             30,
             4,
             79,
-            67,
             66,
             62,
             31,
+            67,
             76
           ],
           "page_recall_at_k": 1.0,
@@ -7238,8 +7288,8 @@
             "Grampian-2024-2025:p0030_000",
             "Grampian-2024-2025:p0004_000",
             "Grampian-2024-2025:p0004_001",
-            "Grampian-2024-2025:p0079_000",
-            "Grampian-2024-2025:p0089_003"
+            "Grampian-2024-2025:p0089_003",
+            "Grampian-2024-2025:p0079_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -7251,8 +7301,8 @@
           "retrieved_pages_ranked": [
             30,
             4,
-            79,
-            89
+            89,
+            79
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -7278,11 +7328,11 @@
             "Grampian-2024-2025:p0030_000",
             "Grampian-2024-2025:p0004_000",
             "Grampian-2024-2025:p0004_001",
-            "Grampian-2024-2025:p0079_000",
             "Grampian-2024-2025:p0089_003",
-            "Grampian-2024-2025:p0071_001",
-            "Grampian-2024-2025:p0031_000",
+            "Grampian-2024-2025:p0079_000",
+            "Grampian-2024-2025:p0031_001",
             "Grampian-2024-2025:p0075_000",
+            "Grampian-2024-2025:p0071_001",
             "Grampian-2024-2025:p0030_001",
             "Grampian-2024-2025:p0075_001"
           ],
@@ -7301,11 +7351,11 @@
           "retrieved_pages_ranked": [
             30,
             4,
-            79,
             89,
-            71,
+            79,
             31,
-            75
+            75,
+            71
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.14285714285714285,
@@ -7468,7 +7518,7 @@
             "Grampian-2024-2025:p0030_000",
             "Grampian-2024-2025:p0004_001",
             "Grampian-2024-2025:p0062_001",
-            "Grampian-2024-2025:p0029_001"
+            "Grampian-2024-2025:p0098_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -7490,7 +7540,7 @@
             78,
             47,
             4,
-            29
+            98
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
@@ -7545,7 +7595,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0065_000"
+            "Grampian-2024-2025:p0065_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
@@ -7570,9 +7620,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0065_000",
+            "Grampian-2024-2025:p0065_001",
             "Grampian-2024-2025:p0009_000",
-            "Grampian-2024-2025:p0009_001"
+            "Grampian-2024-2025:p0076_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -7581,10 +7631,11 @@
           ],
           "retrieved_pages_ranked": [
             65,
-            9
+            9,
+            76
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.3333333333333333,
@@ -7602,10 +7653,10 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0065_000",
+            "Grampian-2024-2025:p0065_001",
             "Grampian-2024-2025:p0009_000",
+            "Grampian-2024-2025:p0076_001",
             "Grampian-2024-2025:p0009_001",
-            "Grampian-2024-2025:p0076_000",
             "Grampian-2024-2025:p0066_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -7642,16 +7693,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0065_000",
-            "Grampian-2024-2025:p0009_000",
-            "Grampian-2024-2025:p0009_001",
-            "Grampian-2024-2025:p0076_000",
-            "Grampian-2024-2025:p0066_000",
-            "Grampian-2024-2025:p0004_002",
-            "Grampian-2024-2025:p0068_000",
             "Grampian-2024-2025:p0065_001",
-            "Grampian-2024-2025:p0030_001",
-            "Grampian-2024-2025:p0067_000"
+            "Grampian-2024-2025:p0009_000",
+            "Grampian-2024-2025:p0076_001",
+            "Grampian-2024-2025:p0009_001",
+            "Grampian-2024-2025:p0066_000",
+            "Grampian-2024-2025:p0067_001",
+            "Grampian-2024-2025:p0004_002",
+            "Grampian-2024-2025:p0065_002",
+            "Grampian-2024-2025:p0068_001",
+            "Grampian-2024-2025:p0025_006"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -7670,10 +7721,10 @@
             9,
             76,
             66,
+            67,
             4,
             68,
-            30,
-            67
+            25
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
@@ -7728,13 +7779,13 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0033_002"
+            "Grampian-2024-2025:p0133_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            33
+            133
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -7753,8 +7804,8 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0033_002",
-            "Grampian-2024-2025:p0028_001",
+            "Grampian-2024-2025:p0133_002",
+            "Grampian-2024-2025:p0033_004",
             "Grampian-2024-2025:p0095_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -7763,34 +7814,34 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
+            133,
             33,
-            28,
             95
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 0.5,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 0.5,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
             0,
-            1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0033_002",
-            "Grampian-2024-2025:p0028_001",
+            "Grampian-2024-2025:p0133_002",
+            "Grampian-2024-2025:p0033_004",
             "Grampian-2024-2025:p0095_000",
-            "Grampian-2024-2025:p0025_001",
-            "Grampian-2024-2025:p0165_002"
+            "Grampian-2024-2025:p0165_002",
+            "Grampian-2024-2025:p0028_005"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -7800,24 +7851,24 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
+            133,
             33,
-            28,
             95,
-            25,
-            165
+            165,
+            28
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.2,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 0.2,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 0.2,
           "chunk_hit_flags": [
             0,
-            1,
             0,
             0,
-            0
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -7827,16 +7878,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0033_002",
-            "Grampian-2024-2025:p0028_001",
+            "Grampian-2024-2025:p0133_002",
+            "Grampian-2024-2025:p0033_004",
             "Grampian-2024-2025:p0095_000",
-            "Grampian-2024-2025:p0025_001",
             "Grampian-2024-2025:p0165_002",
-            "Grampian-2024-2025:p0025_000",
+            "Grampian-2024-2025:p0028_005",
+            "Grampian-2024-2025:p0025_003",
             "Grampian-2024-2025:p0035_001",
+            "Grampian-2024-2025:p0028_004",
             "Grampian-2024-2025:p0109_001",
-            "Grampian-2024-2025:p0134_001",
-            "Grampian-2024-2025:p0109_000"
+            "Grampian-2024-2025:p0165_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -7851,30 +7902,30 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
+            133,
             33,
-            28,
             95,
-            25,
             165,
+            28,
+            25,
             35,
-            109,
-            134
+            109
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 0.2,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.1,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.2,
           "chunk_hit_flags": [
+            0,
+            0,
+            0,
             0,
             1,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
+            1,
             0,
             0
           ],
@@ -7907,40 +7958,40 @@
         "prefer_evidence_layout": "paragraph",
         "prefer_table_chunks": false
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0033_002"
+            "Grampian-2024-2025:p0133_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            33
+            133
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0033_002",
-            "Grampian-2024-2025:p0025_000",
-            "Grampian-2024-2025:p0029_000"
+            "Grampian-2024-2025:p0133_002",
+            "Grampian-2024-2025:p0033_004",
+            "Grampian-2024-2025:p0025_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -7948,19 +7999,19 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
+            133,
             33,
-            25,
-            29
+            25
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 1.0,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
             0,
+            1,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -7971,10 +8022,10 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0033_002",
-            "Grampian-2024-2025:p0025_000",
+            "Grampian-2024-2025:p0133_002",
+            "Grampian-2024-2025:p0033_004",
+            "Grampian-2024-2025:p0025_003",
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0134_001",
             "Grampian-2024-2025:p0095_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -7985,21 +8036,21 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
+            133,
             33,
             25,
             29,
-            134,
             95
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.2,
-          "page_mrr_at_k": 1.0,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
             0,
+            1,
             0,
             0,
             0
@@ -8012,16 +8063,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0033_002",
-            "Grampian-2024-2025:p0025_000",
+            "Grampian-2024-2025:p0133_002",
+            "Grampian-2024-2025:p0033_004",
+            "Grampian-2024-2025:p0025_003",
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0134_001",
             "Grampian-2024-2025:p0095_000",
             "Grampian-2024-2025:p0003_000",
-            "Grampian-2024-2025:p0028_001",
-            "Grampian-2024-2025:p0165_002",
             "Grampian-2024-2025:p0062_000",
-            "Grampian-2024-2025:p0134_002"
+            "Grampian-2024-2025:p0165_002",
+            "Grampian-2024-2025:table_p0167",
+            "Grampian-2024-2025:p0028_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -8036,25 +8087,26 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
+            133,
             33,
             25,
             29,
-            134,
             95,
             3,
-            28,
+            62,
             165,
-            62
+            167,
+            28
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.1111111111111111,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.1,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.1,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
             0,
+            1,
             0,
             0,
             0,
@@ -8125,8 +8177,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0082_000",
-            "Grampian-2024-2025:p0031_001",
-            "Grampian-2024-2025:p0031_002"
+            "Grampian-2024-2025:p0031_003",
+            "Grampian-2024-2025:p0133_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -8135,18 +8187,19 @@
           ],
           "retrieved_pages_ranked": [
             82,
-            31
+            31,
+            133
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
             0,
             1,
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -8157,10 +8210,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0082_000",
-            "Grampian-2024-2025:p0031_001",
-            "Grampian-2024-2025:p0031_002",
-            "Grampian-2024-2025:p0045_000",
-            "Grampian-2024-2025:table_p0131"
+            "Grampian-2024-2025:p0031_003",
+            "Grampian-2024-2025:p0133_002",
+            "Grampian-2024-2025:p0157_000",
+            "Grampian-2024-2025:p0125_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -8172,19 +8225,20 @@
           "retrieved_pages_ranked": [
             82,
             31,
-            45,
-            131
+            133,
+            157,
+            125
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
+          "page_precision_at_k": 0.2,
           "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
             0,
             1,
-            1,
+            0,
             0,
             0
           ],
@@ -8197,15 +8251,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0082_000",
-            "Grampian-2024-2025:p0031_001",
-            "Grampian-2024-2025:p0031_002",
-            "Grampian-2024-2025:p0045_000",
-            "Grampian-2024-2025:table_p0131",
+            "Grampian-2024-2025:p0031_003",
+            "Grampian-2024-2025:p0133_002",
+            "Grampian-2024-2025:p0157_000",
             "Grampian-2024-2025:p0125_001",
             "Grampian-2024-2025:p0089_001",
-            "Grampian-2024-2025:table_p0091",
-            "Grampian-2024-2025:table_p0168",
-            "Grampian-2024-2025:p0095_000"
+            "Grampian-2024-2025:table_p0131",
+            "Grampian-2024-2025:table_p0084",
+            "Grampian-2024-2025:p0095_000",
+            "Grampian-2024-2025:table_p0168"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -8222,24 +8276,25 @@
           "retrieved_pages_ranked": [
             82,
             31,
-            45,
-            131,
+            133,
+            157,
             125,
             89,
-            91,
-            168,
-            95
+            131,
+            84,
+            95,
+            168
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.1111111111111111,
+          "page_precision_at_k": 0.1,
           "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
+          "chunk_precision_at_k": 0.1,
           "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
             0,
             1,
-            1,
+            0,
             0,
             0,
             0,
@@ -8309,7 +8364,7 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0032_001",
-            "Grampian-2024-2025:p0032_002",
+            "Grampian-2024-2025:p0148_000",
             "Grampian-2024-2025:p0125_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -8319,17 +8374,18 @@
           ],
           "retrieved_pages_ranked": [
             32,
+            148,
             125
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -8341,10 +8397,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0032_001",
-            "Grampian-2024-2025:p0032_002",
+            "Grampian-2024-2025:p0148_000",
             "Grampian-2024-2025:p0125_000",
             "Grampian-2024-2025:p0096_001",
-            "Grampian-2024-2025:p0148_000"
+            "Grampian-2024-2025:p0125_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -8355,19 +8411,19 @@
           ],
           "retrieved_pages_ranked": [
             32,
+            148,
             125,
-            96,
-            148
+            96
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0,
             0,
             0
@@ -8381,15 +8437,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0032_001",
-            "Grampian-2024-2025:p0032_002",
+            "Grampian-2024-2025:p0148_000",
             "Grampian-2024-2025:p0125_000",
             "Grampian-2024-2025:p0096_001",
-            "Grampian-2024-2025:p0148_000",
+            "Grampian-2024-2025:p0125_001",
             "Grampian-2024-2025:p0119_002",
             "Grampian-2024-2025:p0032_000",
-            "Grampian-2024-2025:p0125_001",
-            "Grampian-2024-2025:p0149_000",
-            "Grampian-2024-2025:p0149_001"
+            "Grampian-2024-2025:p0149_003",
+            "Grampian-2024-2025:p0026_000",
+            "Grampian-2024-2025:p0096_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -8405,21 +8461,22 @@
           ],
           "retrieved_pages_ranked": [
             32,
+            148,
             125,
             96,
-            148,
             119,
-            149
+            149,
+            26
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.16666666666666666,
+          "page_precision_at_k": 0.14285714285714285,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0,
             0,
             0,
@@ -8490,8 +8547,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0028_001",
-            "Grampian-2024-2025:p0028_000"
+            "Grampian-2024-2025:p0148_000",
+            "Grampian-2024-2025:p0028_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -8500,17 +8557,18 @@
           ],
           "retrieved_pages_ranked": [
             29,
+            148,
             28
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_precision_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
             0,
-            1,
+            0,
             1
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -8522,9 +8580,9 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0028_001",
-            "Grampian-2024-2025:p0028_000",
             "Grampian-2024-2025:p0148_000",
+            "Grampian-2024-2025:p0028_004",
+            "Grampian-2024-2025:p0028_005",
             "Grampian-2024-2025:p0043_001"
           ],
           "retrieved_doc_ids_top_k": [
@@ -8536,21 +8594,21 @@
           ],
           "retrieved_pages_ranked": [
             29,
-            28,
             148,
+            28,
             43
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
             0,
-            1,
-            1,
             0,
+            1,
+            1,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -8562,15 +8620,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0028_001",
-            "Grampian-2024-2025:p0028_000",
             "Grampian-2024-2025:p0148_000",
+            "Grampian-2024-2025:p0028_004",
+            "Grampian-2024-2025:p0028_005",
             "Grampian-2024-2025:p0043_001",
-            "Grampian-2024-2025:p0164_001",
+            "Grampian-2024-2025:p0030_002",
             "Grampian-2024-2025:p0048_001",
-            "Grampian-2024-2025:p0029_002",
-            "Grampian-2024-2025:p0030_000",
-            "Grampian-2024-2025:p0055_000"
+            "Grampian-2024-2025:p0164_001",
+            "Grampian-2024-2025:p0055_000",
+            "Grampian-2024-2025:p0029_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -8586,25 +8644,25 @@
           ],
           "retrieved_pages_ranked": [
             29,
-            28,
             148,
+            28,
             43,
-            164,
-            48,
             30,
+            48,
+            164,
             55
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
             0,
-            1,
-            1,
             0,
+            1,
+            1,
             0,
             0,
             0,
@@ -8674,7 +8732,7 @@
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0029_001",
-            "Grampian-2024-2025:p0026_001"
+            "Grampian-2024-2025:p0062_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -8683,7 +8741,7 @@
           ],
           "retrieved_pages_ranked": [
             29,
-            26
+            62
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
@@ -8706,9 +8764,9 @@
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0029_001",
-            "Grampian-2024-2025:p0026_001",
             "Grampian-2024-2025:p0062_000",
-            "Grampian-2024-2025:p0030_001"
+            "Grampian-2024-2025:p0030_001",
+            "Grampian-2024-2025:p0157_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -8719,9 +8777,9 @@
           ],
           "retrieved_pages_ranked": [
             29,
-            26,
             62,
-            30
+            30,
+            157
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -8746,14 +8804,14 @@
           "retrieved_chunk_ids": [
             "Grampian-2024-2025:p0029_000",
             "Grampian-2024-2025:p0029_001",
-            "Grampian-2024-2025:p0026_001",
             "Grampian-2024-2025:p0062_000",
             "Grampian-2024-2025:p0030_001",
-            "Grampian-2024-2025:p0029_002",
+            "Grampian-2024-2025:p0157_000",
             "Grampian-2024-2025:p0119_001",
+            "Grampian-2024-2025:p0029_002",
             "Grampian-2024-2025:p0004_000",
             "Grampian-2024-2025:p0026_000",
-            "Grampian-2024-2025:p0030_002"
+            "Grampian-2024-2025:p0062_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -8769,14 +8827,15 @@
           ],
           "retrieved_pages_ranked": [
             29,
-            26,
             62,
             30,
+            157,
             119,
-            4
+            4,
+            26
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.16666666666666666,
+          "page_precision_at_k": 0.14285714285714285,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.3,
@@ -8787,8 +8846,8 @@
             0,
             0,
             0,
-            1,
             0,
+            1,
             0,
             0,
             0
@@ -8822,40 +8881,40 @@
         "prefer_evidence_layout": "paragraph",
         "prefer_table_chunks": false
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0033_002"
+            "Grampian-2024-2025:p0133_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            33
+            133
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0033_002",
-            "Grampian-2024-2025:p0025_000",
-            "Grampian-2024-2025:p0029_000"
+            "Grampian-2024-2025:p0133_002",
+            "Grampian-2024-2025:p0033_004",
+            "Grampian-2024-2025:p0025_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -8863,19 +8922,19 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
+            133,
             33,
-            25,
-            29
+            25
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 1.0,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
             0,
+            1,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -8886,10 +8945,10 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0033_002",
-            "Grampian-2024-2025:p0025_000",
+            "Grampian-2024-2025:p0133_002",
+            "Grampian-2024-2025:p0033_004",
+            "Grampian-2024-2025:p0025_003",
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0134_001",
             "Grampian-2024-2025:p0095_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -8900,21 +8959,21 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
+            133,
             33,
             25,
             29,
-            134,
             95
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.2,
-          "page_mrr_at_k": 1.0,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
             0,
+            1,
             0,
             0,
             0
@@ -8927,16 +8986,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0033_002",
-            "Grampian-2024-2025:p0025_000",
+            "Grampian-2024-2025:p0133_002",
+            "Grampian-2024-2025:p0033_004",
+            "Grampian-2024-2025:p0025_003",
             "Grampian-2024-2025:p0029_000",
-            "Grampian-2024-2025:p0134_001",
             "Grampian-2024-2025:p0095_000",
             "Grampian-2024-2025:p0003_000",
-            "Grampian-2024-2025:p0028_001",
-            "Grampian-2024-2025:p0165_002",
             "Grampian-2024-2025:p0062_000",
-            "Grampian-2024-2025:p0134_002"
+            "Grampian-2024-2025:p0165_002",
+            "Grampian-2024-2025:table_p0167",
+            "Grampian-2024-2025:p0028_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -8951,25 +9010,26 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
+            133,
             33,
             25,
             29,
-            134,
             95,
             3,
-            28,
+            62,
             165,
-            62
+            167,
+            28
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.1111111111111111,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.1,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.1,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
             0,
+            1,
             0,
             0,
             0,
@@ -9014,7 +9074,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0031_002"
+            "Grampian-2024-2025:p0031_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
@@ -9039,7 +9099,7 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0031_002",
+            "Grampian-2024-2025:p0031_003",
             "Grampian-2024-2025:p0082_000",
             "Grampian-2024-2025:p0125_001"
           ],
@@ -9072,11 +9132,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0031_002",
+            "Grampian-2024-2025:p0031_003",
             "Grampian-2024-2025:p0082_000",
             "Grampian-2024-2025:p0125_001",
             "Grampian-2024-2025:p0094_001",
-            "Grampian-2024-2025:p0126_000"
+            "Grampian-2024-2025:p0125_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -9089,11 +9149,10 @@
             31,
             82,
             125,
-            94,
-            126
+            94
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.2,
+          "page_precision_at_k": 0.25,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
@@ -9113,16 +9172,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0031_002",
+            "Grampian-2024-2025:p0031_003",
             "Grampian-2024-2025:p0082_000",
             "Grampian-2024-2025:p0125_001",
             "Grampian-2024-2025:p0094_001",
-            "Grampian-2024-2025:p0126_000",
-            "Grampian-2024-2025:p0126_001",
-            "Grampian-2024-2025:p0031_001",
             "Grampian-2024-2025:p0125_002",
-            "Grampian-2024-2025:p0081_001",
-            "Grampian-2024-2025:p0032_000"
+            "Grampian-2024-2025:p0032_000",
+            "Grampian-2024-2025:p0157_000",
+            "Grampian-2024-2025:p0089_001",
+            "Grampian-2024-2025:p0133_002",
+            "Grampian-2024-2025:p0095_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -9141,15 +9200,17 @@
             82,
             125,
             94,
-            126,
-            81,
-            32
+            32,
+            157,
+            89,
+            133,
+            95
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
+          "page_precision_at_k": 0.1111111111111111,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
+          "chunk_precision_at_k": 0.1,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
@@ -9158,7 +9219,7 @@
             0,
             0,
             0,
-            1,
+            0,
             0,
             0,
             0
@@ -9192,40 +9253,40 @@
         "prefer_evidence_layout": "paragraph",
         "prefer_table_chunks": false
       },
-      "page_hit": 0,
-      "failure_type": "FP2_MISSED_TOP_RANK",
-      "failure_stage": "retrieval",
+      "page_hit": 1,
+      "failure_type": "HIT",
+      "failure_stage": "none",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0012_000"
+            "Grampian-2024-2025:p0011_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            12
+            11
           ],
-          "page_recall_at_k": 0.0,
-          "page_precision_at_k": 0.0,
-          "page_mrr_at_k": 0.0,
-          "chunk_hit_at_k": 0.0,
-          "chunk_precision_at_k": 0.0,
-          "chunk_mrr_at_k": 0.0,
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 1.0,
+          "page_mrr_at_k": 1.0,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 1.0,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "missed_top_ranked",
+          "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0012_000",
             "Grampian-2024-2025:p0011_002",
-            "Grampian-2024-2025:p0012_001"
+            "Grampian-2024-2025:p0011_001",
+            "Grampian-2024-2025:p0062_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -9233,17 +9294,17 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            12,
-            11
+            11,
+            62
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
+            1,
             1,
             0
           ],
@@ -9255,11 +9316,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0012_000",
             "Grampian-2024-2025:p0011_002",
-            "Grampian-2024-2025:p0012_001",
             "Grampian-2024-2025:p0011_001",
-            "Grampian-2024-2025:p0062_000"
+            "Grampian-2024-2025:p0062_000",
+            "Grampian-2024-2025:p0013_000",
+            "Grampian-2024-2025:p0043_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -9269,21 +9330,22 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            12,
             11,
-            62
+            62,
+            13,
+            43
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 0.5,
+          "page_precision_at_k": 0.25,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
+            1,
             1,
             0,
-            1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -9294,16 +9356,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2024-2025:p0012_000",
             "Grampian-2024-2025:p0011_002",
-            "Grampian-2024-2025:p0012_001",
             "Grampian-2024-2025:p0011_001",
             "Grampian-2024-2025:p0062_000",
             "Grampian-2024-2025:p0013_000",
             "Grampian-2024-2025:p0043_000",
             "Grampian-2024-2025:p0007_000",
-            "Grampian-2024-2025:p0025_002",
-            "Grampian-2024-2025:p0073_001"
+            "Grampian-2024-2025:p0025_006",
+            "Grampian-2024-2025:p0073_001",
+            "Grampian-2024-2025:p0072_002",
+            "Grampian-2024-2025:p0071_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2024-2025",
@@ -9318,26 +9380,27 @@
             "Grampian-2024-2025"
           ],
           "retrieved_pages_ranked": [
-            12,
             11,
             62,
             13,
             43,
             7,
             25,
-            73
+            73,
+            72,
+            71
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
-          "page_mrr_at_k": 0.5,
+          "page_precision_at_k": 0.1111111111111111,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
+            1,
             1,
             0,
-            1,
+            0,
             0,
             0,
             0,

@@ -1567,7 +1567,7 @@ with tabs[0]:
                 f"rrf_k={retrieval_cfg.get('rrf_k')} | "
                 f"dense_w={retrieval_cfg.get('dense_weight')} | "
                 f"bm25_w={retrieval_cfg.get('bm25_weight')} | "
-                f"subsection_boost={retrieval_cfg.get('enable_subsection_boost')}"
+                f"oracle_labels={retrieval_cfg.get('oracle_labels_in_ranking', False)}"
             )
         gen_dbg = last.get("generation_debug") if isinstance(last.get("generation_debug"), dict) else {}
         gen_status = str(last.get("generation_status") or gen_dbg.get("status") or "").strip()

@@ -1,17 +1,17 @@
 {
   "run_info": {
-    "run_utc": "2026-06-06T14:23:42+00:00",
-    "data_dir": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/Grampian-2021-2022",
+    "run_utc": "2026-09-29T23:27:51+00:00",
+    "data_dir": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2021-2022",
     "method": "hybrid_rrf_dense_bm25",
     "runtime": {
       "python_executable": "/opt/anaconda3/envs/rag-pipeline/bin/python",
       "python_version": "3.11.15",
-      "platform": "macOS-26.5.1-arm64-arm-64bit",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
       "system": "Darwin",
       "machine": "arm64",
-      "cwd": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project",
-      "conda_prefix": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv",
-      "conda_default_env": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv",
+      "cwd": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation",
+      "conda_prefix": "/opt/anaconda3/envs/rag-pipeline",
+      "conda_default_env": "rag-pipeline",
       "virtual_env": null,
       "dependency_report": {
         "modules": {
@@ -96,11 +96,11 @@
         "commands": {
           "gs": {
             "available": true,
-            "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv/bin/gs"
+            "path": "/opt/anaconda3/envs/rag-pipeline/bin/gs"
           },
           "pdftoppm": {
             "available": true,
-            "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv/bin/pdftoppm"
+            "path": "/opt/anaconda3/envs/rag-pipeline/bin/pdftoppm"
           },
           "tesseract": {
             "available": true,
@@ -154,6 +154,7 @@
     "bm25_weight": 2.0,
     "enable_lexical_rerank": true,
     "enable_subsection_boost": false,
+    "oracle_labels_in_ranking": false,
     "enable_cross_encoder_rerank": false,
     "cross_encoder_model": null,
     "cross_encoder_topn": 50,
@@ -169,106 +170,113 @@
       10
     ],
     "num_queries": 50,
-    "num_chunks_indexed": 373,
+    "num_chunks_indexed": 384,
     "pipeline_settings": {
-      "source_metrics_path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/Grampian-2021-2022/metrics.json",
+      "source_metrics_path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2021-2022/metrics.json",
       "source_metrics_exists": true,
       "doc_id": "Grampian-2021-2022",
       "corpus_id": "Grampian-2021-2022",
       "report_year": "2021-2022",
-      "preprocess_run_utc": null,
-      "preprocess_git_commit_short": null,
-      "embedding_model_preprocess": null,
+      "preprocess_run_utc": "2026-06-16T09:42:36+00:00",
+      "preprocess_git_commit_short": "3e729e9",
+      "embedding_model_preprocess": "sentence-transformers/all-MiniLM-L6-v2",
       "chunk_size_tokens": 224,
       "chunk_overlap_tokens": 56,
-      "segment_aware_chunking": null,
-      "whole_doc_markdown_mode": null,
-      "markdown_header_carry_forward": null,
-      "markdown_table_injection": null,
+      "segment_aware_chunking": true,
+      "whole_doc_markdown_mode": false,
+      "markdown_header_carry_forward": true,
+      "markdown_table_injection": true,
       "primary_extractor": "pymupdf",
       "min_chunk_words": 20
     },
     "eval_set": {
-      "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/Grampian-2021-2022/eval_set.json",
+      "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2021-2022/eval_set.json",
       "sha1": "8b2877eb59c7ee758802761e2fe4952fa1c159f9",
       "size_bytes": 35999,
-      "modified_utc": "2026-03-17T00:52:36+00:00",
+      "modified_utc": "2026-06-16T08:45:22+00:00",
       "query_count": 50,
       "meta_dataset_name": "Grampian-2021-2022 Retrieval Gold Set",
       "meta_doc_id": "Grampian-2021-2022",
       "meta_version": null
-    }
+    },
+    "artifact_sha256": {
+      "faiss.index": "929e4f0ca1d5aebc8524a645ca656032b815e5e44e36f6e0729df7a75bd7f71c",
+      "chunk_meta.parquet": "9629b81c87a63bff68cc6f1970e81631f4df551c77031235534bebea0e0ef279",
+      "chunks.parquet": "4b5bd83f62daadb6066ecefd9fb70890a71e71f9332dd19cf979cf69500847e0",
+      "eval_set.json": "3c44d3c05f46822f4ca701fbaaec14e3a476300be9917ddbdcb1c424cffcce7c"
+    },
+    "verified_manifest": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/results/frozen/gold_eval_artifacts_manifest.json"
   },
   "metrics_by_k": {
     "1": {
       "num_queries": 50,
-      "page_hit_rate_at_k": 0.74,
-      "mean_page_recall_at_k": 0.74,
-      "mean_page_precision_at_k": 0.74,
-      "mean_page_mrr_at_k": 0.74,
-      "chunk_hit_rate_at_k": 0.74,
-      "mean_chunk_precision_at_k": 0.74,
-      "mean_chunk_mrr_at_k": 0.74,
+      "page_hit_rate_at_k": 0.52,
+      "mean_page_recall_at_k": 0.52,
+      "mean_page_precision_at_k": 0.52,
+      "mean_page_mrr_at_k": 0.52,
+      "chunk_hit_rate_at_k": 0.52,
+      "mean_chunk_precision_at_k": 0.52,
+      "mean_chunk_mrr_at_k": 0.52,
       "table_query_count": 9,
       "table_recall_at_k": 0.0,
-      "table_page_recall_at_k": 1.0
+      "table_page_recall_at_k": 0.2222222222222222
     },
     "3": {
       "num_queries": 50,
-      "page_hit_rate_at_k": 0.8,
-      "mean_page_recall_at_k": 0.8,
-      "mean_page_precision_at_k": 0.43,
-      "mean_page_mrr_at_k": 0.7666666666666666,
-      "chunk_hit_rate_at_k": 0.8,
-      "mean_chunk_precision_at_k": 0.5,
-      "mean_chunk_mrr_at_k": 0.7633333333333333,
+      "page_hit_rate_at_k": 0.76,
+      "mean_page_recall_at_k": 0.76,
+      "mean_page_precision_at_k": 0.31666666666666665,
+      "mean_page_mrr_at_k": 0.63,
+      "chunk_hit_rate_at_k": 0.76,
+      "mean_chunk_precision_at_k": 0.3466666666666666,
+      "mean_chunk_mrr_at_k": 0.6266666666666667,
       "table_query_count": 9,
-      "table_recall_at_k": 0.3333333333333333,
-      "table_page_recall_at_k": 1.0
+      "table_recall_at_k": 0.0,
+      "table_page_recall_at_k": 0.8888888888888888
     },
     "5": {
       "num_queries": 50,
-      "page_hit_rate_at_k": 0.84,
-      "mean_page_recall_at_k": 0.84,
-      "mean_page_precision_at_k": 0.25066666666666665,
-      "mean_page_mrr_at_k": 0.7766666666666666,
-      "chunk_hit_rate_at_k": 0.84,
-      "mean_chunk_precision_at_k": 0.37200000000000005,
-      "mean_chunk_mrr_at_k": 0.7733333333333333,
+      "page_hit_rate_at_k": 0.86,
+      "mean_page_recall_at_k": 0.86,
+      "mean_page_precision_at_k": 0.21633333333333332,
+      "mean_page_mrr_at_k": 0.6530000000000001,
+      "chunk_hit_rate_at_k": 0.86,
+      "mean_chunk_precision_at_k": 0.26,
+      "mean_chunk_mrr_at_k": 0.6486666666666667,
       "table_query_count": 9,
-      "table_recall_at_k": 0.4444444444444444,
-      "table_page_recall_at_k": 1.0
+      "table_recall_at_k": 0.0,
+      "table_page_recall_at_k": 0.8888888888888888
     },
     "10": {
       "num_queries": 50,
-      "page_hit_rate_at_k": 0.9,
-      "mean_page_recall_at_k": 0.9,
-      "mean_page_precision_at_k": 0.12857936507936507,
-      "mean_page_mrr_at_k": 0.7861904761904762,
-      "chunk_hit_rate_at_k": 0.9,
-      "mean_chunk_precision_at_k": 0.20799999999999996,
-      "mean_chunk_mrr_at_k": 0.7812698412698412,
+      "page_hit_rate_at_k": 0.88,
+      "mean_page_recall_at_k": 0.88,
+      "mean_page_precision_at_k": 0.11304761904761904,
+      "mean_page_mrr_at_k": 0.6563333333333332,
+      "chunk_hit_rate_at_k": 0.88,
+      "mean_chunk_precision_at_k": 0.142,
+      "mean_chunk_mrr_at_k": 0.6515238095238095,
       "table_query_count": 9,
-      "table_recall_at_k": 0.5555555555555556,
-      "table_page_recall_at_k": 1.0
+      "table_recall_at_k": 0.0,
+      "table_page_recall_at_k": 0.8888888888888888
     }
   },
   "failure_counts_by_k": {
     "1": {
-      "hit": 37,
-      "missed_top_ranked": 13
+      "hit": 26,
+      "missed_top_ranked": 24
     },
     "3": {
-      "hit": 40,
-      "missed_top_ranked": 10
+      "hit": 38,
+      "missed_top_ranked": 12
     },
     "5": {
-      "hit": 42,
-      "missed_top_ranked": 8
+      "hit": 43,
+      "missed_top_ranked": 7
     },
     "10": {
-      "hit": 45,
-      "missed_top_ranked": 5
+      "hit": 44,
+      "missed_top_ranked": 6
     }
   },
   "leakage_counts_by_k": {

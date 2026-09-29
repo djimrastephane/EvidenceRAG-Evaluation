@@ -68,7 +68,8 @@ NUMERIC_DENSITY_BOOST = float(os.getenv("NUMERIC_DENSITY_BOOST", "0.03"))
 SEGMENT_SEARCH_HIT_BOOST = float(os.getenv("SEGMENT_SEARCH_HIT_BOOST", "0.03"))
 MAX_ENTITY_MATCHES = int(os.getenv("MAX_ENTITY_MATCHES", "4"))
 ENABLE_LEXICAL_RERANK = os.getenv("ENABLE_LEXICAL_RERANK", "1") != "0"
-ENABLE_SUBSECTION_BOOST = os.getenv("ENABLE_SUBSECTION_BOOST", "1") != "0"
+# Oracle: reads the gold expected_subsection label. Opt-in only (labelled ablations).
+ENABLE_SUBSECTION_BOOST = os.getenv("ENABLE_SUBSECTION_BOOST", "0") == "1"
 
 RESULTS_JSON = DATA_DIR / "retrieval_results_splade_hybrid.json"
 METRICS_JSON = DATA_DIR / "retrieval_metrics_splade_hybrid.json"
@@ -254,9 +255,17 @@ def parse_args() -> argparse.Namespace:
         help="Disable lexical rerank boosts on top of fused ranking.",
     )
     parser.add_argument(
+        "--oracle-subsection-boost",
+        action="store_true",
+        help=(
+            "ORACLE ABLATION ONLY: boost chunks matching the gold expected_subsection label. "
+            "Never use for reported system results. Also enabled by ENABLE_SUBSECTION_BOOST=1."
+        ),
+    )
+    parser.add_argument(
         "--no-subsection-boost",
         action="store_true",
-        help="Disable expected_subsection boost on top of fused ranking.",
+        help="Force the oracle subsection boost off (the default), overriding ENABLE_SUBSECTION_BOOST=1.",
     )
     parser.add_argument(
         "--enable-cross-encoder-rerank",
@@ -630,7 +639,9 @@ def main() -> None:
     max_k = max(k_list)
     max_k_search = min(max(MAX_K_SEARCH, max_k), len(meta))
     enable_lexical_rerank = ENABLE_LEXICAL_RERANK and (not args.no_lexical_rerank)
-    enable_subsection_boost = ENABLE_SUBSECTION_BOOST and (not args.no_subsection_boost)
+    enable_subsection_boost = (ENABLE_SUBSECTION_BOOST or args.oracle_subsection_boost) and (not args.no_subsection_boost)
+    if enable_subsection_boost:
+        print("[warn] ORACLE subsection boost enabled: ranking uses gold expected_subsection labels.")
     enable_cross_encoder_rerank = bool(args.enable_cross_encoder_rerank)
 
     # Dense resources
@@ -910,6 +921,7 @@ def main() -> None:
             "splade_weight": float(args.splade_weight),
             "enable_lexical_rerank": bool(enable_lexical_rerank),
             "enable_subsection_boost": bool(enable_subsection_boost),
+            "oracle_labels_in_ranking": bool(enable_subsection_boost),
             "enable_cross_encoder_rerank": bool(enable_cross_encoder_rerank),
             "cross_encoder_model": (str(args.cross_encoder_model) if enable_cross_encoder_rerank else None),
             "cross_encoder_topn": int(args.cross_encoder_topn),

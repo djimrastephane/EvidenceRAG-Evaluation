@@ -1,10 +1,11 @@
 """Run the FP1-FP7 failure-point analysis across all Grampian cohorts.
 
 Iterates over each eval-ready document folder, runs the hybrid SearchService pipeline,
-and classifies each query result into one of seven failure categories: FP1 (content
-missing from corpus), FP2 (gold page retrieved but not top-ranked), FP3 (gold page
-absent from top-10), FP4 (answer not extracted), FP5 (wrong format), FP6 (incorrect
-specificity), FP7 (incomplete answer), or HIT. Writes per-query CSVs, aggregate counts,
+and classifies each query result with the shared README taxonomy in
+rag_pdf.answer_scoring: FP1 (gold page not indexed), FP2 (gold page not at rank 1),
+FP3 (gold page at rank 1 but answer not in the top-3 context), FP4 (answer not
+extracted), FP5 (wrong format), FP6 (wrong value), FP7 (partial answer), HIT, or
+UNSCORED. Whether the gold page appears in the top-3 / top-10 is recorded separately. Writes per-query CSVs, aggregate counts,
 and a summary JSON to the specified output directory.
 """
 
@@ -56,88 +57,7 @@ except (ModuleNotFoundError, ImportError):
     except (ModuleNotFoundError, ImportError):
         compute_gold_presence = None  # defined inline below
 
-import re as _re
-
-
-def _extract_nums(text: str) -> set[str]:
-    return set(_re.findall(r"\d[\d,\.]*", str(text or "")))
-
-
-def categorize_failure_type(
-    page_hit: int,
-    gold_exists: bool,
-    expected_answer,
-    answer_type: str,
-    context_text: str,
-    extracted_answer,
-    gold_in_top10: bool = False,
-    gold_in_top3: bool = False,
-) -> str:
-    """Classify a single query result into HIT or one of the FP1-FP7 failure categories.
-
-    Retrieval failures (page_hit=0) map to FP1 (content absent), FP2 (gold retrieved but
-    not top-ranked), or FP3 (gold absent from top-10). Generation failures (page_hit=1)
-    map to FP4 (not extracted), FP5 (wrong format), FP6 (incorrect specificity), or
-    FP7 (incomplete answer).
-    """
-    ea   = str(expected_answer  or "").strip().lower()
-    extr = str(extracted_answer or "").strip().lower()
-
-    if page_hit:
-        # Retrieval succeeded — evaluate answer quality
-        if not ea:
-            return "HIT"
-        if ea in extr:
-            return "HIT"
-        if not extr:
-            return "FP4_NOT_EXTRACTED"
-        if answer_type in ("number", "date", "currency"):
-            ea_nums   = _extract_nums(ea)
-            extr_nums = _extract_nums(extr)
-            if ea_nums and (ea_nums & extr_nums):
-                return "HIT"
-            if extr_nums:
-                return "FP5_WRONG_FORMAT"
-            return "FP4_NOT_EXTRACTED"
-        # Text answer
-        ea_words   = set(ea.split())
-        extr_words = set(extr.split())
-        overlap    = ea_words & extr_words
-        if len(overlap) >= max(1, len(ea_words) * 0.5):
-            return "HIT"
-        if len(extr) < len(ea) * 0.4:
-            return "FP7_INCOMPLETE"
-        return "FP6_INCORRECT_SPECIFICITY"
-    else:
-        # Retrieval failed — use page-rank presence for FP2 vs FP3
-        if not gold_exists:
-            return "FP1_MISSING_CONTENT"
-        # FP2: gold page retrieved (in top-10) but not at rank 1
-        if gold_in_top10:
-            return "FP2_MISSED_TOP_RANK"
-        # FP3: gold page not retrieved at all in top-10
-        return "FP3_NOT_IN_CONTEXT"
-
-
-def score_answer_correctness(expected_answer, answer_type: str, extracted_answer):
-    """Return (correct: bool, status: str) for an extracted answer against the expected value."""
-    ea   = str(expected_answer  or "").strip().lower()
-    extr = str(extracted_answer or "").strip().lower()
-    if not ea:
-        correct = True
-        status  = "no_expected_answer"
-    elif ea in extr:
-        correct = True
-        status  = "exact_match"
-    elif answer_type in ("number", "date", "currency"):
-        ea_nums   = _extract_nums(ea)
-        extr_nums = _extract_nums(extr)
-        correct   = bool(ea_nums and (ea_nums & extr_nums))
-        status    = "numeric_match" if correct else "numeric_mismatch"
-    else:
-        correct = False
-        status  = "no_match"
-    return correct, status
+from rag_pdf.answer_scoring import FAILURE_TYPES, categorize_failure_type, score_answer_correctness
 
 
 if compute_gold_presence is None:
@@ -173,16 +93,7 @@ if compute_gold_presence is None:
         }
 
 
-FP_STAGE = {
-    "FP1_MISSING_CONTENT": "retrieval",
-    "FP2_MISSED_TOP_RANK": "retrieval",
-    "FP3_NOT_IN_CONTEXT": "retrieval",
-    "FP4_NOT_EXTRACTED": "generation",
-    "FP5_WRONG_FORMAT": "generation",
-    "FP6_INCORRECT_SPECIFICITY": "generation",
-    "FP7_INCOMPLETE": "generation",
-    "HIT": "none",
-}
+FP_STAGE = FAILURE_TYPES
 
 
 def parse_args() -> argparse.Namespace:
@@ -306,8 +217,6 @@ def main() -> None:
                 answer_type=answer_type,
                 context_text=context_text,
                 extracted_answer=(str(extracted_answer) if extracted_answer is not None else None),
-                gold_in_top10=gold_in_top10,
-                gold_in_top3=gold_in_top3,
             )
             answer_correct, answer_status = score_answer_correctness(
                 expected_answer=expected_answer,
@@ -333,6 +242,8 @@ def main() -> None:
                     "failure_type": failure_type,
                     "failure_stage": FP_STAGE.get(failure_type, "unknown"),
                     "page_hit": int(page_hit),
+                    "gold_in_top3": bool(gold_in_top3),
+                    "gold_in_top10": bool(gold_in_top10),
                     "gold_exists": bool(gold_presence.get("gold_exists", False)),
                     "gold_chunk_count": int(gold_presence.get("gold_chunk_count", 0)),
                     "gold_pages_found": pages_to_text(gold_presence.get("gold_pages_found", [])),

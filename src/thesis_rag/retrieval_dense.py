@@ -80,8 +80,13 @@ def dense_retrieve_legacy_style(
     *,
     top_k: int,
     max_k_search: int = 100,
+    enable_subsection_boost: bool = False,
 ) -> list[RetrievalHit]:
-    """Apply legacy dense reranking heuristics on top of raw FAISS candidates."""
+    """Apply legacy dense reranking heuristics on top of raw FAISS candidates.
+
+    ``enable_subsection_boost`` reads the gold ``expected_subsection`` label (oracle) and is
+    off by default; enable it only for explicitly labelled oracle ablations.
+    """
     meta = pd.DataFrame([chunk.to_dict() for chunk in chunk_records])
     chunk_text_by_id = {chunk.chunk_id: chunk.text for chunk in chunk_records}
     rerank_cfg = RerankConfig(
@@ -106,8 +111,8 @@ def dense_retrieve_legacy_style(
             score += segment_search_hit_boost(query.query_text, bool(row.get("segment_has_search_hit", False)), rerank_cfg)
             boosted.append((score, idx))
         boosted.sort(key=lambda item: item[0], reverse=True)
-        # Oracle boost: uses gold subsection label — intentional for ablation only, not production.
-        if query.expected_subsection and "subsection_title" in meta.columns:
+        # Oracle boost: reads the gold subsection label. Opt-in for labelled ablations only.
+        if enable_subsection_boost and query.expected_subsection and "subsection_title" in meta.columns:
             target = str(query.expected_subsection or "").strip().lower()
             boosted = [
                 (

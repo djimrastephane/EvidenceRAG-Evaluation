@@ -30,7 +30,7 @@ from runtime_env import collect_runtime_provenance, critical_environment_checks,
 DEFAULT_ENV_LOCKS = {
     "REQUIRE_TIKTOKEN": "1",
     "ENABLE_LEXICAL_RERANK": "1",
-    "ENABLE_SUBSECTION_BOOST": "1",
+    "ENABLE_SUBSECTION_BOOST": "0",  # oracle (gold labels); must stay off for reported results
     "TABLE_CHUNK_BOOST": "0.08",
     "MILESTONE_TEXT_BOOST": "0.08",
     "ENTITY_MATCH_BOOST": "0.04",

@@ -69,9 +69,17 @@ def parse_args() -> argparse.Namespace:
         help="Overwrite an existing bundle directory if it already exists.",
     )
     parser.add_argument(
+        "--oracle-subsection-boost",
+        action="store_true",
+        help=(
+            "ORACLE ABLATION ONLY: boost chunks matching the gold expected_subsection label "
+            "in both dense and hybrid retrieval. Never use for reported system results."
+        ),
+    )
+    parser.add_argument(
         "--no-subsection-boost",
         action="store_true",
-        help="Disable subsection boost in hybrid retrieval (enable_subsection_boost=False).",
+        help="Deprecated no-op: the oracle subsection boost is now off by default.",
     )
     return parser.parse_args()
 
@@ -305,7 +313,7 @@ def _run_single_experiment(
     model,
     config: PipelineConfig,
     bundle_dir: Path,
-    enable_subsection_boost: bool = True,
+    enable_subsection_boost: bool = False,
 ) -> dict[str, Any]:
     doc_id = str(experiment["doc_id"])
     experiment_name = str(experiment["name"])
@@ -356,6 +364,7 @@ def _run_single_experiment(
         query_vectors,
         top_k=10,
         max_k_search=100,
+        enable_subsection_boost=enable_subsection_boost,
     )
     dense_page_hits = chunk_hits_to_page_hits(dense_chunk_hits, "dense_pages", chunk_limit=10)
     bm25 = build_bm25(chunks, run_config.bm25)
@@ -512,7 +521,7 @@ def main() -> None:
                     model=model,
                     config=pipeline_config,
                     bundle_dir=bundle_dir,
-                    enable_subsection_boost=not args.no_subsection_boost,
+                    enable_subsection_boost=bool(args.oracle_subsection_boost),
                 )
             )
 

@@ -1,7 +1,7 @@
 """ablate_bm25_hybrid.py
 
 Stage 2 of BM25 parameter ablation: re-evaluates the full hybrid pipeline
-(dense + BM25 + RRF + subsection_boost=True) with the top BM25 k1/b
+(dense + BM25 + RRF, no oracle subsection boost) with the top BM25 k1/b
 candidates identified in Stage 1.
 
 Compares hit@1, hit@5, MRR@10 for each k1/b combo against the current
@@ -183,7 +183,7 @@ def main() -> None:
                 dense_weight=DENSE_W,
                 bm25_weight=BM25_W,
                 rrf_k=RRF_K,
-                enable_subsection_boost=True,
+                enable_subsection_boost=False,  # oracle boost removed from reported results
                 enable_lexical_rerank=True,
             )
             m = _metrics(dc["chunks"], dc["queries"], hybrid_hits)
@@ -254,7 +254,7 @@ def main() -> None:
     ], loc="upper right", fontsize=9, frameon=False)
 
     fig.suptitle("Stage 2: Hybrid pipeline re-evaluation with varied BM25 k1/b\n"
-                 "RRF k=20  dense_w=0.5  bm25_w=2.0  subsection_boost=True  chunk=224/56",
+                 "RRF k=20  dense_w=0.5  bm25_w=2.0  subsection_boost=False  chunk=224/56",
                  fontsize=10)
     fig.tight_layout()
     fig.savefig(out_dir / "hybrid_bm25_comparison.png", dpi=200, bbox_inches="tight")
