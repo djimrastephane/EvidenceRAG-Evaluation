@@ -120,6 +120,11 @@ from rag_pdf.retrieval.rerank import (
     table_priority_boost,
 )
 from runtime_env import collect_runtime_provenance, critical_environment_checks
+from rag_pdf.answer_scoring import (  # noqa: F401  (re-exported for other scripts)
+    FAILURE_TYPES,
+    categorize_failure_type,
+    score_answer_correctness,
+)
 
 
 # =============================================================================
@@ -472,30 +477,6 @@ def extract_answer_from_table_facts(
     return answer, label
 
 
-def score_answer_correctness(
-    expected_answer: Any,
-    answer_type: str,
-    extracted_answer: Optional[str],
-) -> tuple[Optional[bool], str]:
-    """
-    Score extracted answer correctness independently of retrieval-stage failures.
-
-    Returns:
-        (is_correct, status)
-        - is_correct: True / False / None (None when expected answer is not provided)
-        - status: "correct", "partial", "incorrect", or "not_scored"
-    """
-    if expected_answer is None or expected_answer == "" or expected_answer == []:
-        return None, "not_scored"
-    ext = extracted_answer or ""
-    matches, partial = _compare_expected_to_extracted(expected_answer, ext, answer_type)
-    if matches:
-        return True, "correct"
-    if partial:
-        return False, "partial"
-    return False, "incorrect"
-
-
 def refresh_paths() -> None:
     global INDEX_PATH, META_PATH, EVAL_SET_PATH, RESULTS_JSON, METRICS_JSON, SUMMARY_CSV, TABLE_FACTS_PATH
     INDEX_PATH = DATA_DIR / "faiss.index"
@@ -819,210 +800,6 @@ def attribute_retrieval_failure(page_recall: float, gold_exists: bool) -> str:
     return "missed_top_ranked" if gold_exists else "missing_content"
 
 
-FAILURE_TYPES = {
-    "FP1_MISSING_CONTENT": "retrieval",
-    "FP2_MISSED_TOP_RANK": "retrieval",
-    "FP3_NOT_IN_CONTEXT": "retrieval",
-    "FP4_NOT_EXTRACTED": "generation",
-    "FP5_WRONG_FORMAT": "generation",
-    "FP6_INCORRECT_SPECIFICITY": "generation",
-    "FP7_INCOMPLETE": "generation",
-    "HIT": "none",
-}
-
-
-def _normalize_answer_text(val: str) -> str:
-    text = re.sub(r"[£$]", "", str(val or "").lower())
-    text = re.sub(r"[\s,]+", " ", text)
-    text = re.sub(r"[^a-z0-9% ]+", " ", text)
-    return re.sub(r"\s+", " ", text).strip()
-
-
-def _extract_numbers(val: str) -> list[str]:
-    return re.findall(r"\d+(?:\.\d+)?", str(val or ""))
-
-
-def _detect_numeric_dimension(val: str) -> str:
-    text = str(val or "").lower()
-    if any(tok in text for tok in ["%", "percent", "percentage"]):
-        return "percent"
-    if "£" in text or "$" in text or "eur" in text or "usd" in text:
-        return "currency"
-    return "count"
-
-
-def _detect_numeric_multiplier(val: str) -> float:
-    text = str(val or "").lower()
-    compact = re.sub(r"\s+", "", text)
-    if "£000" in compact or "($000)" in compact or "usd000" in compact or "eur000" in compact:
-        return 1_000.0
-    if "(000)" in compact or "[000]" in compact:
-        return 1_000.0
-    if re.search(r"\b(thousand|thousands)\b", text):
-        return 1_000.0
-    if re.search(r"(?<![a-z])[-+]?\d+(?:\.\d+)?\s*k\b", text):
-        return 1_000.0
-    if re.search(r"(?<![a-z])[-+]?\d+(?:\.\d+)?\s*m\b", text):
-        return 1_000_000.0
-    if re.search(r"\b(mn|million|millions)\b", text):
-        return 1_000_000.0
-    if re.search(r"(?<![a-z])[-+]?\d+(?:\.\d+)?\s*bn\b", text):
-        return 1_000_000_000.0
-    if re.search(r"\b(billion|billions)\b", text):
-        return 1_000_000_000.0
-    return 1.0
-
-
-def _normalize_numeric_value(val: str) -> Optional[dict[str, float | str]]:
-    text = str(val or "").strip()
-    if not text:
-        return None
-    lowered = text.lower()
-    negative = bool(re.search(r"\(\s*[-+]?\d[\d,]*(?:\.\d+)?\s*\)", lowered))
-    cleaned = lowered.replace(",", "")
-    match = re.search(r"[-+]?\d+(?:\.\d+)?", cleaned)
-    if not match:
-        return None
-    try:
-        number = float(match.group())
-    except Exception:
-        return None
-    if negative and number > 0:
-        number = -number
-    multiplier = _detect_numeric_multiplier(lowered)
-    dimension = _detect_numeric_dimension(lowered)
-    return {
-        "value": float(number * multiplier),
-        "dimension": dimension,
-        "multiplier": multiplier,
-    }
-
-
-def _numeric_values_match(expected_answer: Any, extracted_answer: str) -> tuple[bool, bool]:
-    expected_values = expected_answer if isinstance(expected_answer, list) else [expected_answer]
-    normalized_expected = [nv for nv in (_normalize_numeric_value(v) for v in expected_values) if nv is not None]
-    normalized_extracted = _normalize_numeric_value(extracted_answer)
-    if not normalized_expected or normalized_extracted is None:
-        return False, False
-
-    full_matches = 0
-    partial_matches = 0
-    for exp in normalized_expected:
-        exp_dimension = str(exp["dimension"])
-        got_dimension = str(normalized_extracted["dimension"])
-        if exp_dimension != got_dimension and "percent" in {exp_dimension, got_dimension}:
-            continue
-        exp_value = float(exp["value"])
-        got_value = float(normalized_extracted["value"])
-        abs_diff = abs(exp_value - got_value)
-        rel_tol = 0.01 * max(abs(exp_value), abs(got_value), 1.0)
-        if abs_diff <= max(1.0, rel_tol):
-            full_matches += 1
-        elif abs_diff <= max(5.0, 0.05 * max(abs(exp_value), abs(got_value), 1.0)):
-            partial_matches += 1
-
-    return (
-        full_matches == len(normalized_expected) and len(normalized_expected) > 0,
-        full_matches == 0 and partial_matches > 0,
-    )
-
-
-def _is_missing_extraction(extracted_answer: Optional[str]) -> bool:
-    if not extracted_answer:
-        return True
-    lowered = str(extracted_answer).strip().lower()
-    return lowered in {"(no chunk text available)", "(no extraction rule matched)"}
-
-
-def _expected_in_context(expected_answer: Any, context_text: str, answer_type: str) -> bool:
-    if expected_answer is None or expected_answer == "":
-        return False
-    ctx_norm = _normalize_answer_text(context_text)
-    if isinstance(expected_answer, list):
-        expected_items = [_normalize_answer_text(v) for v in expected_answer]
-        return any(item and item in ctx_norm for item in expected_items)
-    expected_norm = _normalize_answer_text(expected_answer)
-    if answer_type == "number":
-        if _normalize_numeric_value(context_text) is not None:
-            match, partial = _numeric_values_match(expected_answer, context_text)
-            if match or partial:
-                return True
-        expected_nums = _extract_numbers(expected_answer)
-        ctx_nums = _extract_numbers(context_text)
-        return any(n in ctx_nums for n in expected_nums)
-    return expected_norm in ctx_norm if expected_norm else False
-
-
-def _format_matches(answer_type: str, extracted_answer: str) -> bool:
-    if answer_type == "number":
-        return bool(_extract_numbers(extracted_answer))
-    if answer_type == "date":
-        patterns = [
-            r"\b\d{4}-\d{2}-\d{2}\b",
-            r"\b\d{1,2}/\d{1,2}/\d{2,4}\b",
-            r"\b\d{1,2}\s+[A-Z][a-z]+\s+\d{4}\b",
-        ]
-        return any(re.search(p, extracted_answer) for p in patterns)
-    if answer_type == "list":
-        return any(token in extracted_answer for token in [",", ";", "\n", " and "])
-    return True
-
-
-def _compare_expected_to_extracted(
-    expected_answer: Any, extracted_answer: str, answer_type: str
-) -> tuple[bool, bool]:
-    if expected_answer is None or expected_answer == "":
-        return True, False
-    extracted_norm = _normalize_answer_text(extracted_answer)
-    if isinstance(expected_answer, list):
-        expected_items = [_normalize_answer_text(v) for v in expected_answer]
-        matched = [item for item in expected_items if item and item in extracted_norm]
-        return len(matched) == len(expected_items), 0 < len(matched) < len(expected_items)
-    expected_norm = _normalize_answer_text(expected_answer)
-    if answer_type == "number":
-        numeric_match, numeric_partial = _numeric_values_match(expected_answer, extracted_answer)
-        if numeric_match or numeric_partial:
-            return numeric_match, numeric_partial
-        expected_nums = _extract_numbers(expected_answer)
-        extracted_nums = _extract_numbers(extracted_answer)
-        matched = [n for n in expected_nums if n in extracted_nums]
-        return len(matched) == len(expected_nums) and len(expected_nums) > 0, 0 < len(matched) < len(expected_nums)
-    if expected_norm and expected_norm in extracted_norm:
-        return True, False
-    expected_tokens = {t for t in expected_norm.split() if len(t) > 3}
-    extracted_tokens = set(extracted_norm.split())
-    overlap = expected_tokens.intersection(extracted_tokens)
-    return False, bool(overlap)
-
-
-def categorize_failure_type(
-    page_hit: int,
-    gold_exists: bool,
-    expected_answer: Any,
-    answer_type: str,
-    context_text: str,
-    extracted_answer: Optional[str],
-) -> str:
-    if not gold_exists:
-        return "FP1_MISSING_CONTENT"
-    if page_hit == 0:
-        return "FP2_MISSED_TOP_RANK"
-    if expected_answer is None or expected_answer == "" or expected_answer == []:
-        return "HIT"
-    if expected_answer and not _expected_in_context(expected_answer, context_text, answer_type):
-        return "FP3_NOT_IN_CONTEXT"
-    if _is_missing_extraction(extracted_answer):
-        return "FP4_NOT_EXTRACTED"
-    if not _format_matches(answer_type, extracted_answer or ""):
-        return "FP5_WRONG_FORMAT"
-    matches, partial = _compare_expected_to_extracted(expected_answer, extracted_answer or "", answer_type)
-    if matches:
-        return "HIT"
-    if partial:
-        return "FP7_INCOMPLETE"
-    return "FP6_INCORRECT_SPECIFICITY"
-
-
 # =============================================================================
 # MAIN
 # =============================================================================
@@ -1160,29 +937,6 @@ def main():
         segment_search_hit_boost=SEGMENT_SEARCH_HIT_BOOST,
         max_entity_matches=MAX_ENTITY_MATCHES,
     )
-
-    def _extract_quarter_value(label: str, text: str, q_lower: str) -> tuple[Optional[str], Optional[str]]:
-        m = re.search(
-            rf"{label}\s+([\d-]+)\s+([\d-]+)\s+([\d-]+)\s+([\d-]+)",
-            text,
-            flags=re.IGNORECASE,
-        )
-        if not m:
-            return None, None
-        vals = [m.group(i) for i in range(1, 5)]
-
-        def _pick(idx: int) -> Optional[str]:
-            return None if vals[idx] == "-" else vals[idx]
-
-        if "q1" in q_lower:
-            return _pick(0), "Q1"
-        if "q2" in q_lower:
-            return _pick(1), "Q2"
-        if "q3" in q_lower:
-            return _pick(2), "Q3"
-        if "q4" in q_lower:
-            return _pick(3), "Q4"
-        return None, None
 
     def _first_sentence(text: str) -> str:
         for sent in re.split(r"(?<=[.!?])\s+", text.strip()):
@@ -1354,7 +1108,6 @@ def main():
             top_chunk_id = str(ids[0])
             top_text = chunk_text_by_id.get(top_chunk_id, "")
 
-        q_lower = question.lower()
         k3_pages = per_k.get("3", {}).get("retrieved_pages_ranked", []) or []
         k1_pages = per_k.get("1", {}).get("retrieved_pages_ranked", []) or []
         candidate_page_source = k3_pages if k3_pages else k1_pages
@@ -1373,122 +1126,6 @@ def main():
             if is_table_metric_route(route):
                 extracted_answer = _first_sentence(top_text) or "(no extraction rule matched)"
                 extracted_label = "Snippet"
-            elif "significant" in q_lower and "delay" in q_lower:
-                extracted_answer, quarter = _extract_quarter_value(
-                    "Significant Delay", top_text, q_lower
-                )
-                if extracted_answer:
-                    extracted_label = f"Significant Delay ({quarter})" if quarter else "Significant Delay"
-            elif "on track" in q_lower:
-                extracted_answer, quarter = _extract_quarter_value("On Track", top_text, q_lower)
-                if extracted_answer:
-                    extracted_label = f"On Track ({quarter})" if quarter else "On Track"
-            elif "proportion" in q_lower and "complete" in q_lower:
-                m = re.search(r"(\d+(?:\.\d+)?)%[^\n]{0,80}complete", top_text, flags=re.IGNORECASE)
-                if not m:
-                    m = re.search(r"complete[^\n]{0,80}(\d+(?:\.\d+)?)%", top_text, flags=re.IGNORECASE)
-                if m:
-                    extracted_answer = f"{m.group(1)}%"
-                    extracted_label = "Complete (%)"
-            elif "board committee" in q_lower and "strategic risk register" in q_lower:
-                m = re.search(
-                    r"the ([A-Za-z &-]+ committee) have delegated responsibility",
-                    top_text,
-                    flags=re.IGNORECASE,
-                )
-                if not m:
-                    m = re.search(
-                        r"the ([A-Za-z &-]+ committee) has delegated responsibility",
-                        top_text,
-                        flags=re.IGNORECASE,
-                    )
-                if m:
-                    extracted_answer = m.group(1).strip().title()
-                    extracted_label = "Delegated Committee"
-            elif "endorse" in q_lower and "risk appetite" in q_lower and "strategic risk profile" in q_lower:
-                ra_date = None
-                srp_date = None
-                for sent in re.split(r"(?<=[.!?])\s+", top_text):
-                    low = sent.lower()
-                    if "endorsed" in low and "risk appetite statement" in low:
-                        m = re.search(
-                            r"endorsed.*?on(?: the)?\s+(\d{1,2}(?:st|nd|rd|th)?\s+[A-Z][a-z]+\s+\d{4})",
-                            sent,
-                            flags=re.IGNORECASE,
-                        )
-                        if m:
-                            ra_date = m.group(1)
-                    if "endorsed" in low and "strategic risk profile" in low:
-                        m = re.search(
-                            r"endorsed.*?strategic risk profile.*?in\s+([A-Z][a-z]+\s+\d{4})",
-                            sent,
-                            flags=re.IGNORECASE,
-                        )
-                        if m:
-                            srp_date = m.group(1)
-                if not srp_date:
-                    candidate_ids = (
-                        per_k.get("5", {}).get("retrieved_chunk_ids")
-                        or per_k.get("3", {}).get("retrieved_chunk_ids")
-                        or []
-                    )
-                    for cid in candidate_ids:
-                        if str(cid) == top_chunk_id:
-                            continue
-                        other_text = chunk_text_by_id.get(str(cid), "")
-                        if not other_text:
-                            continue
-                        for sent in re.split(r"(?<=[.!?])\s+", other_text):
-                            low = sent.lower()
-                            if "endorsed" in low and "strategic risk profile" in low:
-                                m = re.search(
-                                    r"endorsed.*?strategic risk profile.*?in\s+([A-Z][a-z]+\s+\d{4})",
-                                    sent,
-                                    flags=re.IGNORECASE,
-                                )
-                                if m:
-                                    srp_date = m.group(1)
-                                    break
-                        if srp_date:
-                            break
-                parts = []
-                if ra_date:
-                    parts.append(f"Risk Appetite: {ra_date}")
-                if srp_date:
-                    parts.append(f"Strategic Risk Profile: {srp_date}")
-                if parts:
-                    extracted_answer = "; ".join(parts)
-                    extracted_label = "Board Endorsements"
-            elif "endorse" in q_lower and "risk appetite" in q_lower:
-                for sent in re.split(r"(?<=[.!?])\s+", top_text):
-                    if "endorsed" in sent and "risk appetite statement" in sent.lower():
-                        m = re.search(
-                            r"endorsed.*?on(?: the)?\s+(\d{1,2}(?:st|nd|rd|th)?\s+[A-Z][a-z]+\s+\d{4})",
-                            sent,
-                            flags=re.IGNORECASE,
-                        )
-                        if m:
-                            extracted_answer = m.group(1)
-                            extracted_label = "Risk Appetite Endorsement"
-                            break
-            elif "endorse" in q_lower and "strategic risk profile" in q_lower:
-                for sent in re.split(r"(?<=[.!?])\s+", top_text):
-                    if "endorsed" in sent and "strategic risk profile" in sent.lower():
-                        m = re.search(
-                            r"endorsed.*?strategic risk profile.*?in\s+([A-Z][a-z]+\s+\d{4})",
-                            sent,
-                            flags=re.IGNORECASE,
-                        )
-                        if m:
-                            extracted_answer = m.group(1)
-                            extracted_label = "Strategic Risk Profile Endorsement"
-                            break
-            elif "significant issue" in q_lower and "accountable officer" in q_lower:
-                for sent in re.split(r"(?<=[.!?])\s+", top_text):
-                    if "funding arrangement" in sent.lower():
-                        extracted_answer = sent.strip()
-                        extracted_label = "Significant Issue"
-                        break
 
         if not extracted_answer:
             if top_text:

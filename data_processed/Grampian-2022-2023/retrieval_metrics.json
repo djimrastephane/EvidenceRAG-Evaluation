@@ -1,6 +1,6 @@
 {
   "run_info": {
-    "run_utc": "2026-09-29T23:31:03+00:00",
+    "run_utc": "2026-09-29T23:44:31+00:00",
     "data_dir": "data_processed/Grampian-2022-2023",
     "runtime": {
       "python_executable": "/opt/anaconda3/envs/rag-pipeline/bin/python",
@@ -188,7 +188,8 @@
         "FP5_WRONG_FORMAT",
         "FP6_INCORRECT_SPECIFICITY",
         "FP7_INCOMPLETE",
-        "HIT"
+        "HIT",
+        "UNSCORED"
       ],
       "scope": "retrieval_and_generation"
     },
@@ -316,11 +317,11 @@
   "answer_scoring": {
     "num_queries_total": 50,
     "num_queries_scored": 50,
-    "answer_accuracy": 0.18,
+    "answer_accuracy": 0.12,
     "answer_status_counts": {
-      "incorrect": 33,
-      "correct": 9,
-      "partial": 8
+      "incorrect": 41,
+      "correct": 6,
+      "partial": 3
     }
   }
 }

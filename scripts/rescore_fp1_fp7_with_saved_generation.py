@@ -38,16 +38,9 @@ except ModuleNotFoundError:
     from retrieval_eval import categorize_failure_type, compute_gold_presence, score_answer_correctness
 
 
-FP_STAGE = {
-    "FP1_MISSING_CONTENT": "retrieval",
-    "FP2_MISSED_TOP_RANK": "retrieval",
-    "FP3_NOT_IN_CONTEXT": "retrieval",
-    "FP4_NOT_EXTRACTED": "generation",
-    "FP5_WRONG_FORMAT": "generation",
-    "FP6_INCORRECT_SPECIFICITY": "generation",
-    "FP7_INCOMPLETE": "generation",
-    "HIT": "none",
-}
+from rag_pdf.answer_scoring import FAILURE_TYPES  # noqa: E402
+
+FP_STAGE = FAILURE_TYPES
 
 
 def parse_args() -> argparse.Namespace:
