@@ -1,14 +1,14 @@
 {
   "run_info": {
-    "run_utc": "2026-06-06T16:43:50+00:00",
+    "run_utc": "2026-09-29T23:31:10+00:00",
     "data_dir": "data_processed/Grampian-2023-2024",
     "runtime": {
       "python_executable": "/opt/anaconda3/envs/rag-pipeline/bin/python",
       "python_version": "3.11.15",
-      "platform": "macOS-26.5.1-arm64-arm-64bit",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
       "system": "Darwin",
       "machine": "arm64",
-      "cwd": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project",
+      "cwd": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation",
       "conda_prefix": "/opt/anaconda3/envs/rag-pipeline",
       "conda_default_env": "rag-pipeline",
       "virtual_env": null,
@@ -149,7 +149,7 @@
     "meta_path": "data_processed/Grampian-2023-2024/chunk_meta.parquet",
     "table_facts_path": "data_processed/Grampian-2023-2024/table_facts.parquet",
     "eval_set_path": "data_processed/Grampian-2023-2024/eval_set.json",
-    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedding_model": "models/all-MiniLM-L6-v2",
     "k_list": [
       1,
       3,
@@ -164,7 +164,8 @@
     "segment_search_hit_boost": 0.03,
     "max_entity_matches": 4,
     "enable_lexical_rerank": true,
-    "enable_subsection_boost": true,
+    "enable_subsection_boost": false,
+    "oracle_labels_in_ranking": false,
     "max_k_search": 100,
     "num_queries": 50,
     "num_chunks_indexed": 381,
@@ -207,8 +208,8 @@
       "doc_id": "Grampian-2023-2024",
       "corpus_id": "Grampian-2023-2024",
       "report_year": "2023-2024",
-      "preprocess_run_utc": "2026-06-06T15:57:31+00:00",
-      "preprocess_git_commit_short": "3799e6d",
+      "preprocess_run_utc": "2026-06-16T09:45:44+00:00",
+      "preprocess_git_commit_short": "3e729e9",
       "embedding_model_preprocess": "sentence-transformers/all-MiniLM-L6-v2",
       "chunk_size_tokens": 224,
       "chunk_overlap_tokens": 56,
@@ -223,7 +224,7 @@
       "path": "data_processed/Grampian-2023-2024/eval_set.json",
       "sha1": "f1248fc317b1561c0b2168ebea349b1f03f656ef",
       "size_bytes": 41631,
-      "modified_utc": "2026-04-07T09:26:38+00:00",
+      "modified_utc": "2026-06-16T08:45:22+00:00",
       "query_count": 50,
       "meta_dataset_name": "NHS Grampian 2023-2024 Retrieval Gold Set",
       "meta_doc_id": "Grampian-2023-2024",
@@ -233,61 +234,61 @@
   "metrics_by_k": {
     "1": {
       "num_queries": 50,
-      "page_hit_rate_at_k": 0.7,
-      "mean_page_recall_at_k": 0.7,
-      "mean_page_precision_at_k": 0.7,
-      "mean_page_mrr_at_k": 0.7,
-      "chunk_hit_rate_at_k": 0.7,
-      "mean_chunk_precision_at_k": 0.7,
-      "mean_chunk_mrr_at_k": 0.7
+      "page_hit_rate_at_k": 0.62,
+      "mean_page_recall_at_k": 0.62,
+      "mean_page_precision_at_k": 0.62,
+      "mean_page_mrr_at_k": 0.62,
+      "chunk_hit_rate_at_k": 0.62,
+      "mean_chunk_precision_at_k": 0.62,
+      "mean_chunk_mrr_at_k": 0.62
     },
     "3": {
       "num_queries": 50,
-      "page_hit_rate_at_k": 0.86,
-      "mean_page_recall_at_k": 0.86,
-      "mean_page_precision_at_k": 0.38,
-      "mean_page_mrr_at_k": 0.7733333333333333,
-      "chunk_hit_rate_at_k": 0.86,
-      "mean_chunk_precision_at_k": 0.3933333333333333,
-      "mean_chunk_mrr_at_k": 0.7666666666666666
+      "page_hit_rate_at_k": 0.78,
+      "mean_page_recall_at_k": 0.78,
+      "mean_page_precision_at_k": 0.33666666666666667,
+      "mean_page_mrr_at_k": 0.6866666666666665,
+      "chunk_hit_rate_at_k": 0.78,
+      "mean_chunk_precision_at_k": 0.35999999999999993,
+      "mean_chunk_mrr_at_k": 0.6833333333333332
     },
     "5": {
       "num_queries": 50,
-      "page_hit_rate_at_k": 0.92,
-      "mean_page_recall_at_k": 0.92,
-      "mean_page_precision_at_k": 0.2686666666666666,
-      "mean_page_mrr_at_k": 0.79,
-      "chunk_hit_rate_at_k": 0.92,
-      "mean_chunk_precision_at_k": 0.308,
-      "mean_chunk_mrr_at_k": 0.7816666666666666
+      "page_hit_rate_at_k": 0.84,
+      "mean_page_recall_at_k": 0.84,
+      "mean_page_precision_at_k": 0.242,
+      "mean_page_mrr_at_k": 0.7016666666666665,
+      "chunk_hit_rate_at_k": 0.84,
+      "mean_chunk_precision_at_k": 0.28400000000000003,
+      "mean_chunk_mrr_at_k": 0.6953333333333334
     },
     "10": {
       "num_queries": 50,
-      "page_hit_rate_at_k": 0.94,
-      "mean_page_recall_at_k": 0.94,
-      "mean_page_precision_at_k": 0.1389126984126984,
-      "mean_page_mrr_at_k": 0.7933333333333333,
-      "chunk_hit_rate_at_k": 0.94,
-      "mean_chunk_precision_at_k": 0.19599999999999998,
-      "mean_chunk_mrr_at_k": 0.7841666666666666
+      "page_hit_rate_at_k": 0.92,
+      "mean_page_recall_at_k": 0.92,
+      "mean_page_precision_at_k": 0.1319047619047619,
+      "mean_page_mrr_at_k": 0.7137222222222221,
+      "chunk_hit_rate_at_k": 0.92,
+      "mean_chunk_precision_at_k": 0.17999999999999997,
+      "mean_chunk_mrr_at_k": 0.7057460317460318
     }
   },
   "failure_counts_by_k": {
     "1": {
-      "hit": 35,
-      "missed_top_ranked": 15
+      "hit": 31,
+      "missed_top_ranked": 19
     },
     "3": {
-      "hit": 43,
-      "missed_top_ranked": 7
+      "hit": 39,
+      "missed_top_ranked": 11
     },
     "5": {
-      "hit": 46,
-      "missed_top_ranked": 4
+      "hit": 42,
+      "missed_top_ranked": 8
     },
     "10": {
-      "hit": 47,
-      "missed_top_ranked": 3
+      "hit": 46,
+      "missed_top_ranked": 4
     }
   },
   "leakage_counts_by_k": {
@@ -315,11 +316,11 @@
   "answer_scoring": {
     "num_queries_total": 50,
     "num_queries_scored": 50,
-    "answer_accuracy": 0.16,
+    "answer_accuracy": 0.14,
     "answer_status_counts": {
-      "incorrect": 27,
+      "incorrect": 28,
       "partial": 15,
-      "correct": 8
+      "correct": 7
     }
   }
 }

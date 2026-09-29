@@ -42,42 +42,43 @@ Retrieved chunks are ranked, gated for citation quality and numeric consistency,
 
 ## Retrieval Performance
 
-Evaluated on 250 queries across 5 Grampian documents (2020–2025), 50 queries per document.
+Evaluated on 250 queries across 5 Grampian documents (2020–2025), 50 queries per document. Metrics are page-level: Hit@k is 1 when any gold page appears among the pages of the top-k retrieved chunks. MRR is reported at k = 10.
 
-### Summary (hybrid RRF, page-level)
+These numbers are regenerated from the frozen, committed indexes (`results/frozen/gold_eval_artifacts_manifest.json`). No gold labels are used in ranking. See [Reproducing the retrieval table](#reproducing-the-retrieval-table).
 
-| Document | Hit@1 | Hit@3 | Hit@5 | Hit@10 | MRR |
+### Summary (production pipeline: hybrid RRF + lexical rerank, page-level)
+
+| Document | Hit@1 | Hit@3 | Hit@5 | Hit@10 | MRR@10 |
 |---|---|---|---|---|---|
-| Grampian 2020–2021 | 0.680 | 0.880 | 0.900 | 0.940 | 0.777 |
-| Grampian 2021–2022 | 0.740 | 0.800 | 0.840 | 0.900 | 0.786 |
-| Grampian 2022–2023 | 0.640 | 0.820 | 0.860 | 0.900 | 0.747 |
-| Grampian 2023–2024 | 0.700 | 0.900 | 0.920 | 0.960 | 0.811 |
-| Grampian 2024–2025 | 0.600 | 0.880 | 0.920 | 0.920 | 0.745 |
-| **Mean** | **0.672** | **0.856** | **0.888** | **0.924** | **0.773** |
+| Grampian 2020–2021 | 0.640 | 0.780 | 0.820 | 0.900 | 0.720 |
+| Grampian 2021–2022 | 0.520 | 0.760 | 0.860 | 0.880 | 0.656 |
+| Grampian 2022–2023 | 0.480 | 0.780 | 0.800 | 0.820 | 0.627 |
+| Grampian 2023–2024 | 0.640 | 0.840 | 0.920 | 0.960 | 0.763 |
+| Grampian 2024–2025 | 0.580 | 0.840 | 0.900 | 0.920 | 0.712 |
+| **Mean** | **0.572** | **0.800** | **0.860** | **0.896** | **0.696** |
 
-### Hybrid vs Dense retrieval (bootstrapped 95% CI)
+### Baselines (same 250 queries, same indexes)
 
-![Bootstrap CI: Hybrid vs Dense](docs/architecture/rendered/paired_bootstrap_ci_panel_Grampian_2020_2025_hybrid_vs_dense.png)
+| Method | Hit@1 [95% Wilson] | Hit@5 [95% Wilson] | Hit@10 | MRR@10 | Hit@1 vs production (exact McNemar) |
+|---|---|---|---|---|---|
+| Hybrid RRF + lexical rerank (production) | 0.572 [0.510, 0.632] | 0.860 [0.812, 0.898] | 0.896 | 0.696 | — |
+| Hybrid RRF, no rerank | 0.640 [0.579, 0.697] | 0.856 [0.807, 0.894] | 0.892 | 0.740 | +0.068 (24/7, p = 0.003) |
+| Dense only (MiniLM) | 0.568 [0.506, 0.628] | 0.800 [0.746, 0.845] | 0.888 | 0.672 | −0.004 (35/36, p = 1.000) |
+| BM25 only | 0.620 [0.558, 0.678] | 0.824 [0.772, 0.866] | 0.868 | 0.715 | +0.048 (25/13, p = 0.073) |
 
-Hybrid RRF consistently outperforms dense-only retrieval across all k values. Bootstrapped confidence intervals confirm the improvement is statistically reliable.
+The discordant counts in the last column are *queries only that method hits / queries only production hits*. Observations:
+- At Hit@1 the production pipeline is indistinguishable from dense-only retrieval.
+- Removing the lexical rerank improves Hit@1 significantly. It has not been disabled in production, because that choice would itself be made on this evaluation set; it needs a held-out evaluation first.
+- The RRF weights (`rrf_k=20`, 0.5 / 2.0) were tuned on these same 250 queries, so all hybrid numbers here are optimistic.
 
-### Rank survival curve
+### Earlier figures (superseded, pending regeneration)
 
-![Rank survival curve](docs/architecture/rendered/retrieval_rank_km_curve.png)
+The figures below were produced before the 2026-09-30 evaluation fixes. Their pipelines ranked with gold-label (oracle) features, or ran on index builds that are not in the repository. Their numbers are superseded by the tables above. They are kept for reference until they are regenerated from the frozen artifacts.
 
-Proportion of queries with their gold page still in the retrieved set as k grows. The pipeline achieves >94% page recall by k=10.
-
-### Performance by query difficulty
-
-![Difficulty tier method comparison](docs/architecture/rendered/difficulty_tier_method_comparison.png)
-
-Queries are stratified by difficulty (Easy/Medium/Hard/Very Hard). Hybrid retrieval gains are concentrated in the Medium and Hard tiers where BM25 term matching compensates for dense retrieval misses.
-
-### Failure analysis (k=1)
-
-![Failure heatmap](docs/architecture/rendered/fp_failure_heatmap_full50_v4.png)
-
-FP taxonomy at k=1 across 50 queries per document. FP2 (missed top rank — answer exists in index but not retrieved first) accounts for the majority of failures, pointing to re-ranking as the primary remaining improvement opportunity.
+- Hybrid vs dense, paired bootstrap 95% CI: ![Bootstrap CI: Hybrid vs Dense](docs/architecture/rendered/paired_bootstrap_ci_panel_Grampian_2020_2025_hybrid_vs_dense.png)
+- Rank survival curve: ![Rank survival curve](docs/architecture/rendered/retrieval_rank_km_curve.png)
+- Hit@1 by query difficulty tier (LEX / MOD / STR): ![Difficulty tier method comparison](docs/architecture/rendered/difficulty_tier_method_comparison.png)
+- Failure taxonomy at k = 1: ![Failure heatmap](docs/architecture/rendered/fp_failure_heatmap_full50_v4.png)
 
 ### Embedding space (PCA by section type)
 
@@ -162,6 +163,23 @@ python scripts/retrieval_eval.py \
 
 Requires `eval_set.json` in the document directory. Outputs:
 `retrieval_results.json`, `retrieval_metrics.json`, `retrieval_summary.csv`
+
+For the production hybrid pipeline, use `scripts/evaluate_pipeline.py --data-dir data_processed/<doc_id>`.
+
+### Reproducing the retrieval table
+
+The retrieval inputs of the five gold-labelled documents are committed and pinned by SHA-256. These inputs are `faiss.index`, `chunk_meta.parquet`, `chunks.parquet` and `eval_set.json` under `data_processed/Grampian-2020-2021` … `Grampian-2024-2025`, and the hashes are in `results/frozen/gold_eval_artifacts_manifest.json`.
+
+```bash
+python scripts/freeze_eval_artifacts.py --verify        # fails on any drift
+python scripts/reproduce_readme_retrieval_table.py      # production + 3 baselines, 5 docs
+```
+
+The second command verifies every run against the manifest. It writes `results/readme_retrieval_table/summary.{md,json}` and the per-query results. Each run's `run_info` records `artifact_sha256` and `oracle_labels_in_ranking`.
+
+Gold labels (`expected_section` / `expected_subsection`) are never used for ranking by default. `--oracle-subsection-boost` exists only for explicitly labelled oracle ablations.
+
+Re-preprocessing a gold document changes its hashes. Re-freeze with `--write` only if the change is intended, then regenerate the table.
 
 ### 4. Single query
 
@@ -372,7 +390,8 @@ python qa/test2_preprocessing.py
 
 ## Limitations
 
-- **Hit@1 ceiling.** Mean page Hit@1 across the 5 evaluation cohorts is 0.672. Approximately one in three queries does not surface the correct page at rank 1. The rank survival curve shows strong recovery by k=5 (0.888), but top-1 precision remains the primary gap.
+- **Hit@1 ceiling.** Mean page Hit@1 across the 5 evaluation cohorts is 0.572 for the production pipeline. More than four in ten queries do not surface the correct page at rank 1. Recovery is strong by k=5 (0.860), but top-1 precision remains the primary gap.
+- **No held-out test set.** Fusion weights and rerank boosts were tuned on the same 250 queries that are reported, so the reported hybrid numbers are optimistic.
 - **FP2 dominates failures.** The majority of k=1 failures are FP2 (correct page is indexed and retrievable but not ranked first), not FP1 (missing content). This points to re-ranking rather than indexing coverage as the bottleneck.
 - **Fixed search window.** `MAX_K_SEARCH=100` caps how many chunks are retrieved from FAISS before BM25 fusion. For large documents (e.g. Grampian-2024-2025 with 423 chunks), BM25-only hits outside the top-100 dense window receive a `NULL` cosine score rather than a genuine zero — a known diagnostic artefact surfaced in the ranking margin panel.
 - **Single-document scope.** Retrieval is scoped to one document at a time. There is no cross-document index or multi-document fusion; a query about trends across years requires running separately against each document.

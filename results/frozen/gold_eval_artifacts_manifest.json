@@ -1,0 +1,58 @@
+{
+  "description": "Frozen retrieval inputs for the gold-labelled evaluation documents.",
+  "frozen_utc": "2026-09-29T23:27:36+00:00",
+  "embedding_model": "models/all-MiniLM-L6-v2",
+  "artifacts": [
+    "faiss.index",
+    "chunk_meta.parquet",
+    "chunks.parquet",
+    "eval_set.json"
+  ],
+  "documents": {
+    "Grampian-2020-2021": {
+      "sha256": {
+        "faiss.index": "e6a47acba14f5e118f8003da493a1c275e88abf20f3f60e12b868661136379a1",
+        "chunk_meta.parquet": "5c7707f48dd8fb569e95b3b2cccfedc83deff96b4b7017a9138f7ae65ef0d0de",
+        "chunks.parquet": "8fc14792b7f296f2a837af46c408736c70ee45bb6bd8b9677ef20c5ec73a1b81",
+        "eval_set.json": "d9e53fe3bfccd32a16f23ac7c4fe029edd4d6bb27e72aa9f3145f356624b6de9"
+      },
+      "num_chunks": 349
+    },
+    "Grampian-2021-2022": {
+      "sha256": {
+        "faiss.index": "929e4f0ca1d5aebc8524a645ca656032b815e5e44e36f6e0729df7a75bd7f71c",
+        "chunk_meta.parquet": "9629b81c87a63bff68cc6f1970e81631f4df551c77031235534bebea0e0ef279",
+        "chunks.parquet": "4b5bd83f62daadb6066ecefd9fb70890a71e71f9332dd19cf979cf69500847e0",
+        "eval_set.json": "3c44d3c05f46822f4ca701fbaaec14e3a476300be9917ddbdcb1c424cffcce7c"
+      },
+      "num_chunks": 384
+    },
+    "Grampian-2022-2023": {
+      "sha256": {
+        "faiss.index": "4410c92a2a2425efdb0bf716f28a43302794178510cdf49f64e7e40a3cfcf01e",
+        "chunk_meta.parquet": "b151a13c130943d9633f076b12d351c9737384b0ba3825bc263799b3ccc91ccc",
+        "chunks.parquet": "e143d73319552c5c59f93b065b07645a5e396269ed780bec450b22e887043799",
+        "eval_set.json": "740b910c62779d2ee62b024ac8ab996dfd85e54bed0ddab65f8524f775d27167"
+      },
+      "num_chunks": 355
+    },
+    "Grampian-2023-2024": {
+      "sha256": {
+        "faiss.index": "2be97cb9207741d0a2eb59b6d91bae563010fc05f63aa09b0fccabb83d795207",
+        "chunk_meta.parquet": "51303bc521ff168e0c5a734541db27cfd62d8d240741f55b38c4a431bef568a5",
+        "chunks.parquet": "31f4e6affb90e4535444f0bf0fbd36ad59ce3c50c48290dfdcd7cefc568818ac",
+        "eval_set.json": "25abcf342a46a9f049013362b6e97abe68c56c354af53dbc4709b2cc16675c34"
+      },
+      "num_chunks": 381
+    },
+    "Grampian-2024-2025": {
+      "sha256": {
+        "faiss.index": "e11d5418a3eb9608b7b558881e035a89328f7c12a350a769aff58f7491aa55a8",
+        "chunk_meta.parquet": "4c958b15dffdb07fa727cdee557f0e8d1c8a20ede83be62bede8e20bf3cbdb3b",
+        "chunks.parquet": "2ae2c7a4657cac0cedd8f1a11e9b685eb21ebf8cee56bf42e8595cc610900e2f",
+        "eval_set.json": "ded2e17d4984f03baa9dadc74cf90dabc5a149d1b4e3ae7f47b982f2a56ab8b9"
+      },
+      "num_chunks": 423
+    }
+  }
+}

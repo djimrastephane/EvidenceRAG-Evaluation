@@ -1,17 +1,17 @@
 {
   "run_info": {
-    "run_utc": "2026-06-06T14:23:37+00:00",
-    "data_dir": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/Grampian-2020-2021",
+    "run_utc": "2026-09-29T23:27:46+00:00",
+    "data_dir": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2020-2021",
     "method": "hybrid_rrf_dense_bm25",
     "runtime": {
       "python_executable": "/opt/anaconda3/envs/rag-pipeline/bin/python",
       "python_version": "3.11.15",
-      "platform": "macOS-26.5.1-arm64-arm-64bit",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
       "system": "Darwin",
       "machine": "arm64",
-      "cwd": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project",
-      "conda_prefix": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv",
-      "conda_default_env": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv",
+      "cwd": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation",
+      "conda_prefix": "/opt/anaconda3/envs/rag-pipeline",
+      "conda_default_env": "rag-pipeline",
       "virtual_env": null,
       "dependency_report": {
         "modules": {
@@ -96,11 +96,11 @@
         "commands": {
           "gs": {
             "available": true,
-            "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv/bin/gs"
+            "path": "/opt/anaconda3/envs/rag-pipeline/bin/gs"
           },
           "pdftoppm": {
             "available": true,
-            "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv/bin/pdftoppm"
+            "path": "/opt/anaconda3/envs/rag-pipeline/bin/pdftoppm"
           },
           "tesseract": {
             "available": true,
@@ -154,6 +154,7 @@
     "bm25_weight": 2.0,
     "enable_lexical_rerank": true,
     "enable_subsection_boost": false,
+    "oracle_labels_in_ranking": false,
     "enable_cross_encoder_rerank": false,
     "cross_encoder_model": null,
     "cross_encoder_topn": 50,
@@ -169,106 +170,113 @@
       10
     ],
     "num_queries": 50,
-    "num_chunks_indexed": 338,
+    "num_chunks_indexed": 349,
     "pipeline_settings": {
-      "source_metrics_path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/Grampian-2020-2021/metrics.json",
+      "source_metrics_path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2020-2021/metrics.json",
       "source_metrics_exists": true,
       "doc_id": "Grampian-2020-2021",
       "corpus_id": "Grampian-2020-2021",
       "report_year": "2020-2021",
-      "preprocess_run_utc": null,
-      "preprocess_git_commit_short": null,
-      "embedding_model_preprocess": null,
+      "preprocess_run_utc": "2026-06-16T09:41:31+00:00",
+      "preprocess_git_commit_short": "3e729e9",
+      "embedding_model_preprocess": "sentence-transformers/all-MiniLM-L6-v2",
       "chunk_size_tokens": 224,
       "chunk_overlap_tokens": 56,
-      "segment_aware_chunking": null,
-      "whole_doc_markdown_mode": null,
-      "markdown_header_carry_forward": null,
-      "markdown_table_injection": null,
+      "segment_aware_chunking": true,
+      "whole_doc_markdown_mode": false,
+      "markdown_header_carry_forward": true,
+      "markdown_table_injection": true,
       "primary_extractor": "pymupdf",
       "min_chunk_words": 20
     },
     "eval_set": {
-      "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/Grampian-2020-2021/eval_set.json",
+      "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2020-2021/eval_set.json",
       "sha1": "c7d102c525e172739ae7f24cd3f398402674f4cd",
       "size_bytes": 38038,
-      "modified_utc": "2026-04-09T08:01:32+00:00",
+      "modified_utc": "2026-06-16T08:45:22+00:00",
       "query_count": 50,
       "meta_dataset_name": "Grampian-2020-2021 Retrieval Gold Set",
       "meta_doc_id": "Grampian-2020-2021",
       "meta_version": null
-    }
+    },
+    "artifact_sha256": {
+      "faiss.index": "e6a47acba14f5e118f8003da493a1c275e88abf20f3f60e12b868661136379a1",
+      "chunk_meta.parquet": "5c7707f48dd8fb569e95b3b2cccfedc83deff96b4b7017a9138f7ae65ef0d0de",
+      "chunks.parquet": "8fc14792b7f296f2a837af46c408736c70ee45bb6bd8b9677ef20c5ec73a1b81",
+      "eval_set.json": "d9e53fe3bfccd32a16f23ac7c4fe029edd4d6bb27e72aa9f3145f356624b6de9"
+    },
+    "verified_manifest": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/results/frozen/gold_eval_artifacts_manifest.json"
   },
   "metrics_by_k": {
     "1": {
       "num_queries": 50,
-      "page_hit_rate_at_k": 0.68,
-      "mean_page_recall_at_k": 0.68,
-      "mean_page_precision_at_k": 0.68,
-      "mean_page_mrr_at_k": 0.68,
-      "chunk_hit_rate_at_k": 0.68,
-      "mean_chunk_precision_at_k": 0.68,
-      "mean_chunk_mrr_at_k": 0.68,
+      "page_hit_rate_at_k": 0.64,
+      "mean_page_recall_at_k": 0.64,
+      "mean_page_precision_at_k": 0.64,
+      "mean_page_mrr_at_k": 0.64,
+      "chunk_hit_rate_at_k": 0.64,
+      "mean_chunk_precision_at_k": 0.64,
+      "mean_chunk_mrr_at_k": 0.64,
       "table_query_count": 11,
       "table_recall_at_k": 0.0,
-      "table_page_recall_at_k": 0.9090909090909091
+      "table_page_recall_at_k": 0.6363636363636364
     },
     "3": {
       "num_queries": 50,
-      "page_hit_rate_at_k": 0.88,
-      "mean_page_recall_at_k": 0.88,
-      "mean_page_precision_at_k": 0.44666666666666666,
-      "mean_page_mrr_at_k": 0.7633333333333334,
-      "chunk_hit_rate_at_k": 0.88,
-      "mean_chunk_precision_at_k": 0.4933333333333334,
-      "mean_chunk_mrr_at_k": 0.7633333333333334,
+      "page_hit_rate_at_k": 0.78,
+      "mean_page_recall_at_k": 0.78,
+      "mean_page_precision_at_k": 0.33333333333333326,
+      "mean_page_mrr_at_k": 0.6966666666666665,
+      "chunk_hit_rate_at_k": 0.78,
+      "mean_chunk_precision_at_k": 0.34666666666666657,
+      "mean_chunk_mrr_at_k": 0.6966666666666665,
       "table_query_count": 11,
-      "table_recall_at_k": 0.45454545454545453,
-      "table_page_recall_at_k": 1.0
+      "table_recall_at_k": 0.0,
+      "table_page_recall_at_k": 0.7272727272727273
     },
     "5": {
       "num_queries": 50,
-      "page_hit_rate_at_k": 0.9,
-      "mean_page_recall_at_k": 0.9,
-      "mean_page_precision_at_k": 0.2573333333333333,
-      "mean_page_mrr_at_k": 0.7683333333333334,
-      "chunk_hit_rate_at_k": 0.9,
-      "mean_chunk_precision_at_k": 0.348,
-      "mean_chunk_mrr_at_k": 0.7673333333333333,
+      "page_hit_rate_at_k": 0.82,
+      "mean_page_recall_at_k": 0.82,
+      "mean_page_precision_at_k": 0.20099999999999998,
+      "mean_page_mrr_at_k": 0.7073333333333331,
+      "chunk_hit_rate_at_k": 0.82,
+      "mean_chunk_precision_at_k": 0.23999999999999996,
+      "mean_chunk_mrr_at_k": 0.7056666666666667,
       "table_query_count": 11,
-      "table_recall_at_k": 0.45454545454545453,
-      "table_page_recall_at_k": 1.0
+      "table_recall_at_k": 0.0,
+      "table_page_recall_at_k": 0.7272727272727273
     },
     "10": {
       "num_queries": 50,
-      "page_hit_rate_at_k": 0.94,
-      "mean_page_recall_at_k": 0.94,
-      "mean_page_precision_at_k": 0.13235714285714287,
-      "mean_page_mrr_at_k": 0.7773333333333333,
-      "chunk_hit_rate_at_k": 0.94,
-      "mean_chunk_precision_at_k": 0.21599999999999997,
-      "mean_chunk_mrr_at_k": 0.774,
+      "page_hit_rate_at_k": 0.9,
+      "mean_page_recall_at_k": 0.9,
+      "mean_page_precision_at_k": 0.11497619047619051,
+      "mean_page_mrr_at_k": 0.7200238095238095,
+      "chunk_hit_rate_at_k": 0.9,
+      "mean_chunk_precision_at_k": 0.14800000000000002,
+      "mean_chunk_mrr_at_k": 0.7165,
       "table_query_count": 11,
-      "table_recall_at_k": 0.6363636363636364,
-      "table_page_recall_at_k": 1.0
+      "table_recall_at_k": 0.0,
+      "table_page_recall_at_k": 0.8181818181818182
     }
   },
   "failure_counts_by_k": {
     "1": {
-      "hit": 34,
-      "missed_top_ranked": 16
+      "hit": 32,
+      "missed_top_ranked": 18
     },
     "3": {
-      "hit": 44,
-      "missed_top_ranked": 6
+      "hit": 39,
+      "missed_top_ranked": 11
     },
     "5": {
-      "hit": 45,
-      "missed_top_ranked": 5
+      "hit": 41,
+      "missed_top_ranked": 9
     },
     "10": {
-      "hit": 47,
-      "missed_top_ranked": 3
+      "hit": 45,
+      "missed_top_ranked": 5
     }
   },
   "leakage_counts_by_k": {

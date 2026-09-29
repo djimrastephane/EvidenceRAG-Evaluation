@@ -1,17 +1,17 @@
 {
   "run_info": {
-    "run_utc": "2026-06-06T14:23:52+00:00",
-    "data_dir": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/Grampian-2023-2024",
+    "run_utc": "2026-09-29T23:28:01+00:00",
+    "data_dir": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2023-2024",
     "method": "hybrid_rrf_dense_bm25",
     "runtime": {
       "python_executable": "/opt/anaconda3/envs/rag-pipeline/bin/python",
       "python_version": "3.11.15",
-      "platform": "macOS-26.5.1-arm64-arm-64bit",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
       "system": "Darwin",
       "machine": "arm64",
-      "cwd": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project",
-      "conda_prefix": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv",
-      "conda_default_env": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv",
+      "cwd": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation",
+      "conda_prefix": "/opt/anaconda3/envs/rag-pipeline",
+      "conda_default_env": "rag-pipeline",
       "virtual_env": null,
       "dependency_report": {
         "modules": {
@@ -96,11 +96,11 @@
         "commands": {
           "gs": {
             "available": true,
-            "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv/bin/gs"
+            "path": "/opt/anaconda3/envs/rag-pipeline/bin/gs"
           },
           "pdftoppm": {
             "available": true,
-            "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv/bin/pdftoppm"
+            "path": "/opt/anaconda3/envs/rag-pipeline/bin/pdftoppm"
           },
           "tesseract": {
             "available": true,
@@ -154,6 +154,7 @@
     "bm25_weight": 2.0,
     "enable_lexical_rerank": true,
     "enable_subsection_boost": false,
+    "oracle_labels_in_ranking": false,
     "enable_cross_encoder_rerank": false,
     "cross_encoder_model": null,
     "cross_encoder_topn": 50,
@@ -171,33 +172,40 @@
     "num_queries": 50,
     "num_chunks_indexed": 381,
     "pipeline_settings": {
-      "source_metrics_path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/Grampian-2023-2024/metrics.json",
+      "source_metrics_path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2023-2024/metrics.json",
       "source_metrics_exists": true,
       "doc_id": "Grampian-2023-2024",
       "corpus_id": "Grampian-2023-2024",
       "report_year": "2023-2024",
-      "preprocess_run_utc": null,
-      "preprocess_git_commit_short": null,
-      "embedding_model_preprocess": null,
+      "preprocess_run_utc": "2026-06-16T09:45:44+00:00",
+      "preprocess_git_commit_short": "3e729e9",
+      "embedding_model_preprocess": "sentence-transformers/all-MiniLM-L6-v2",
       "chunk_size_tokens": 224,
       "chunk_overlap_tokens": 56,
-      "segment_aware_chunking": null,
-      "whole_doc_markdown_mode": null,
-      "markdown_header_carry_forward": null,
-      "markdown_table_injection": null,
+      "segment_aware_chunking": true,
+      "whole_doc_markdown_mode": false,
+      "markdown_header_carry_forward": true,
+      "markdown_table_injection": true,
       "primary_extractor": "pymupdf",
       "min_chunk_words": 20
     },
     "eval_set": {
-      "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/Grampian-2023-2024/eval_set.json",
+      "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2023-2024/eval_set.json",
       "sha1": "f1248fc317b1561c0b2168ebea349b1f03f656ef",
       "size_bytes": 41631,
-      "modified_utc": "2026-04-07T09:26:38+00:00",
+      "modified_utc": "2026-06-16T08:45:22+00:00",
       "query_count": 50,
       "meta_dataset_name": "NHS Grampian 2023-2024 Retrieval Gold Set",
       "meta_doc_id": "Grampian-2023-2024",
       "meta_version": null
-    }
+    },
+    "artifact_sha256": {
+      "faiss.index": "2be97cb9207741d0a2eb59b6d91bae563010fc05f63aa09b0fccabb83d795207",
+      "chunk_meta.parquet": "51303bc521ff168e0c5a734541db27cfd62d8d240741f55b38c4a431bef568a5",
+      "chunks.parquet": "31f4e6affb90e4535444f0bf0fbd36ad59ce3c50c48290dfdcd7cefc568818ac",
+      "eval_set.json": "25abcf342a46a9f049013362b6e97abe68c56c354af53dbc4709b2cc16675c34"
+    },
+    "verified_manifest": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/results/frozen/gold_eval_artifacts_manifest.json"
   },
   "results": [
     {
@@ -221,40 +229,40 @@
         "prefer_evidence_layout": "table",
         "prefer_table_chunks": true
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001"
+            "Grampian-2023-2024:p0027_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26
+            27
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001",
             "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:p0027_002"
+            "Grampian-2023-2024:p0027_002",
+            "Grampian-2023-2024:p0026_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -262,19 +270,19 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26,
-            27
+            27,
+            26
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
-            1,
             0,
-            0
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -284,11 +292,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001",
             "Grampian-2023-2024:p0027_000",
             "Grampian-2023-2024:p0027_002",
-            "Grampian-2023-2024:p0026_000",
-            "Grampian-2023-2024:table_p0026"
+            "Grampian-2023-2024:p0026_004",
+            "Grampian-2023-2024:p0099_002",
+            "Grampian-2023-2024:p0024_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -298,23 +306,25 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
+            27,
             26,
-            27
+            99,
+            24
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.25,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
-            1,
             0,
             0,
             1,
-            1
+            0,
+            0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -322,16 +332,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001",
             "Grampian-2023-2024:p0027_000",
             "Grampian-2023-2024:p0027_002",
-            "Grampian-2023-2024:p0026_000",
-            "Grampian-2023-2024:table_p0026",
+            "Grampian-2023-2024:p0026_004",
             "Grampian-2023-2024:p0099_002",
             "Grampian-2023-2024:p0024_000",
-            "Grampian-2023-2024:p0064_001",
+            "Grampian-2023-2024:p0004_001",
+            "Grampian-2023-2024:p0085_001",
+            "Grampian-2023-2024:p0064_002",
             "Grampian-2023-2024:p0070_000",
-            "Grampian-2023-2024:p0004_001"
+            "Grampian-2023-2024:p0024_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -346,33 +356,34 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26,
             27,
+            26,
             99,
             24,
+            4,
+            85,
             64,
-            70,
-            4
+            70
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.125,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.1,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
-            1,
             0,
             0,
             1,
-            1,
+            0,
+            0,
             0,
             0,
             0,
             0,
             0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -417,40 +428,40 @@
         "prefer_evidence_layout": "table",
         "prefer_table_chunks": true
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001"
+            "Grampian-2023-2024:p0085_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26
+            85
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001",
-            "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:p0027_002"
+            "Grampian-2023-2024:p0085_001",
+            "Grampian-2023-2024:p0027_002",
+            "Grampian-2023-2024:p0027_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -458,33 +469,33 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26,
+            85,
             27
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1,
+            0,
             0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001",
-            "Grampian-2023-2024:p0027_000",
+            "Grampian-2023-2024:p0085_001",
             "Grampian-2023-2024:p0027_002",
-            "Grampian-2023-2024:table_p0026",
-            "Grampian-2023-2024:p0074_000"
+            "Grampian-2023-2024:p0027_000",
+            "Grampian-2023-2024:p0026_004",
+            "Grampian-2023-2024:p0024_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -494,24 +505,25 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26,
+            85,
             27,
-            74
+            26,
+            24
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.25,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.25,
           "chunk_hit_flags": [
-            1,
+            0,
             0,
             0,
             1,
             0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -519,16 +531,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001",
-            "Grampian-2023-2024:p0027_000",
+            "Grampian-2023-2024:p0085_001",
             "Grampian-2023-2024:p0027_002",
-            "Grampian-2023-2024:table_p0026",
-            "Grampian-2023-2024:p0074_000",
+            "Grampian-2023-2024:p0027_000",
+            "Grampian-2023-2024:p0026_004",
             "Grampian-2023-2024:p0024_000",
             "Grampian-2023-2024:p0043_000",
             "Grampian-2023-2024:p0100_000",
-            "Grampian-2023-2024:p0024_001",
-            "Grampian-2023-2024:p0033_001"
+            "Grampian-2023-2024:p0033_001",
+            "Grampian-2023-2024:p0116_000",
+            "Grampian-2023-2024:p0099_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -543,22 +555,24 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26,
+            85,
             27,
-            74,
+            26,
             24,
             43,
             100,
-            33
+            33,
+            116,
+            99
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.1111111111111111,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.1,
+          "chunk_mrr_at_k": 0.25,
           "chunk_hit_flags": [
-            1,
+            0,
             0,
             0,
             1,
@@ -569,7 +583,7 @@
             0,
             0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -598,40 +612,40 @@
         "prefer_evidence_layout": "table",
         "prefer_table_chunks": true
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001"
+            "Grampian-2023-2024:p0027_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26
+            27
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001",
             "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:p0027_002"
+            "Grampian-2023-2024:p0027_002",
+            "Grampian-2023-2024:p0026_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -639,19 +653,19 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26,
-            27
+            27,
+            26
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
-            1,
             0,
-            0
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -661,11 +675,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001",
             "Grampian-2023-2024:p0027_000",
             "Grampian-2023-2024:p0027_002",
-            "Grampian-2023-2024:p0026_000",
-            "Grampian-2023-2024:table_p0026"
+            "Grampian-2023-2024:p0026_004",
+            "Grampian-2023-2024:p0099_002",
+            "Grampian-2023-2024:p0026_005"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -675,23 +689,24 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
+            27,
             26,
-            27
+            99
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.4,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
-            1,
             0,
             0,
             1,
+            0,
             1
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -699,16 +714,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001",
             "Grampian-2023-2024:p0027_000",
             "Grampian-2023-2024:p0027_002",
-            "Grampian-2023-2024:p0026_000",
-            "Grampian-2023-2024:table_p0026",
-            "Grampian-2023-2024:p0028_000",
+            "Grampian-2023-2024:p0026_004",
             "Grampian-2023-2024:p0099_002",
+            "Grampian-2023-2024:p0026_005",
+            "Grampian-2023-2024:p0004_000",
             "Grampian-2023-2024:p0024_000",
             "Grampian-2023-2024:p0070_000",
-            "Grampian-2023-2024:p0004_000"
+            "Grampian-2023-2024:p0028_001",
+            "Grampian-2023-2024:p0064_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -723,25 +738,26 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26,
             27,
-            28,
+            26,
             99,
+            4,
             24,
             70,
-            4
+            28,
+            64
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.125,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
-            1,
             0,
             0,
             1,
+            0,
             1,
             0,
             0,
@@ -749,7 +765,7 @@
             0,
             0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -778,40 +794,40 @@
         "prefer_evidence_layout": "paragraph",
         "prefer_table_chunks": false
       },
-      "page_hit": 0,
-      "failure_type": "FP2_MISSED_TOP_RANK",
-      "failure_stage": "retrieval",
+      "page_hit": 1,
+      "failure_type": "HIT",
+      "failure_stage": "none",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:table_p0026"
+            "Grampian-2023-2024:p0027_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26
+            27
           ],
-          "page_recall_at_k": 0.0,
-          "page_precision_at_k": 0.0,
-          "page_mrr_at_k": 0.0,
-          "chunk_hit_at_k": 0.0,
-          "chunk_precision_at_k": 0.0,
-          "chunk_mrr_at_k": 0.0,
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 1.0,
+          "page_mrr_at_k": 1.0,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 1.0,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "missed_top_ranked",
+          "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:table_p0026",
-            "Grampian-2023-2024:p0026_001",
-            "Grampian-2023-2024:p0027_000"
+            "Grampian-2023-2024:p0027_000",
+            "Grampian-2023-2024:p0027_002",
+            "Grampian-2023-2024:p0026_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -819,16 +835,55 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26,
-            27
+            27,
+            26
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 0.3333333333333333,
+          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
+            1,
+            1,
+            0
+          ],
+          "table_chunk_hit_at_k": 0.0,
+          "failure_stage": "hit",
+          "leakage_count_top_k": 0,
+          "leakage_doc_ids_top_k": [],
+          "leakage_rate_top_k": 0.0
+        },
+        "5": {
+          "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0027_000",
+            "Grampian-2023-2024:p0027_002",
+            "Grampian-2023-2024:p0026_004",
+            "Grampian-2023-2024:p0024_000",
+            "Grampian-2023-2024:p0027_001"
+          ],
+          "retrieved_doc_ids_top_k": [
+            "Grampian-2023-2024",
+            "Grampian-2023-2024",
+            "Grampian-2023-2024",
+            "Grampian-2023-2024",
+            "Grampian-2023-2024"
+          ],
+          "retrieved_pages_ranked": [
+            27,
+            26,
+            24
+          ],
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 1.0,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 0.6,
+          "chunk_mrr_at_k": 1.0,
+          "chunk_hit_flags": [
+            1,
+            1,
             0,
             0,
             1
@@ -839,56 +894,18 @@
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
-        "5": {
-          "retrieved_chunk_ids": [
-            "Grampian-2023-2024:table_p0026",
-            "Grampian-2023-2024:p0026_001",
-            "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:p0027_002",
-            "Grampian-2023-2024:p0026_000"
-          ],
-          "retrieved_doc_ids_top_k": [
-            "Grampian-2023-2024",
-            "Grampian-2023-2024",
-            "Grampian-2023-2024",
-            "Grampian-2023-2024",
-            "Grampian-2023-2024"
-          ],
-          "retrieved_pages_ranked": [
-            26,
-            27
-          ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 0.5,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 0.3333333333333333,
-          "chunk_hit_flags": [
-            0,
-            0,
-            1,
-            1,
-            0
-          ],
-          "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
-          "leakage_count_top_k": 0,
-          "leakage_doc_ids_top_k": [],
-          "leakage_rate_top_k": 0.0
-        },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:table_p0026",
-            "Grampian-2023-2024:p0026_001",
             "Grampian-2023-2024:p0027_000",
             "Grampian-2023-2024:p0027_002",
-            "Grampian-2023-2024:p0026_000",
+            "Grampian-2023-2024:p0026_004",
             "Grampian-2023-2024:p0024_000",
-            "Grampian-2023-2024:p0024_001",
             "Grampian-2023-2024:p0027_001",
-            "Grampian-2023-2024:p0028_000",
-            "Grampian-2023-2024:p0070_000"
+            "Grampian-2023-2024:p0070_000",
+            "Grampian-2023-2024:p0099_003",
+            "Grampian-2023-2024:p0147_001",
+            "Grampian-2023-2024:p0099_002",
+            "Grampian-2023-2024:p0025_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -903,27 +920,29 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26,
             27,
+            26,
             24,
-            28,
-            70
+            70,
+            99,
+            147,
+            25
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.2,
-          "page_mrr_at_k": 0.5,
+          "page_precision_at_k": 0.14285714285714285,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.3,
-          "chunk_mrr_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
-            0,
             1,
             1,
             0,
             0,
-            0,
             1,
+            0,
+            0,
+            0,
             0,
             0
           ],
@@ -1066,10 +1085,10 @@
             "Grampian-2023-2024:p0004_000",
             "Grampian-2023-2024:p0033_001",
             "Grampian-2023-2024:p0013_001",
-            "Grampian-2023-2024:p0027_002",
             "Grampian-2023-2024:p0039_001",
+            "Grampian-2023-2024:p0027_002",
+            "Grampian-2023-2024:p0053_002",
             "Grampian-2023-2024:p0028_000",
-            "Grampian-2023-2024:p0053_001",
             "Grampian-2023-2024:p0153_001"
           ],
           "retrieved_doc_ids_top_k": [
@@ -1091,8 +1110,8 @@
             33,
             13,
             27,
-            28,
             53,
+            28,
             153
           ],
           "page_recall_at_k": 1.0,
@@ -1100,15 +1119,15 @@
           "page_mrr_at_k": 0.16666666666666666,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.1,
-          "chunk_mrr_at_k": 0.16666666666666666,
+          "chunk_mrr_at_k": 0.14285714285714285,
           "chunk_hit_flags": [
             0,
             0,
             0,
             0,
             0,
-            1,
             0,
+            1,
             0,
             0,
             0
@@ -1142,27 +1161,60 @@
         "prefer_evidence_layout": "table",
         "prefer_table_chunks": true
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001"
+            "Grampian-2023-2024:p0027_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
+            27
+          ],
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
+          "chunk_hit_flags": [
+            0
+          ],
+          "table_chunk_hit_at_k": 0.0,
+          "failure_stage": "missed_top_ranked",
+          "leakage_count_top_k": 0,
+          "leakage_doc_ids_top_k": [],
+          "leakage_rate_top_k": 0.0
+        },
+        "3": {
+          "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0027_000",
+            "Grampian-2023-2024:table_p0118",
+            "Grampian-2023-2024:p0026_004"
+          ],
+          "retrieved_doc_ids_top_k": [
+            "Grampian-2023-2024",
+            "Grampian-2023-2024",
+            "Grampian-2023-2024"
+          ],
+          "retrieved_pages_ranked": [
+            27,
+            118,
             26
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
+            0,
+            0,
             1
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -1171,45 +1223,13 @@
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
-        "3": {
-          "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001",
-            "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:table_p0026"
-          ],
-          "retrieved_doc_ids_top_k": [
-            "Grampian-2023-2024",
-            "Grampian-2023-2024",
-            "Grampian-2023-2024"
-          ],
-          "retrieved_pages_ranked": [
-            26,
-            27
-          ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
-          "chunk_mrr_at_k": 1.0,
-          "chunk_hit_flags": [
-            1,
-            0,
-            1
-          ],
-          "table_chunk_hit_at_k": 1.0,
-          "failure_stage": "hit",
-          "leakage_count_top_k": 0,
-          "leakage_doc_ids_top_k": [],
-          "leakage_rate_top_k": 0.0
-        },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001",
             "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:table_p0026",
             "Grampian-2023-2024:table_p0118",
-            "Grampian-2023-2024:p0116_000"
+            "Grampian-2023-2024:p0026_004",
+            "Grampian-2023-2024:p0116_000",
+            "Grampian-2023-2024:p0111_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -1219,25 +1239,26 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26,
             27,
             118,
-            116
+            26,
+            116,
+            111
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.2,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
-            1,
+            0,
             0,
             1,
             0,
             0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -1245,16 +1266,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001",
             "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:table_p0026",
             "Grampian-2023-2024:table_p0118",
+            "Grampian-2023-2024:p0026_004",
             "Grampian-2023-2024:p0116_000",
             "Grampian-2023-2024:p0111_000",
-            "Grampian-2023-2024:p0026_000",
             "Grampian-2023-2024:p0027_002",
             "Grampian-2023-2024:table_p0146",
-            "Grampian-2023-2024:p0099_002"
+            "Grampian-2023-2024:p0099_002",
+            "Grampian-2023-2024:table_p0132",
+            "Grampian-2023-2024:p0060_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -1269,33 +1290,35 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26,
             27,
             118,
+            26,
             116,
             111,
             146,
-            99
+            99,
+            132,
+            60
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.1111111111111111,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.1,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
-            1,
-            0,
-            1,
-            0,
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -1330,7 +1353,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0029_000"
+            "Grampian-2023-2024:p0029_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -1355,9 +1378,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0029_000",
+            "Grampian-2023-2024:p0029_001",
             "Grampian-2023-2024:p0154_003",
-            "Grampian-2023-2024:p0023_001"
+            "Grampian-2023-2024:p0154_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -1366,11 +1389,10 @@
           ],
           "retrieved_pages_ranked": [
             29,
-            154,
-            23
+            154
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
+          "page_precision_at_k": 0.5,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.3333333333333333,
@@ -1388,11 +1410,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0029_000",
+            "Grampian-2023-2024:p0029_001",
             "Grampian-2023-2024:p0154_003",
-            "Grampian-2023-2024:p0023_001",
-            "Grampian-2023-2024:p0022_003",
-            "Grampian-2023-2024:p0154_002"
+            "Grampian-2023-2024:p0154_002",
+            "Grampian-2023-2024:p0030_002",
+            "Grampian-2023-2024:p0031_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -1404,8 +1426,8 @@
           "retrieved_pages_ranked": [
             29,
             154,
-            23,
-            22
+            30,
+            31
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -1428,16 +1450,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0029_000",
+            "Grampian-2023-2024:p0029_001",
             "Grampian-2023-2024:p0154_003",
-            "Grampian-2023-2024:p0023_001",
-            "Grampian-2023-2024:p0022_003",
             "Grampian-2023-2024:p0154_002",
+            "Grampian-2023-2024:p0030_002",
             "Grampian-2023-2024:p0031_001",
-            "Grampian-2023-2024:p0145_002",
-            "Grampian-2023-2024:p0029_002",
             "Grampian-2023-2024:p0031_000",
-            "Grampian-2023-2024:p0030_001"
+            "Grampian-2023-2024:p0145_002",
+            "Grampian-2023-2024:p0147_000",
+            "Grampian-2023-2024:p0023_000",
+            "Grampian-2023-2024:p0033_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -1454,17 +1476,18 @@
           "retrieved_pages_ranked": [
             29,
             154,
-            23,
-            22,
+            30,
             31,
             145,
-            30
+            147,
+            23,
+            33
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
+          "page_precision_at_k": 0.125,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
+          "chunk_precision_at_k": 0.1,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
@@ -1474,7 +1497,7 @@
             0,
             0,
             0,
-            1,
+            0,
             0,
             0
           ],
@@ -1540,7 +1563,7 @@
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0085_001",
             "Grampian-2023-2024:p0004_001",
-            "Grampian-2023-2024:p0122_000"
+            "Grampian-2023-2024:p0004_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -1549,8 +1572,7 @@
           ],
           "retrieved_pages_ranked": [
             85,
-            4,
-            122
+            4
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -1573,9 +1595,9 @@
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0085_001",
             "Grampian-2023-2024:p0004_001",
-            "Grampian-2023-2024:p0122_000",
             "Grampian-2023-2024:p0004_000",
-            "Grampian-2023-2024:p0040_001"
+            "Grampian-2023-2024:p0040_001",
+            "Grampian-2023-2024:p0079_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -1587,8 +1609,8 @@
           "retrieved_pages_ranked": [
             85,
             4,
-            122,
-            40
+            40,
+            79
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -1613,14 +1635,14 @@
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0085_001",
             "Grampian-2023-2024:p0004_001",
-            "Grampian-2023-2024:p0122_000",
             "Grampian-2023-2024:p0004_000",
             "Grampian-2023-2024:p0040_001",
             "Grampian-2023-2024:p0079_000",
-            "Grampian-2023-2024:p0145_002",
             "Grampian-2023-2024:p0003_000",
-            "Grampian-2023-2024:p0122_003",
-            "Grampian-2023-2024:p0087_000"
+            "Grampian-2023-2024:p0145_002",
+            "Grampian-2023-2024:p0006_000",
+            "Grampian-2023-2024:p0062_000",
+            "Grampian-2023-2024:p0013_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -1637,12 +1659,13 @@
           "retrieved_pages_ranked": [
             85,
             4,
-            122,
             40,
             79,
-            145,
             3,
-            87
+            145,
+            6,
+            62,
+            13
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -1691,40 +1714,40 @@
         "prefer_evidence_layout": "paragraph",
         "prefer_table_chunks": false
       },
-      "page_hit": 0,
-      "failure_type": "FP2_MISSED_TOP_RANK",
-      "failure_stage": "retrieval",
+      "page_hit": 1,
+      "failure_type": "HIT",
+      "failure_stage": "none",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0024_001"
+            "Grampian-2023-2024:p0027_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            24
+            27
           ],
-          "page_recall_at_k": 0.0,
-          "page_precision_at_k": 0.0,
-          "page_mrr_at_k": 0.0,
-          "chunk_hit_at_k": 0.0,
-          "chunk_precision_at_k": 0.0,
-          "chunk_mrr_at_k": 0.0,
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 1.0,
+          "page_mrr_at_k": 1.0,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 1.0,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "missed_top_ranked",
+          "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0024_001",
             "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:p0070_000"
+            "Grampian-2023-2024:p0070_000",
+            "Grampian-2023-2024:p0027_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -1732,20 +1755,19 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            24,
             27,
             70
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 0.5,
+          "page_precision_at_k": 0.5,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
             1,
-            0
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -1755,11 +1777,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0024_001",
             "Grampian-2023-2024:p0027_000",
             "Grampian-2023-2024:p0070_000",
             "Grampian-2023-2024:p0027_001",
-            "Grampian-2023-2024:p0062_002"
+            "Grampian-2023-2024:p0062_002",
+            "Grampian-2023-2024:p0028_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -1769,22 +1791,22 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            24,
             27,
             70,
-            62
+            62,
+            28
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
             1,
             0,
             1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -1795,7 +1817,6 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0024_001",
             "Grampian-2023-2024:p0027_000",
             "Grampian-2023-2024:p0070_000",
             "Grampian-2023-2024:p0027_001",
@@ -1804,7 +1825,8 @@
             "Grampian-2023-2024:p0062_001",
             "Grampian-2023-2024:p0027_002",
             "Grampian-2023-2024:p0039_000",
-            "Grampian-2023-2024:p0025_000"
+            "Grampian-2023-2024:p0024_001",
+            "Grampian-2023-2024:p0025_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -1819,22 +1841,21 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            24,
             27,
             70,
             62,
             28,
             39,
+            24,
             25
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.14285714285714285,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.3,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
             1,
             0,
             1,
@@ -1842,6 +1863,7 @@
             0,
             0,
             1,
+            0,
             0,
             0
           ],
@@ -1874,40 +1896,40 @@
         "prefer_evidence_layout": "paragraph",
         "prefer_table_chunks": false
       },
-      "page_hit": 0,
-      "failure_type": "FP2_MISSED_TOP_RANK",
-      "failure_stage": "retrieval",
+      "page_hit": 1,
+      "failure_type": "HIT",
+      "failure_stage": "none",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0122_000"
+            "Grampian-2023-2024:p0029_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            122
+            29
           ],
-          "page_recall_at_k": 0.0,
-          "page_precision_at_k": 0.0,
-          "page_mrr_at_k": 0.0,
-          "chunk_hit_at_k": 0.0,
-          "chunk_precision_at_k": 0.0,
-          "chunk_mrr_at_k": 0.0,
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 1.0,
+          "page_mrr_at_k": 1.0,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 1.0,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "missed_top_ranked",
+          "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0122_000",
+            "Grampian-2023-2024:p0029_002",
             "Grampian-2023-2024:p0029_001",
-            "Grampian-2023-2024:p0029_002"
+            "Grampian-2023-2024:p0073_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -1915,19 +1937,19 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            122,
-            29
+            29,
+            73
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.6666666666666666,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
             1,
-            1
+            1,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -1937,11 +1959,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0122_000",
-            "Grampian-2023-2024:p0029_001",
             "Grampian-2023-2024:p0029_002",
+            "Grampian-2023-2024:p0029_001",
             "Grampian-2023-2024:p0073_000",
-            "Grampian-2023-2024:p0029_000"
+            "Grampian-2023-2024:p0081_001",
+            "Grampian-2023-2024:p0116_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -1951,22 +1973,23 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            122,
             29,
-            73
+            73,
+            81,
+            116
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 0.5,
+          "page_precision_at_k": 0.25,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_precision_at_k": 0.4,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
             1,
             1,
             0,
-            1
+            0,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -1976,16 +1999,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0122_000",
-            "Grampian-2023-2024:p0029_001",
             "Grampian-2023-2024:p0029_002",
+            "Grampian-2023-2024:p0029_001",
             "Grampian-2023-2024:p0073_000",
-            "Grampian-2023-2024:p0029_000",
             "Grampian-2023-2024:p0081_001",
             "Grampian-2023-2024:p0116_001",
             "Grampian-2023-2024:p0117_000",
             "Grampian-2023-2024:p0110_002",
-            "Grampian-2023-2024:p0064_001"
+            "Grampian-2023-2024:p0030_002",
+            "Grampian-2023-2024:p0081_000",
+            "Grampian-2023-2024:table_p0157"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -2000,27 +2023,27 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            122,
             29,
             73,
             81,
             116,
             117,
             110,
-            64
+            30,
+            157
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
             1,
             1,
             0,
-            1,
+            0,
+            0,
             0,
             0,
             0,
@@ -2088,8 +2111,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0116_000",
-            "Grampian-2023-2024:p0088_001",
-            "Grampian-2023-2024:p0116_001"
+            "Grampian-2023-2024:p0116_001",
+            "Grampian-2023-2024:p0138_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -2098,7 +2121,7 @@
           ],
           "retrieved_pages_ranked": [
             116,
-            88
+            138
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -2120,10 +2143,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0116_000",
-            "Grampian-2023-2024:p0088_001",
             "Grampian-2023-2024:p0116_001",
             "Grampian-2023-2024:p0138_000",
-            "Grampian-2023-2024:p0137_000"
+            "Grampian-2023-2024:p0138_001",
+            "Grampian-2023-2024:p0030_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -2134,25 +2157,24 @@
           ],
           "retrieved_pages_ranked": [
             116,
-            88,
             138,
-            137
+            30
           ],
-          "page_recall_at_k": 0.0,
-          "page_precision_at_k": 0.0,
-          "page_mrr_at_k": 0.0,
-          "chunk_hit_at_k": 0.0,
-          "chunk_precision_at_k": 0.0,
-          "chunk_mrr_at_k": 0.0,
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 0.3333333333333333,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.2,
           "chunk_hit_flags": [
             0,
             0,
             0,
             0,
-            0
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "missed_top_ranked",
+          "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
@@ -2160,15 +2182,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0116_000",
-            "Grampian-2023-2024:p0088_001",
             "Grampian-2023-2024:p0116_001",
             "Grampian-2023-2024:p0138_000",
-            "Grampian-2023-2024:p0137_000",
             "Grampian-2023-2024:p0138_001",
-            "Grampian-2023-2024:p0088_000",
             "Grampian-2023-2024:p0030_000",
+            "Grampian-2023-2024:p0137_000",
+            "Grampian-2023-2024:p0029_003",
             "Grampian-2023-2024:p0110_002",
-            "Grampian-2023-2024:p0110_003"
+            "Grampian-2023-2024:p0116_002",
+            "Grampian-2023-2024:p0147_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -2184,27 +2206,28 @@
           ],
           "retrieved_pages_ranked": [
             116,
-            88,
             138,
-            137,
             30,
-            110
+            137,
+            29,
+            110,
+            147
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.16666666666666666,
-          "page_mrr_at_k": 0.2,
+          "page_precision_at_k": 0.14285714285714285,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.1,
-          "chunk_mrr_at_k": 0.125,
+          "chunk_mrr_at_k": 0.2,
           "chunk_hit_flags": [
             0,
             0,
             0,
             0,
-            0,
-            0,
-            0,
             1,
+            0,
+            0,
+            0,
             0,
             0
           ],
@@ -2237,39 +2260,39 @@
         "prefer_evidence_layout": "paragraph",
         "prefer_table_chunks": false
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0023_001"
+            "Grampian-2023-2024:p0154_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            23
+            154
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0023_001",
             "Grampian-2023-2024:p0154_001",
+            "Grampian-2023-2024:p0154_003",
             "Grampian-2023-2024:p0154_002"
           ],
           "retrieved_doc_ids_top_k": [
@@ -2278,33 +2301,32 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            23,
             154
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1,
+            0,
             0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0023_001",
             "Grampian-2023-2024:p0154_001",
-            "Grampian-2023-2024:p0154_002",
             "Grampian-2023-2024:p0154_003",
-            "Grampian-2023-2024:table_p0155"
+            "Grampian-2023-2024:p0154_002",
+            "Grampian-2023-2024:table_p0155",
+            "Grampian-2023-2024:p0023_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -2314,22 +2336,22 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            23,
             154,
-            155
+            155,
+            23
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 1.0,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_mrr_at_k": 0.2,
           "chunk_hit_flags": [
-            1,
             0,
             0,
             0,
-            0
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -2339,16 +2361,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0023_001",
             "Grampian-2023-2024:p0154_001",
-            "Grampian-2023-2024:p0154_002",
             "Grampian-2023-2024:p0154_003",
+            "Grampian-2023-2024:p0154_002",
             "Grampian-2023-2024:table_p0155",
-            "Grampian-2023-2024:p0022_002",
             "Grampian-2023-2024:p0023_000",
-            "Grampian-2023-2024:p0022_003",
-            "Grampian-2023-2024:p0022_001",
-            "Grampian-2023-2024:p0033_001"
+            "Grampian-2023-2024:p0023_001",
+            "Grampian-2023-2024:p0033_001",
+            "Grampian-2023-2024:p0100_001",
+            "Grampian-2023-2024:p0106_001",
+            "Grampian-2023-2024:table_p0094"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -2363,26 +2385,28 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            23,
             154,
             155,
-            22,
-            33
+            23,
+            33,
+            100,
+            106,
+            94
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.2,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.14285714285714285,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_mrr_at_k": 0.2,
           "chunk_hit_flags": [
-            1,
-            0,
             0,
             0,
             0,
             0,
             1,
+            1,
+            0,
             0,
             0,
             0
@@ -2431,40 +2455,40 @@
         "prefer_evidence_layout": "paragraph",
         "prefer_table_chunks": false
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0005_000"
+            "Grampian-2023-2024:p0084_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            5
+            84
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0005_000",
             "Grampian-2023-2024:p0084_002",
-            "Grampian-2023-2024:p0084_001"
+            "Grampian-2023-2024:p0085_001",
+            "Grampian-2023-2024:p0005_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -2472,19 +2496,20 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            5,
-            84
+            84,
+            85,
+            5
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
-            1,
             0,
-            0
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -2494,11 +2519,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0005_000",
             "Grampian-2023-2024:p0084_002",
+            "Grampian-2023-2024:p0085_001",
+            "Grampian-2023-2024:p0005_000",
             "Grampian-2023-2024:p0084_001",
-            "Grampian-2023-2024:p0154_002",
-            "Grampian-2023-2024:p0048_002"
+            "Grampian-2023-2024:p0154_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -2508,21 +2533,21 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            5,
             84,
-            154,
-            48
+            85,
+            5,
+            154
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
-          "page_mrr_at_k": 1.0,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
+            0,
+            0,
             1,
-            0,
-            0,
             0,
             0
           ],
@@ -2534,16 +2559,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0005_000",
             "Grampian-2023-2024:p0084_002",
+            "Grampian-2023-2024:p0085_001",
+            "Grampian-2023-2024:p0005_000",
             "Grampian-2023-2024:p0084_001",
             "Grampian-2023-2024:p0154_002",
             "Grampian-2023-2024:p0048_002",
             "Grampian-2023-2024:p0004_000",
-            "Grampian-2023-2024:p0085_000",
-            "Grampian-2023-2024:p0074_000",
             "Grampian-2023-2024:p0081_000",
-            "Grampian-2023-2024:p0078_001"
+            "Grampian-2023-2024:p0078_001",
+            "Grampian-2023-2024:p0034_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -2558,26 +2583,26 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            5,
             84,
+            85,
+            5,
             154,
             48,
             4,
-            85,
-            74,
             81,
-            78
+            78,
+            34
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.1111111111111111,
-          "page_mrr_at_k": 1.0,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.1,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
+            0,
+            0,
             1,
-            0,
-            0,
             0,
             0,
             0,
@@ -2621,13 +2646,13 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001"
+            "Grampian-2023-2024:p0030_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26
+            30
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -2646,9 +2671,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001",
+            "Grampian-2023-2024:p0030_002",
             "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:p0031_001"
+            "Grampian-2023-2024:p0027_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -2656,9 +2681,8 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26,
-            27,
-            31
+            30,
+            27
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -2679,11 +2703,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001",
+            "Grampian-2023-2024:p0030_002",
             "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:p0031_001",
-            "Grampian-2023-2024:p0030_001",
-            "Grampian-2023-2024:table_p0026"
+            "Grampian-2023-2024:p0027_002",
+            "Grampian-2023-2024:p0026_004",
+            "Grampian-2023-2024:p0031_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -2693,10 +2717,10 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26,
+            30,
             27,
-            31,
-            30
+            26,
+            31
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -2719,16 +2743,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001",
-            "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:p0031_001",
-            "Grampian-2023-2024:p0030_001",
-            "Grampian-2023-2024:table_p0026",
-            "Grampian-2023-2024:p0027_002",
             "Grampian-2023-2024:p0030_002",
-            "Grampian-2023-2024:p0029_000",
-            "Grampian-2023-2024:p0031_002",
-            "Grampian-2023-2024:p0100_000"
+            "Grampian-2023-2024:p0027_000",
+            "Grampian-2023-2024:p0027_002",
+            "Grampian-2023-2024:p0026_004",
+            "Grampian-2023-2024:p0031_003",
+            "Grampian-2023-2024:p0029_001",
+            "Grampian-2023-2024:p0100_000",
+            "Grampian-2023-2024:table_p0118",
+            "Grampian-2023-2024:p0031_001",
+            "Grampian-2023-2024:table_p0129"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -2743,19 +2767,21 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26,
-            27,
-            31,
             30,
+            27,
+            26,
+            31,
             29,
-            100
+            100,
+            118,
+            129
           ],
-          "page_recall_at_k": 0.0,
-          "page_precision_at_k": 0.0,
-          "page_mrr_at_k": 0.0,
-          "chunk_hit_at_k": 0.0,
-          "chunk_precision_at_k": 0.0,
-          "chunk_mrr_at_k": 0.0,
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 0.125,
+          "page_mrr_at_k": 0.14285714285714285,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 0.1,
+          "chunk_mrr_at_k": 0.125,
           "chunk_hit_flags": [
             0,
             0,
@@ -2764,12 +2790,12 @@
             0,
             0,
             0,
-            0,
+            1,
             0,
             0
           ],
-          "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "missed_top_ranked",
+          "table_chunk_hit_at_k": 1.0,
+          "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
@@ -2803,7 +2829,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0028_001"
+            "Grampian-2023-2024:p0028_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -2828,9 +2854,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0028_002",
             "Grampian-2023-2024:p0028_001",
-            "Grampian-2023-2024:p0004_001",
-            "Grampian-2023-2024:p0004_000"
+            "Grampian-2023-2024:p0004_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -2845,11 +2871,11 @@
           "page_precision_at_k": 0.5,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3333333333333333,
+          "chunk_precision_at_k": 0.6666666666666666,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            0,
+            1,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -2860,11 +2886,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0028_002",
             "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0004_001",
             "Grampian-2023-2024:p0004_000",
-            "Grampian-2023-2024:p0037_000",
-            "Grampian-2023-2024:p0033_001"
+            "Grampian-2023-2024:p0037_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -2876,18 +2902,17 @@
           "retrieved_pages_ranked": [
             28,
             4,
-            37,
-            33
+            37
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
+          "chunk_precision_at_k": 0.4,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            0,
+            1,
             0,
             0,
             0
@@ -2900,16 +2925,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0028_002",
             "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0004_001",
             "Grampian-2023-2024:p0004_000",
             "Grampian-2023-2024:p0037_000",
+            "Grampian-2023-2024:p0026_004",
             "Grampian-2023-2024:p0033_001",
-            "Grampian-2023-2024:p0027_000",
             "Grampian-2023-2024:p0027_002",
-            "Grampian-2023-2024:p0066_000",
-            "Grampian-2023-2024:p0043_000",
-            "Grampian-2023-2024:p0070_000"
+            "Grampian-2023-2024:p0027_000",
+            "Grampian-2023-2024:p0043_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -2927,21 +2952,20 @@
             28,
             4,
             37,
+            26,
             33,
             27,
-            66,
-            43,
-            70
+            43
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
+          "page_precision_at_k": 0.14285714285714285,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.1,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            0,
+            1,
             0,
             0,
             0,
@@ -3046,7 +3070,7 @@
             "Grampian-2023-2024:p0029_000",
             "Grampian-2023-2024:p0004_001",
             "Grampian-2023-2024:p0004_000",
-            "Grampian-2023-2024:p0028_001",
+            "Grampian-2023-2024:p0028_002",
             "Grampian-2023-2024:p0004_002"
           ],
           "retrieved_doc_ids_top_k": [
@@ -3085,13 +3109,13 @@
             "Grampian-2023-2024:p0029_000",
             "Grampian-2023-2024:p0004_001",
             "Grampian-2023-2024:p0004_000",
-            "Grampian-2023-2024:p0028_001",
-            "Grampian-2023-2024:p0004_002",
             "Grampian-2023-2024:p0028_002",
+            "Grampian-2023-2024:p0004_002",
             "Grampian-2023-2024:p0043_000",
+            "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:p0131_000",
-            "Grampian-2023-2024:table_p0118"
+            "Grampian-2023-2024:table_p0118",
+            "Grampian-2023-2024:p0014_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -3111,8 +3135,8 @@
             28,
             43,
             27,
-            131,
-            118
+            118,
+            14
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.14285714285714285,
@@ -3167,7 +3191,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0028_001"
+            "Grampian-2023-2024:p0028_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -3192,47 +3216,11 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0028_001",
-            "Grampian-2023-2024:p0028_002",
-            "Grampian-2023-2024:p0004_001"
-          ],
-          "retrieved_doc_ids_top_k": [
-            "Grampian-2023-2024",
-            "Grampian-2023-2024",
-            "Grampian-2023-2024"
-          ],
-          "retrieved_pages_ranked": [
-            28,
-            4
-          ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
-          "chunk_mrr_at_k": 1.0,
-          "chunk_hit_flags": [
-            1,
-            1,
-            0
-          ],
-          "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
-          "leakage_count_top_k": 0,
-          "leakage_doc_ids_top_k": [],
-          "leakage_rate_top_k": 0.0
-        },
-        "5": {
-          "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0028_002",
             "Grampian-2023-2024:p0004_001",
-            "Grampian-2023-2024:p0066_000",
-            "Grampian-2023-2024:p0004_000"
+            "Grampian-2023-2024:p0066_000"
           ],
           "retrieved_doc_ids_top_k": [
-            "Grampian-2023-2024",
-            "Grampian-2023-2024",
             "Grampian-2023-2024",
             "Grampian-2023-2024",
             "Grampian-2023-2024"
@@ -3246,11 +3234,49 @@
           "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
+            0,
+            0
+          ],
+          "table_chunk_hit_at_k": 0.0,
+          "failure_stage": "hit",
+          "leakage_count_top_k": 0,
+          "leakage_doc_ids_top_k": [],
+          "leakage_rate_top_k": 0.0
+        },
+        "5": {
+          "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0028_002",
+            "Grampian-2023-2024:p0004_001",
+            "Grampian-2023-2024:p0066_000",
+            "Grampian-2023-2024:p0004_000",
+            "Grampian-2023-2024:p0023_000"
+          ],
+          "retrieved_doc_ids_top_k": [
+            "Grampian-2023-2024",
+            "Grampian-2023-2024",
+            "Grampian-2023-2024",
+            "Grampian-2023-2024",
+            "Grampian-2023-2024"
+          ],
+          "retrieved_pages_ranked": [
+            28,
+            4,
+            66,
+            23
+          ],
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 0.25,
+          "page_mrr_at_k": 1.0,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 1.0,
+          "chunk_hit_flags": [
             1,
+            0,
             0,
             0,
             0
@@ -3263,16 +3289,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0028_002",
             "Grampian-2023-2024:p0004_001",
             "Grampian-2023-2024:p0066_000",
             "Grampian-2023-2024:p0004_000",
             "Grampian-2023-2024:p0023_000",
+            "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0027_000",
             "Grampian-2023-2024:p0011_000",
             "Grampian-2023-2024:p0008_000",
-            "Grampian-2023-2024:p0081_001"
+            "Grampian-2023-2024:p0019_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -3294,7 +3320,7 @@
             27,
             11,
             8,
-            81
+            19
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
@@ -3304,11 +3330,11 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
+            0,
+            0,
+            0,
+            0,
             1,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -3349,7 +3375,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0028_001"
+            "Grampian-2023-2024:p0028_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -3374,9 +3400,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0028_002",
-            "Grampian-2023-2024:p0004_000"
+            "Grampian-2023-2024:p0004_000",
+            "Grampian-2023-2024:p0004_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -3391,11 +3417,11 @@
           "page_precision_at_k": 0.5,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -3406,11 +3432,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0028_002",
             "Grampian-2023-2024:p0004_000",
+            "Grampian-2023-2024:p0004_001",
             "Grampian-2023-2024:p0011_000",
-            "Grampian-2023-2024:p0004_001"
+            "Grampian-2023-2024:p0049_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -3422,17 +3448,18 @@
           "retrieved_pages_ranked": [
             28,
             4,
-            11
+            11,
+            49
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
+          "page_precision_at_k": 0.25,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0,
             0,
             0
@@ -3445,16 +3472,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0028_002",
             "Grampian-2023-2024:p0004_000",
-            "Grampian-2023-2024:p0011_000",
             "Grampian-2023-2024:p0004_001",
+            "Grampian-2023-2024:p0011_000",
             "Grampian-2023-2024:p0049_001",
+            "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0037_001",
             "Grampian-2023-2024:p0033_002",
             "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:p0098_001"
+            "Grampian-2023-2024:p0025_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -3476,7 +3503,7 @@
             37,
             33,
             27,
-            98
+            25
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
@@ -3486,11 +3513,11 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
+            0,
+            0,
+            0,
+            0,
             1,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -3557,8 +3584,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0028_002",
-            "Grampian-2023-2024:p0028_001",
-            "Grampian-2023-2024:p0004_001"
+            "Grampian-2023-2024:p0004_001",
+            "Grampian-2023-2024:p0004_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -3573,11 +3600,11 @@
           "page_precision_at_k": 0.5,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -3589,10 +3616,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0028_002",
-            "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0004_001",
             "Grampian-2023-2024:p0004_000",
-            "Grampian-2023-2024:p0059_001"
+            "Grampian-2023-2024:p0059_003",
+            "Grampian-2023-2024:p0068_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -3604,17 +3631,18 @@
           "retrieved_pages_ranked": [
             28,
             4,
-            59
+            59,
+            68
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
+          "page_precision_at_k": 0.25,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0,
             0,
             0
@@ -3628,15 +3656,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0028_002",
-            "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0004_001",
             "Grampian-2023-2024:p0004_000",
-            "Grampian-2023-2024:p0059_001",
-            "Grampian-2023-2024:p0054_000",
-            "Grampian-2023-2024:p0068_000",
-            "Grampian-2023-2024:p0065_000",
+            "Grampian-2023-2024:p0059_003",
+            "Grampian-2023-2024:p0068_001",
+            "Grampian-2023-2024:p0064_000",
             "Grampian-2023-2024:p0049_001",
-            "Grampian-2023-2024:p0064_000"
+            "Grampian-2023-2024:p0065_000",
+            "Grampian-2023-2024:p0020_000",
+            "Grampian-2023-2024:p0059_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -3654,21 +3682,21 @@
             28,
             4,
             59,
-            54,
             68,
-            65,
+            64,
             49,
-            64
+            65,
+            20
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
+          "chunk_precision_at_k": 0.1,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0,
             0,
             0,
@@ -3713,7 +3741,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0028_001"
+            "Grampian-2023-2024:p0028_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -3738,7 +3766,7 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0028_001",
+            "Grampian-2023-2024:p0028_002",
             "Grampian-2023-2024:p0066_000",
             "Grampian-2023-2024:p0004_000"
           ],
@@ -3771,11 +3799,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0028_001",
+            "Grampian-2023-2024:p0028_002",
             "Grampian-2023-2024:p0066_000",
             "Grampian-2023-2024:p0004_000",
-            "Grampian-2023-2024:p0028_002",
-            "Grampian-2023-2024:p0004_001"
+            "Grampian-2023-2024:p0004_001",
+            "Grampian-2023-2024:p0011_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -3787,19 +3815,20 @@
           "retrieved_pages_ranked": [
             28,
             66,
-            4
+            4,
+            11
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
+          "page_precision_at_k": 0.25,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
             0,
-            1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -3810,16 +3839,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0028_001",
+            "Grampian-2023-2024:p0028_002",
             "Grampian-2023-2024:p0066_000",
             "Grampian-2023-2024:p0004_000",
-            "Grampian-2023-2024:p0028_002",
             "Grampian-2023-2024:p0004_001",
             "Grampian-2023-2024:p0011_000",
             "Grampian-2023-2024:p0033_001",
             "Grampian-2023-2024:p0018_000",
+            "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0033_002",
-            "Grampian-2023-2024:p0008_000"
+            "Grampian-2023-2024:p0027_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -3840,7 +3869,7 @@
             11,
             33,
             18,
-            8
+            27
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.14285714285714285,
@@ -3852,11 +3881,11 @@
             1,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
             1,
-            0,
-            0,
-            0,
-            0,
             0,
             0
           ],
@@ -3895,7 +3924,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0024_002"
+            "Grampian-2023-2024:p0024_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -3920,9 +3949,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0024_002",
             "Grampian-2023-2024:p0024_003",
-            "Grampian-2023-2024:p0024_001"
+            "Grampian-2023-2024:p0024_002",
+            "Grampian-2023-2024:p0025_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -3930,18 +3959,19 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            24
+            24,
+            25
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
+          "page_precision_at_k": 0.5,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
+          "chunk_precision_at_k": 0.6666666666666666,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             1,
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -3951,11 +3981,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0024_002",
             "Grampian-2023-2024:p0024_003",
-            "Grampian-2023-2024:p0024_001",
+            "Grampian-2023-2024:p0024_002",
+            "Grampian-2023-2024:p0025_001",
             "Grampian-2023-2024:p0025_000",
-            "Grampian-2023-2024:p0022_002"
+            "Grampian-2023-2024:p0024_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -3966,11 +3996,10 @@
           ],
           "retrieved_pages_ranked": [
             24,
-            25,
-            22
+            25
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
+          "page_precision_at_k": 0.5,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.6,
@@ -3978,9 +4007,9 @@
           "chunk_hit_flags": [
             1,
             1,
-            1,
             0,
-            0
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -3990,16 +4019,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0024_002",
             "Grampian-2023-2024:p0024_003",
-            "Grampian-2023-2024:p0024_001",
+            "Grampian-2023-2024:p0024_002",
+            "Grampian-2023-2024:p0025_001",
             "Grampian-2023-2024:p0025_000",
-            "Grampian-2023-2024:p0022_002",
-            "Grampian-2023-2024:p0022_001",
             "Grampian-2023-2024:p0024_000",
-            "Grampian-2023-2024:p0074_006",
             "Grampian-2023-2024:p0154_000",
-            "Grampian-2023-2024:p0070_000"
+            "Grampian-2023-2024:p0070_000",
+            "Grampian-2023-2024:table_p0156",
+            "Grampian-2023-2024:table_p0155",
+            "Grampian-2023-2024:p0030_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -4016,25 +4045,26 @@
           "retrieved_pages_ranked": [
             24,
             25,
-            22,
-            74,
             154,
-            70
+            70,
+            156,
+            155,
+            30
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.16666666666666666,
+          "page_precision_at_k": 0.14285714285714285,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.3,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             1,
+            0,
+            0,
             1,
             0,
             0,
-            0,
-            1,
             0,
             0,
             0
@@ -4074,7 +4104,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0024_001"
+            "Grampian-2023-2024:p0024_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -4099,8 +4129,8 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0024_001",
-            "Grampian-2023-2024:p0025_000",
+            "Grampian-2023-2024:p0024_003",
+            "Grampian-2023-2024:p0025_001",
             "Grampian-2023-2024:p0024_002"
           ],
           "retrieved_doc_ids_top_k": [
@@ -4131,11 +4161,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0024_001",
-            "Grampian-2023-2024:p0025_000",
-            "Grampian-2023-2024:p0024_002",
             "Grampian-2023-2024:p0024_003",
-            "Grampian-2023-2024:p0024_000"
+            "Grampian-2023-2024:p0025_001",
+            "Grampian-2023-2024:p0024_002",
+            "Grampian-2023-2024:p0024_001",
+            "Grampian-2023-2024:p0025_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -4152,14 +4182,14 @@
           "page_precision_at_k": 0.5,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.8,
+          "chunk_precision_at_k": 0.6,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
             1,
             1,
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -4169,16 +4199,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0024_003",
+            "Grampian-2023-2024:p0025_001",
+            "Grampian-2023-2024:p0024_002",
             "Grampian-2023-2024:p0024_001",
             "Grampian-2023-2024:p0025_000",
-            "Grampian-2023-2024:p0024_002",
-            "Grampian-2023-2024:p0024_003",
             "Grampian-2023-2024:p0024_000",
-            "Grampian-2023-2024:p0029_002",
+            "Grampian-2023-2024:p0029_003",
             "Grampian-2023-2024:p0070_000",
-            "Grampian-2023-2024:p0022_002",
-            "Grampian-2023-2024:p0025_001",
-            "Grampian-2023-2024:p0030_001"
+            "Grampian-2023-2024:p0030_002",
+            "Grampian-2023-2024:p0014_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -4197,8 +4227,8 @@
             25,
             29,
             70,
-            22,
-            30
+            30,
+            14
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.16666666666666666,
@@ -4211,8 +4241,8 @@
             0,
             1,
             1,
-            1,
             0,
+            1,
             0,
             0,
             0,
@@ -4279,8 +4309,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0024_003",
-            "Grampian-2023-2024:p0025_000",
-            "Grampian-2023-2024:p0024_001"
+            "Grampian-2023-2024:p0025_001",
+            "Grampian-2023-2024:p0024_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -4311,10 +4341,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0024_003",
-            "Grampian-2023-2024:p0025_000",
-            "Grampian-2023-2024:p0024_001",
+            "Grampian-2023-2024:p0025_001",
             "Grampian-2023-2024:p0024_002",
-            "Grampian-2023-2024:p0025_001"
+            "Grampian-2023-2024:p0030_002",
+            "Grampian-2023-2024:p0025_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -4325,10 +4355,11 @@
           ],
           "retrieved_pages_ranked": [
             24,
-            25
+            25,
+            30
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.4,
@@ -4349,15 +4380,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0024_003",
+            "Grampian-2023-2024:p0025_001",
+            "Grampian-2023-2024:p0024_002",
+            "Grampian-2023-2024:p0030_002",
             "Grampian-2023-2024:p0025_000",
             "Grampian-2023-2024:p0024_001",
-            "Grampian-2023-2024:p0024_002",
-            "Grampian-2023-2024:p0025_001",
-            "Grampian-2023-2024:p0030_001",
             "Grampian-2023-2024:p0024_000",
-            "Grampian-2023-2024:p0030_002",
-            "Grampian-2023-2024:p0029_002",
-            "Grampian-2023-2024:p0070_000"
+            "Grampian-2023-2024:p0029_003",
+            "Grampian-2023-2024:p0070_000",
+            "Grampian-2023-2024:p0154_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -4376,10 +4407,11 @@
             25,
             30,
             29,
-            70
+            70,
+            154
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.2,
+          "page_precision_at_k": 0.16666666666666666,
           "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
@@ -4457,8 +4489,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0024_001",
-            "Grampian-2023-2024:p0030_001",
-            "Grampian-2023-2024:p0025_000"
+            "Grampian-2023-2024:p0030_002",
+            "Grampian-2023-2024:p0025_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -4490,10 +4522,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0024_001",
-            "Grampian-2023-2024:p0030_001",
-            "Grampian-2023-2024:p0025_000",
+            "Grampian-2023-2024:p0030_002",
+            "Grampian-2023-2024:p0025_001",
             "Grampian-2023-2024:p0024_002",
-            "Grampian-2023-2024:p0025_001"
+            "Grampian-2023-2024:p0025_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -4529,15 +4561,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0024_001",
-            "Grampian-2023-2024:p0030_001",
-            "Grampian-2023-2024:p0025_000",
-            "Grampian-2023-2024:p0024_002",
-            "Grampian-2023-2024:p0025_001",
-            "Grampian-2023-2024:p0024_000",
-            "Grampian-2023-2024:p0070_000",
-            "Grampian-2023-2024:p0029_002",
             "Grampian-2023-2024:p0030_002",
-            "Grampian-2023-2024:p0024_003"
+            "Grampian-2023-2024:p0025_001",
+            "Grampian-2023-2024:p0024_002",
+            "Grampian-2023-2024:p0025_000",
+            "Grampian-2023-2024:p0024_000",
+            "Grampian-2023-2024:p0029_003",
+            "Grampian-2023-2024:p0070_000",
+            "Grampian-2023-2024:p0024_003",
+            "Grampian-2023-2024:p0154_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -4555,11 +4587,12 @@
             24,
             30,
             25,
+            29,
             70,
-            29
+            154
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.2,
+          "page_precision_at_k": 0.16666666666666666,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.4,
@@ -4573,8 +4606,8 @@
             1,
             0,
             0,
-            0,
-            1
+            1,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -4638,7 +4671,7 @@
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0024_001",
             "Grampian-2023-2024:p0024_000",
-            "Grampian-2023-2024:p0029_002"
+            "Grampian-2023-2024:p0029_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -4670,9 +4703,9 @@
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0024_001",
             "Grampian-2023-2024:p0024_000",
-            "Grampian-2023-2024:p0029_002",
-            "Grampian-2023-2024:p0025_000",
-            "Grampian-2023-2024:p0030_001"
+            "Grampian-2023-2024:p0029_003",
+            "Grampian-2023-2024:p0025_001",
+            "Grampian-2023-2024:p0027_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -4685,7 +4718,7 @@
             24,
             29,
             25,
-            30
+            27
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -4710,14 +4743,14 @@
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0024_001",
             "Grampian-2023-2024:p0024_000",
-            "Grampian-2023-2024:p0029_002",
-            "Grampian-2023-2024:p0025_000",
-            "Grampian-2023-2024:p0030_001",
-            "Grampian-2023-2024:p0099_002",
+            "Grampian-2023-2024:p0029_003",
+            "Grampian-2023-2024:p0025_001",
             "Grampian-2023-2024:p0027_002",
             "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:p0099_001",
-            "Grampian-2023-2024:p0024_002"
+            "Grampian-2023-2024:p0099_002",
+            "Grampian-2023-2024:p0024_002",
+            "Grampian-2023-2024:p0026_004",
+            "Grampian-2023-2024:p0099_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -4735,9 +4768,9 @@
             24,
             29,
             25,
-            30,
+            27,
             99,
-            27
+            26
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.16666666666666666,
@@ -4753,9 +4786,9 @@
             0,
             0,
             0,
+            1,
             0,
-            0,
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -4786,40 +4819,40 @@
         "prefer_evidence_layout": "table",
         "prefer_table_chunks": true
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0022_001"
+            "Grampian-2023-2024:p0154_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            22
+            154
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0022_001",
+            "Grampian-2023-2024:p0154_000",
             "Grampian-2023-2024:p0039_002",
-            "Grampian-2023-2024:p0154_000"
+            "Grampian-2023-2024:p0099_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -4827,78 +4860,33 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            22,
+            154,
             39,
-            154
+            99
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1,
+            0,
             0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0022_001",
-            "Grampian-2023-2024:p0039_002",
             "Grampian-2023-2024:p0154_000",
-            "Grampian-2023-2024:p0099_001",
-            "Grampian-2023-2024:p0022_002"
-          ],
-          "retrieved_doc_ids_top_k": [
-            "Grampian-2023-2024",
-            "Grampian-2023-2024",
-            "Grampian-2023-2024",
-            "Grampian-2023-2024",
-            "Grampian-2023-2024"
-          ],
-          "retrieved_pages_ranked": [
-            22,
-            39,
-            154,
-            99
-          ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 1.0,
-          "chunk_hit_flags": [
-            1,
-            0,
-            0,
-            0,
-            1
-          ],
-          "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
-          "leakage_count_top_k": 0,
-          "leakage_doc_ids_top_k": [],
-          "leakage_rate_top_k": 0.0
-        },
-        "10": {
-          "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0022_001",
             "Grampian-2023-2024:p0039_002",
-            "Grampian-2023-2024:p0154_000",
             "Grampian-2023-2024:p0099_001",
-            "Grampian-2023-2024:p0022_002",
-            "Grampian-2023-2024:p0023_002",
-            "Grampian-2023-2024:p0029_002",
-            "Grampian-2023-2024:p0022_000",
-            "Grampian-2023-2024:p0030_002",
+            "Grampian-2023-2024:p0029_003",
             "Grampian-2023-2024:p0024_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -4906,6 +4894,52 @@
             "Grampian-2023-2024",
             "Grampian-2023-2024",
             "Grampian-2023-2024",
+            "Grampian-2023-2024"
+          ],
+          "retrieved_pages_ranked": [
+            154,
+            39,
+            99,
+            29,
+            24
+          ],
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
+          "chunk_hit_flags": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "table_chunk_hit_at_k": 0.0,
+          "failure_stage": "missed_top_ranked",
+          "leakage_count_top_k": 0,
+          "leakage_doc_ids_top_k": [],
+          "leakage_rate_top_k": 0.0
+        },
+        "10": {
+          "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0154_000",
+            "Grampian-2023-2024:p0039_002",
+            "Grampian-2023-2024:p0099_001",
+            "Grampian-2023-2024:p0029_003",
+            "Grampian-2023-2024:p0024_000",
+            "Grampian-2023-2024:p0030_001",
+            "Grampian-2023-2024:p0068_001",
+            "Grampian-2023-2024:p0005_001",
+            "Grampian-2023-2024:p0039_001",
+            "Grampian-2023-2024:p0047_000"
+          ],
+          "retrieved_doc_ids_top_k": [
+            "Grampian-2023-2024",
+            "Grampian-2023-2024",
+            "Grampian-2023-2024",
+            "Grampian-2023-2024",
             "Grampian-2023-2024",
             "Grampian-2023-2024",
             "Grampian-2023-2024",
@@ -4914,35 +4948,36 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            22,
-            39,
             154,
+            39,
             99,
-            23,
             29,
+            24,
             30,
-            24
+            68,
+            5,
+            47
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1,
             0,
             0,
             0,
-            1,
             0,
             0,
-            1,
+            0,
+            0,
+            0,
             0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
@@ -4976,7 +5011,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0030_001"
+            "Grampian-2023-2024:p0030_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -5001,9 +5036,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0030_002",
             "Grampian-2023-2024:p0030_001",
-            "Grampian-2023-2024:p0154_000",
-            "Grampian-2023-2024:p0030_000"
+            "Grampian-2023-2024:p0154_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -5022,8 +5057,8 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            0,
-            1
+            1,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -5033,11 +5068,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0030_002",
             "Grampian-2023-2024:p0030_001",
             "Grampian-2023-2024:p0154_000",
-            "Grampian-2023-2024:p0030_000",
-            "Grampian-2023-2024:p0022_001",
-            "Grampian-2023-2024:p0029_002"
+            "Grampian-2023-2024:p0024_002",
+            "Grampian-2023-2024:p0029_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -5049,7 +5084,7 @@
           "retrieved_pages_ranked": [
             30,
             154,
-            22,
+            24,
             29
           ],
           "page_recall_at_k": 1.0,
@@ -5060,8 +5095,8 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            0,
             1,
+            0,
             0,
             0
           ],
@@ -5073,16 +5108,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0030_002",
             "Grampian-2023-2024:p0030_001",
             "Grampian-2023-2024:p0154_000",
-            "Grampian-2023-2024:p0030_000",
-            "Grampian-2023-2024:p0022_001",
-            "Grampian-2023-2024:p0029_002",
-            "Grampian-2023-2024:p0074_008",
             "Grampian-2023-2024:p0024_002",
-            "Grampian-2023-2024:p0023_002",
-            "Grampian-2023-2024:p0122_000",
-            "Grampian-2023-2024:p0154_003"
+            "Grampian-2023-2024:p0029_003",
+            "Grampian-2023-2024:p0154_003",
+            "Grampian-2023-2024:p0085_001",
+            "Grampian-2023-2024:p0040_001",
+            "Grampian-2023-2024:p0043_000",
+            "Grampian-2023-2024:p0033_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -5099,12 +5134,12 @@
           "retrieved_pages_ranked": [
             30,
             154,
-            22,
-            29,
-            74,
             24,
-            23,
-            122
+            29,
+            85,
+            40,
+            43,
+            33
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
@@ -5114,8 +5149,8 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            0,
             1,
+            0,
             0,
             0,
             0,
@@ -5185,8 +5220,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0024_002",
-            "Grampian-2023-2024:p0024_001",
-            "Grampian-2023-2024:p0025_000"
+            "Grampian-2023-2024:p0025_001",
+            "Grampian-2023-2024:p0024_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -5205,8 +5240,8 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
-            0
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -5217,10 +5252,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0024_002",
+            "Grampian-2023-2024:p0025_001",
             "Grampian-2023-2024:p0024_001",
-            "Grampian-2023-2024:p0025_000",
             "Grampian-2023-2024:p0154_000",
-            "Grampian-2023-2024:p0022_001"
+            "Grampian-2023-2024:table_p0156"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -5233,7 +5268,7 @@
             24,
             25,
             154,
-            22
+            156
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -5243,8 +5278,8 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
             0,
+            1,
             0,
             0
           ],
@@ -5257,15 +5292,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0024_002",
+            "Grampian-2023-2024:p0025_001",
             "Grampian-2023-2024:p0024_001",
-            "Grampian-2023-2024:p0025_000",
             "Grampian-2023-2024:p0154_000",
-            "Grampian-2023-2024:p0022_001",
             "Grampian-2023-2024:table_p0156",
-            "Grampian-2023-2024:p0022_002",
             "Grampian-2023-2024:table_p0155",
             "Grampian-2023-2024:p0024_000",
-            "Grampian-2023-2024:p0154_001"
+            "Grampian-2023-2024:p0154_001",
+            "Grampian-2023-2024:p0030_002",
+            "Grampian-2023-2024:p0030_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -5283,9 +5318,9 @@
             24,
             25,
             154,
-            22,
             156,
-            155
+            155,
+            30
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.16666666666666666,
@@ -5295,14 +5330,14 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
+            0,
+            1,
+            0,
+            0,
+            0,
             1,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            1,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -5340,7 +5375,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0012_000"
+            "Grampian-2023-2024:p0012_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -5365,9 +5400,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0012_000",
-            "Grampian-2023-2024:p0087_000",
-            "Grampian-2023-2024:p0085_000"
+            "Grampian-2023-2024:p0012_001",
+            "Grampian-2023-2024:p0154_002",
+            "Grampian-2023-2024:p0062_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -5376,8 +5411,8 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            87,
-            85
+            154,
+            62
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
@@ -5398,11 +5433,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0012_000",
-            "Grampian-2023-2024:p0087_000",
-            "Grampian-2023-2024:p0085_000",
-            "Grampian-2023-2024:p0131_000",
-            "Grampian-2023-2024:p0074_000"
+            "Grampian-2023-2024:p0012_001",
+            "Grampian-2023-2024:p0154_002",
+            "Grampian-2023-2024:p0062_001",
+            "Grampian-2023-2024:p0013_000",
+            "Grampian-2023-2024:p0147_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -5413,10 +5448,10 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            87,
-            85,
-            131,
-            74
+            154,
+            62,
+            13,
+            147
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.2,
@@ -5439,16 +5474,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0012_000",
-            "Grampian-2023-2024:p0087_000",
-            "Grampian-2023-2024:p0085_000",
-            "Grampian-2023-2024:p0131_000",
-            "Grampian-2023-2024:p0074_000",
-            "Grampian-2023-2024:p0062_001",
-            "Grampian-2023-2024:p0022_002",
+            "Grampian-2023-2024:p0012_001",
             "Grampian-2023-2024:p0154_002",
-            "Grampian-2023-2024:p0152_000",
-            "Grampian-2023-2024:p0131_001"
+            "Grampian-2023-2024:p0062_001",
+            "Grampian-2023-2024:p0013_000",
+            "Grampian-2023-2024:p0147_000",
+            "Grampian-2023-2024:p0117_000",
+            "Grampian-2023-2024:p0085_001",
+            "Grampian-2023-2024:p0131_000",
+            "Grampian-2023-2024:p0062_002",
+            "Grampian-2023-2024:p0052_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -5464,14 +5499,14 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            87,
+            154,
+            62,
+            13,
+            147,
+            117,
             85,
             131,
-            74,
-            62,
-            22,
-            154,
-            152
+            52
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.1111111111111111,
@@ -5526,7 +5561,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0012_000"
+            "Grampian-2023-2024:p0012_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -5551,9 +5586,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0012_000",
-            "Grampian-2023-2024:p0087_000",
-            "Grampian-2023-2024:p0014_001"
+            "Grampian-2023-2024:p0012_001",
+            "Grampian-2023-2024:p0014_001",
+            "Grampian-2023-2024:p0014_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -5562,11 +5597,10 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            87,
             14
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
+          "page_precision_at_k": 0.5,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.3333333333333333,
@@ -5584,11 +5618,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0012_000",
-            "Grampian-2023-2024:p0087_000",
+            "Grampian-2023-2024:p0012_001",
             "Grampian-2023-2024:p0014_001",
+            "Grampian-2023-2024:p0014_000",
             "Grampian-2023-2024:p0131_000",
-            "Grampian-2023-2024:p0131_001"
+            "Grampian-2023-2024:p0013_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -5599,9 +5633,9 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            87,
             14,
-            131
+            131,
+            13
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -5624,16 +5658,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0012_000",
-            "Grampian-2023-2024:p0087_000",
+            "Grampian-2023-2024:p0012_001",
             "Grampian-2023-2024:p0014_001",
-            "Grampian-2023-2024:p0131_000",
-            "Grampian-2023-2024:p0131_001",
             "Grampian-2023-2024:p0014_000",
+            "Grampian-2023-2024:p0131_000",
             "Grampian-2023-2024:p0013_000",
             "Grampian-2023-2024:p0154_002",
             "Grampian-2023-2024:p0079_000",
-            "Grampian-2023-2024:p0016_000"
+            "Grampian-2023-2024:p0087_001",
+            "Grampian-2023-2024:p0016_000",
+            "Grampian-2023-2024:p0017_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -5649,16 +5683,17 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            87,
             14,
             131,
             13,
             154,
             79,
-            16
+            87,
+            16,
+            17
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
+          "page_precision_at_k": 0.1111111111111111,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.1,
@@ -5710,7 +5745,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0012_000"
+            "Grampian-2023-2024:p0012_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -5735,9 +5770,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0012_000",
-            "Grampian-2023-2024:p0131_001",
-            "Grampian-2023-2024:p0131_000"
+            "Grampian-2023-2024:p0012_001",
+            "Grampian-2023-2024:p0131_000",
+            "Grampian-2023-2024:p0014_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -5746,10 +5781,11 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            131
+            131,
+            14
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.3333333333333333,
@@ -5767,11 +5803,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0012_000",
-            "Grampian-2023-2024:p0131_001",
+            "Grampian-2023-2024:p0012_001",
             "Grampian-2023-2024:p0131_000",
             "Grampian-2023-2024:p0014_001",
-            "Grampian-2023-2024:p0014_000"
+            "Grampian-2023-2024:p0014_000",
+            "Grampian-2023-2024:p0079_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -5783,10 +5819,11 @@
           "retrieved_pages_ranked": [
             12,
             131,
-            14
+            14,
+            79
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
+          "page_precision_at_k": 0.25,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
@@ -5806,16 +5843,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0012_000",
-            "Grampian-2023-2024:p0131_001",
+            "Grampian-2023-2024:p0012_001",
             "Grampian-2023-2024:p0131_000",
             "Grampian-2023-2024:p0014_001",
             "Grampian-2023-2024:p0014_000",
             "Grampian-2023-2024:p0079_000",
-            "Grampian-2023-2024:p0087_000",
-            "Grampian-2023-2024:p0152_000",
-            "Grampian-2023-2024:p0022_003",
-            "Grampian-2023-2024:p0147_000"
+            "Grampian-2023-2024:p0147_000",
+            "Grampian-2023-2024:p0003_002",
+            "Grampian-2023-2024:p0013_000",
+            "Grampian-2023-2024:p0154_002",
+            "Grampian-2023-2024:p0059_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -5834,13 +5871,14 @@
             131,
             14,
             79,
-            87,
-            152,
-            22,
-            147
+            147,
+            3,
+            13,
+            154,
+            59
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
+          "page_precision_at_k": 0.1111111111111111,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.1,
@@ -5918,7 +5956,7 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0014_001",
-            "Grampian-2023-2024:p0012_000",
+            "Grampian-2023-2024:p0012_001",
             "Grampian-2023-2024:p0016_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -5951,10 +5989,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0014_001",
-            "Grampian-2023-2024:p0012_000",
+            "Grampian-2023-2024:p0012_001",
             "Grampian-2023-2024:p0016_000",
-            "Grampian-2023-2024:p0131_001",
-            "Grampian-2023-2024:p0152_000"
+            "Grampian-2023-2024:p0014_000",
+            "Grampian-2023-2024:p0131_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -5967,11 +6005,10 @@
             14,
             12,
             16,
-            131,
-            152
+            131
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.2,
+          "page_precision_at_k": 0.25,
           "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
@@ -5992,15 +6029,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0014_001",
-            "Grampian-2023-2024:p0012_000",
+            "Grampian-2023-2024:p0012_001",
             "Grampian-2023-2024:p0016_000",
-            "Grampian-2023-2024:p0131_001",
-            "Grampian-2023-2024:p0152_000",
-            "Grampian-2023-2024:p0131_000",
-            "Grampian-2023-2024:p0087_000",
             "Grampian-2023-2024:p0014_000",
-            "Grampian-2023-2024:p0022_003",
-            "Grampian-2023-2024:p0013_000"
+            "Grampian-2023-2024:p0131_000",
+            "Grampian-2023-2024:p0013_000",
+            "Grampian-2023-2024:p0147_000",
+            "Grampian-2023-2024:p0079_000",
+            "Grampian-2023-2024:p0087_000",
+            "Grampian-2023-2024:p0059_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -6019,13 +6056,14 @@
             12,
             16,
             131,
-            152,
+            13,
+            147,
+            79,
             87,
-            22,
-            13
+            59
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
+          "page_precision_at_k": 0.1111111111111111,
           "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.1,
@@ -6077,13 +6115,13 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0131_001"
+            "Grampian-2023-2024:p0012_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            131
+            12
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -6102,8 +6140,8 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0131_001",
-            "Grampian-2023-2024:p0012_000",
+            "Grampian-2023-2024:p0012_001",
+            "Grampian-2023-2024:p0131_000",
             "Grampian-2023-2024:p0013_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -6112,8 +6150,8 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            131,
             12,
+            131,
             13
           ],
           "page_recall_at_k": 1.0,
@@ -6135,11 +6173,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0131_001",
-            "Grampian-2023-2024:p0012_000",
+            "Grampian-2023-2024:p0012_001",
+            "Grampian-2023-2024:p0131_000",
             "Grampian-2023-2024:p0013_000",
             "Grampian-2023-2024:p0014_000",
-            "Grampian-2023-2024:p0131_000"
+            "Grampian-2023-2024:p0014_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -6149,8 +6187,8 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            131,
             12,
+            131,
             13,
             14
           ],
@@ -6175,16 +6213,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0131_001",
-            "Grampian-2023-2024:p0012_000",
+            "Grampian-2023-2024:p0012_001",
+            "Grampian-2023-2024:p0131_000",
             "Grampian-2023-2024:p0013_000",
             "Grampian-2023-2024:p0014_000",
-            "Grampian-2023-2024:p0131_000",
             "Grampian-2023-2024:p0014_001",
             "Grampian-2023-2024:p0154_002",
             "Grampian-2023-2024:p0115_001",
             "Grampian-2023-2024:p0050_001",
-            "Grampian-2023-2024:p0022_002"
+            "Grampian-2023-2024:p0079_000",
+            "Grampian-2023-2024:p0050_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -6199,14 +6237,14 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            131,
             12,
+            131,
             13,
             14,
             154,
             115,
             50,
-            22
+            79
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
@@ -6261,7 +6299,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0012_000"
+            "Grampian-2023-2024:p0012_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -6286,9 +6324,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0012_000",
+            "Grampian-2023-2024:p0012_001",
             "Grampian-2023-2024:p0013_000",
-            "Grampian-2023-2024:p0013_001"
+            "Grampian-2023-2024:p0014_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -6297,18 +6335,19 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            13
+            13,
+            14
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
             0,
             1,
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -6318,11 +6357,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0012_000",
+            "Grampian-2023-2024:p0012_001",
             "Grampian-2023-2024:p0013_000",
-            "Grampian-2023-2024:p0013_001",
             "Grampian-2023-2024:p0014_000",
-            "Grampian-2023-2024:p0152_000"
+            "Grampian-2023-2024:p0013_001",
+            "Grampian-2023-2024:p0050_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -6335,7 +6374,7 @@
             12,
             13,
             14,
-            152
+            50
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -6346,8 +6385,8 @@
           "chunk_hit_flags": [
             0,
             1,
-            1,
             0,
+            1,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -6358,16 +6397,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0012_000",
+            "Grampian-2023-2024:p0012_001",
             "Grampian-2023-2024:p0013_000",
-            "Grampian-2023-2024:p0013_001",
             "Grampian-2023-2024:p0014_000",
-            "Grampian-2023-2024:p0152_000",
+            "Grampian-2023-2024:p0013_001",
             "Grampian-2023-2024:p0050_001",
-            "Grampian-2023-2024:p0131_000",
+            "Grampian-2023-2024:p0147_000",
             "Grampian-2023-2024:p0087_000",
-            "Grampian-2023-2024:p0128_000",
-            "Grampian-2023-2024:p0147_000"
+            "Grampian-2023-2024:p0117_000",
+            "Grampian-2023-2024:p0116_001",
+            "Grampian-2023-2024:p0062_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -6385,12 +6424,12 @@
             12,
             13,
             14,
-            152,
             50,
-            131,
+            147,
             87,
-            128,
-            147
+            117,
+            116,
+            62
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.1111111111111111,
@@ -6401,8 +6440,8 @@
           "chunk_hit_flags": [
             0,
             1,
-            1,
             0,
+            1,
             0,
             0,
             0,
@@ -6461,7 +6500,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0053_001"
+            "Grampian-2023-2024:p0053_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -6486,9 +6525,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0053_002",
             "Grampian-2023-2024:p0053_001",
-            "Grampian-2023-2024:p0006_000",
-            "Grampian-2023-2024:p0053_000"
+            "Grampian-2023-2024:p0006_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -6518,11 +6557,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0053_002",
             "Grampian-2023-2024:p0053_001",
             "Grampian-2023-2024:p0006_000",
-            "Grampian-2023-2024:p0053_000",
             "Grampian-2023-2024:p0054_000",
-            "Grampian-2023-2024:p0010_000"
+            "Grampian-2023-2024:p0008_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -6535,7 +6574,7 @@
             53,
             6,
             54,
-            10
+            8
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
@@ -6558,16 +6597,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0053_002",
             "Grampian-2023-2024:p0053_001",
             "Grampian-2023-2024:p0006_000",
-            "Grampian-2023-2024:p0053_000",
             "Grampian-2023-2024:p0054_000",
-            "Grampian-2023-2024:p0010_000",
-            "Grampian-2023-2024:p0020_000",
             "Grampian-2023-2024:p0008_001",
-            "Grampian-2023-2024:p0037_002",
+            "Grampian-2023-2024:p0020_000",
+            "Grampian-2023-2024:p0010_000",
             "Grampian-2023-2024:p0062_001",
-            "Grampian-2023-2024:p0067_001"
+            "Grampian-2023-2024:p0037_002",
+            "Grampian-2023-2024:p0064_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -6585,12 +6624,12 @@
             53,
             6,
             54,
-            10,
-            20,
             8,
-            37,
+            20,
+            10,
             62,
-            67
+            37,
+            64
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.2222222222222222,
@@ -6645,7 +6684,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0053_001"
+            "Grampian-2023-2024:p0053_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -6670,7 +6709,7 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0053_001",
+            "Grampian-2023-2024:p0053_002",
             "Grampian-2023-2024:p0010_000",
             "Grampian-2023-2024:p0006_002"
           ],
@@ -6703,7 +6742,7 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0053_001",
+            "Grampian-2023-2024:p0053_002",
             "Grampian-2023-2024:p0010_000",
             "Grampian-2023-2024:p0006_002",
             "Grampian-2023-2024:p0008_001",
@@ -6743,16 +6782,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0053_001",
+            "Grampian-2023-2024:p0053_002",
             "Grampian-2023-2024:p0010_000",
             "Grampian-2023-2024:p0006_002",
             "Grampian-2023-2024:p0008_001",
             "Grampian-2023-2024:p0006_001",
             "Grampian-2023-2024:p0064_000",
+            "Grampian-2023-2024:p0053_001",
             "Grampian-2023-2024:p0027_002",
             "Grampian-2023-2024:p0099_002",
-            "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:p0037_002"
+            "Grampian-2023-2024:p0027_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -6773,14 +6812,13 @@
             8,
             64,
             27,
-            99,
-            37
+            99
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
+          "page_precision_at_k": 0.14285714285714285,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.1,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
@@ -6789,7 +6827,7 @@
             0,
             0,
             0,
-            0,
+            1,
             0,
             0,
             0
@@ -6829,7 +6867,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0053_001"
+            "Grampian-2023-2024:p0053_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -6854,9 +6892,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0053_002",
             "Grampian-2023-2024:p0053_001",
-            "Grampian-2023-2024:p0006_000",
-            "Grampian-2023-2024:p0053_000"
+            "Grampian-2023-2024:p0006_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -6872,11 +6910,11 @@
           "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
             0,
-            1,
-            0
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -6886,11 +6924,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0053_002",
             "Grampian-2023-2024:p0053_001",
             "Grampian-2023-2024:p0006_000",
-            "Grampian-2023-2024:p0053_000",
             "Grampian-2023-2024:p0054_000",
-            "Grampian-2023-2024:p0058_000"
+            "Grampian-2023-2024:p0006_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -6902,21 +6940,20 @@
           "retrieved_pages_ranked": [
             53,
             6,
-            54,
-            58
+            54
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_precision_at_k": 0.4,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
+            0,
             0,
             1,
             0,
-            0,
-            0
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -6926,16 +6963,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0053_002",
             "Grampian-2023-2024:p0053_001",
             "Grampian-2023-2024:p0006_000",
-            "Grampian-2023-2024:p0053_000",
             "Grampian-2023-2024:p0054_000",
-            "Grampian-2023-2024:p0058_000",
-            "Grampian-2023-2024:p0057_001",
             "Grampian-2023-2024:p0006_001",
-            "Grampian-2023-2024:p0008_001",
             "Grampian-2023-2024:p0058_001",
-            "Grampian-2023-2024:p0047_000"
+            "Grampian-2023-2024:p0057_001",
+            "Grampian-2023-2024:p0008_001",
+            "Grampian-2023-2024:p0020_000",
+            "Grampian-2023-2024:p0010_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -6956,22 +6993,23 @@
             58,
             57,
             8,
-            47
+            20,
+            10
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
+          "page_precision_at_k": 0.125,
           "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
             0,
+            0,
+            1,
+            0,
             1,
             0,
             0,
-            0,
-            0,
-            1,
             0,
             0,
             0
@@ -7011,7 +7049,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0053_001"
+            "Grampian-2023-2024:p0053_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -7036,9 +7074,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0053_002",
             "Grampian-2023-2024:p0053_001",
-            "Grampian-2023-2024:p0008_001",
-            "Grampian-2023-2024:p0053_000"
+            "Grampian-2023-2024:p0008_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -7057,8 +7095,8 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            0,
-            1
+            1,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -7068,9 +7106,9 @@
         },
         "5": {
           "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0053_002",
             "Grampian-2023-2024:p0053_001",
             "Grampian-2023-2024:p0008_001",
-            "Grampian-2023-2024:p0053_000",
             "Grampian-2023-2024:p0006_000",
             "Grampian-2023-2024:p0054_000"
           ],
@@ -7095,8 +7133,8 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            0,
             1,
+            0,
             0,
             0
           ],
@@ -7108,16 +7146,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
+            "Grampian-2023-2024:p0053_002",
             "Grampian-2023-2024:p0053_001",
             "Grampian-2023-2024:p0008_001",
-            "Grampian-2023-2024:p0053_000",
             "Grampian-2023-2024:p0006_000",
             "Grampian-2023-2024:p0054_000",
             "Grampian-2023-2024:p0011_000",
             "Grampian-2023-2024:p0021_000",
             "Grampian-2023-2024:p0020_001",
-            "Grampian-2023-2024:p0020_000",
-            "Grampian-2023-2024:p0049_001"
+            "Grampian-2023-2024:p0049_001",
+            "Grampian-2023-2024:p0020_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -7149,8 +7187,8 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            0,
             1,
+            0,
             0,
             0,
             0,
@@ -7237,7 +7275,7 @@
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0006_002",
             "Grampian-2023-2024:p0010_000",
-            "Grampian-2023-2024:p0006_001"
+            "Grampian-2023-2024:p0049_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -7246,18 +7284,19 @@
           ],
           "retrieved_pages_ranked": [
             6,
-            10
+            10,
+            49
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -7269,8 +7308,8 @@
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0006_002",
             "Grampian-2023-2024:p0010_000",
-            "Grampian-2023-2024:p0006_001",
             "Grampian-2023-2024:p0049_002",
+            "Grampian-2023-2024:p0006_001",
             "Grampian-2023-2024:p0049_001"
           ],
           "retrieved_doc_ids_top_k": [
@@ -7294,8 +7333,8 @@
           "chunk_hit_flags": [
             1,
             0,
-            1,
             0,
+            1,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -7308,14 +7347,14 @@
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0006_002",
             "Grampian-2023-2024:p0010_000",
-            "Grampian-2023-2024:p0006_001",
             "Grampian-2023-2024:p0049_002",
+            "Grampian-2023-2024:p0006_001",
             "Grampian-2023-2024:p0049_001",
             "Grampian-2023-2024:p0054_000",
-            "Grampian-2023-2024:p0054_001",
             "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0046_000",
-            "Grampian-2023-2024:p0068_000"
+            "Grampian-2023-2024:p0010_001",
+            "Grampian-2023-2024:p0047_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -7336,22 +7375,22 @@
             54,
             28,
             46,
-            68
+            47
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.2857142857142857,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.3,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
-            1,
-            0,
             0,
             1,
+            0,
             1,
+            0,
             0,
             0,
             0
@@ -7433,8 +7472,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0027_002",
-            "Grampian-2023-2024:p0062_000",
-            "Grampian-2023-2024:p0004_002"
+            "Grampian-2023-2024:p0062_002",
+            "Grampian-2023-2024:p0062_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -7443,19 +7482,18 @@
           ],
           "retrieved_pages_ranked": [
             27,
-            62,
-            4
+            62
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.6666666666666666,
+          "page_precision_at_k": 0.5,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -7466,10 +7504,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0027_002",
+            "Grampian-2023-2024:p0062_002",
             "Grampian-2023-2024:p0062_000",
             "Grampian-2023-2024:p0004_002",
-            "Grampian-2023-2024:p0062_002",
-            "Grampian-2023-2024:p0058_000"
+            "Grampian-2023-2024:p0058_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -7493,8 +7531,8 @@
           "chunk_hit_flags": [
             1,
             0,
-            1,
             0,
+            1,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -7506,15 +7544,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0027_002",
+            "Grampian-2023-2024:p0062_002",
             "Grampian-2023-2024:p0062_000",
             "Grampian-2023-2024:p0004_002",
-            "Grampian-2023-2024:p0062_002",
-            "Grampian-2023-2024:p0058_000",
+            "Grampian-2023-2024:p0058_001",
             "Grampian-2023-2024:p0145_000",
+            "Grampian-2023-2024:p0062_001",
             "Grampian-2023-2024:p0078_000",
-            "Grampian-2023-2024:p0016_001",
             "Grampian-2023-2024:p0006_000",
-            "Grampian-2023-2024:p0062_001"
+            "Grampian-2023-2024:p0016_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -7535,8 +7573,8 @@
             58,
             145,
             78,
-            16,
-            6
+            6,
+            16
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -7547,8 +7585,8 @@
           "chunk_hit_flags": [
             1,
             0,
-            1,
             0,
+            1,
             0,
             0,
             0,
@@ -7607,7 +7645,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0058_000"
+            "Grampian-2023-2024:p0058_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -7632,9 +7670,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0058_000",
+            "Grampian-2023-2024:p0058_001",
             "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:p0147_001"
+            "Grampian-2023-2024:p0084_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -7644,7 +7682,7 @@
           "retrieved_pages_ranked": [
             58,
             27,
-            147
+            84
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
@@ -7665,10 +7703,10 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0058_000",
+            "Grampian-2023-2024:p0058_001",
             "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:p0147_001",
             "Grampian-2023-2024:p0084_001",
+            "Grampian-2023-2024:p0147_001",
             "Grampian-2023-2024:p0024_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -7681,8 +7719,8 @@
           "retrieved_pages_ranked": [
             58,
             27,
-            147,
             84,
+            147,
             24
           ],
           "page_recall_at_k": 1.0,
@@ -7706,16 +7744,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0058_000",
+            "Grampian-2023-2024:p0058_001",
             "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:p0147_001",
             "Grampian-2023-2024:p0084_001",
+            "Grampian-2023-2024:p0147_001",
             "Grampian-2023-2024:p0024_000",
             "Grampian-2023-2024:p0006_000",
-            "Grampian-2023-2024:p0057_000",
             "Grampian-2023-2024:p0034_001",
-            "Grampian-2023-2024:p0142_000",
-            "Grampian-2023-2024:p0085_001"
+            "Grampian-2023-2024:p0057_000",
+            "Grampian-2023-2024:p0008_001",
+            "Grampian-2023-2024:p0068_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -7732,14 +7770,14 @@
           "retrieved_pages_ranked": [
             58,
             27,
-            147,
             84,
+            147,
             24,
             6,
-            57,
             34,
-            142,
-            85
+            57,
+            8,
+            68
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.1,
@@ -7820,8 +7858,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0004_000",
-            "Grampian-2023-2024:p0056_001",
-            "Grampian-2023-2024:p0021_000"
+            "Grampian-2023-2024:p0021_000",
+            "Grampian-2023-2024:p0004_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -7830,19 +7868,18 @@
           ],
           "retrieved_pages_ranked": [
             4,
-            56,
             21
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
+          "page_precision_at_k": 0.5,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3333333333333333,
+          "chunk_precision_at_k": 0.6666666666666666,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
-            0
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -7853,10 +7890,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0004_000",
-            "Grampian-2023-2024:p0056_001",
             "Grampian-2023-2024:p0021_000",
             "Grampian-2023-2024:p0004_002",
-            "Grampian-2023-2024:p0059_000"
+            "Grampian-2023-2024:p0059_001",
+            "Grampian-2023-2024:p0056_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -7867,9 +7904,9 @@
           ],
           "retrieved_pages_ranked": [
             4,
-            56,
             21,
-            59
+            59,
+            56
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -7880,8 +7917,8 @@
           "chunk_hit_flags": [
             1,
             0,
-            0,
             1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -7893,15 +7930,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0004_000",
-            "Grampian-2023-2024:p0056_001",
             "Grampian-2023-2024:p0021_000",
             "Grampian-2023-2024:p0004_002",
-            "Grampian-2023-2024:p0059_000",
+            "Grampian-2023-2024:p0059_001",
+            "Grampian-2023-2024:p0056_002",
             "Grampian-2023-2024:p0010_001",
+            "Grampian-2023-2024:p0057_002",
             "Grampian-2023-2024:p0080_001",
-            "Grampian-2023-2024:p0079_002",
-            "Grampian-2023-2024:p0003_000",
-            "Grampian-2023-2024:p0057_002"
+            "Grampian-2023-2024:p0058_001",
+            "Grampian-2023-2024:p0079_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -7917,14 +7954,14 @@
           ],
           "retrieved_pages_ranked": [
             4,
-            56,
             21,
             59,
+            56,
             10,
+            57,
             80,
-            79,
-            3,
-            57
+            58,
+            79
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.1111111111111111,
@@ -7935,8 +7972,8 @@
           "chunk_hit_flags": [
             1,
             0,
-            0,
             1,
+            0,
             0,
             0,
             0,
@@ -7979,7 +8016,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0056_000"
+            "Grampian-2023-2024:p0056_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -8004,9 +8041,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0056_000",
-            "Grampian-2023-2024:p0059_000",
-            "Grampian-2023-2024:p0057_000"
+            "Grampian-2023-2024:p0056_001",
+            "Grampian-2023-2024:p0059_001",
+            "Grampian-2023-2024:p0008_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -8016,7 +8053,7 @@
           "retrieved_pages_ranked": [
             56,
             59,
-            57
+            8
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
@@ -8037,11 +8074,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0056_000",
-            "Grampian-2023-2024:p0059_000",
-            "Grampian-2023-2024:p0057_000",
+            "Grampian-2023-2024:p0056_001",
+            "Grampian-2023-2024:p0059_001",
             "Grampian-2023-2024:p0008_001",
-            "Grampian-2023-2024:p0058_000"
+            "Grampian-2023-2024:p0057_000",
+            "Grampian-2023-2024:p0058_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -8053,8 +8090,8 @@
           "retrieved_pages_ranked": [
             56,
             59,
-            57,
             8,
+            57,
             58
           ],
           "page_recall_at_k": 1.0,
@@ -8078,16 +8115,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0056_000",
-            "Grampian-2023-2024:p0059_000",
-            "Grampian-2023-2024:p0057_000",
+            "Grampian-2023-2024:p0056_001",
+            "Grampian-2023-2024:p0059_001",
             "Grampian-2023-2024:p0008_001",
-            "Grampian-2023-2024:p0058_000",
-            "Grampian-2023-2024:p0064_001",
+            "Grampian-2023-2024:p0057_000",
+            "Grampian-2023-2024:p0058_001",
             "Grampian-2023-2024:p0024_000",
             "Grampian-2023-2024:p0057_001",
             "Grampian-2023-2024:p0004_001",
-            "Grampian-2023-2024:p0054_001"
+            "Grampian-2023-2024:p0054_001",
+            "Grampian-2023-2024:p0008_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -8104,16 +8141,15 @@
           "retrieved_pages_ranked": [
             56,
             59,
-            57,
             8,
+            57,
             58,
-            64,
             24,
             4,
             54
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.1111111111111111,
+          "page_precision_at_k": 0.125,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.1,
@@ -8165,7 +8201,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0056_000"
+            "Grampian-2023-2024:p0056_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -8190,8 +8226,8 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0056_000",
-            "Grampian-2023-2024:p0068_000",
+            "Grampian-2023-2024:p0056_001",
+            "Grampian-2023-2024:p0068_001",
             "Grampian-2023-2024:p0070_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -8223,11 +8259,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0056_000",
-            "Grampian-2023-2024:p0068_000",
+            "Grampian-2023-2024:p0056_001",
+            "Grampian-2023-2024:p0068_001",
             "Grampian-2023-2024:p0070_000",
-            "Grampian-2023-2024:p0071_002",
-            "Grampian-2023-2024:p0058_001"
+            "Grampian-2023-2024:p0058_001",
+            "Grampian-2023-2024:p0004_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -8240,8 +8276,8 @@
             56,
             68,
             70,
-            71,
-            58
+            58,
+            4
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.2,
@@ -8264,16 +8300,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0056_000",
-            "Grampian-2023-2024:p0068_000",
+            "Grampian-2023-2024:p0056_001",
+            "Grampian-2023-2024:p0068_001",
             "Grampian-2023-2024:p0070_000",
-            "Grampian-2023-2024:p0071_002",
             "Grampian-2023-2024:p0058_001",
             "Grampian-2023-2024:p0004_000",
-            "Grampian-2023-2024:p0056_001",
-            "Grampian-2023-2024:p0053_001",
+            "Grampian-2023-2024:p0071_002",
+            "Grampian-2023-2024:p0056_002",
             "Grampian-2023-2024:p0006_000",
-            "Grampian-2023-2024:p0016_000"
+            "Grampian-2023-2024:p0016_000",
+            "Grampian-2023-2024:p0059_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -8291,12 +8327,12 @@
             56,
             68,
             70,
-            71,
             58,
             4,
-            53,
+            71,
             6,
-            16
+            16,
+            59
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.1111111111111111,
@@ -8351,7 +8387,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0056_000"
+            "Grampian-2023-2024:p0056_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -8376,8 +8412,8 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0056_000",
             "Grampian-2023-2024:p0056_001",
+            "Grampian-2023-2024:p0056_002",
             "Grampian-2023-2024:p0048_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -8408,8 +8444,8 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0056_000",
             "Grampian-2023-2024:p0056_001",
+            "Grampian-2023-2024:p0056_002",
             "Grampian-2023-2024:p0048_000",
             "Grampian-2023-2024:p0048_001",
             "Grampian-2023-2024:p0060_001"
@@ -8447,16 +8483,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0056_000",
             "Grampian-2023-2024:p0056_001",
+            "Grampian-2023-2024:p0056_002",
             "Grampian-2023-2024:p0048_000",
             "Grampian-2023-2024:p0048_001",
             "Grampian-2023-2024:p0060_001",
             "Grampian-2023-2024:p0050_002",
             "Grampian-2023-2024:p0062_000",
-            "Grampian-2023-2024:p0054_000",
             "Grampian-2023-2024:p0070_000",
-            "Grampian-2023-2024:p0069_000"
+            "Grampian-2023-2024:p0069_000",
+            "Grampian-2023-2024:p0057_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -8476,9 +8512,9 @@
             60,
             50,
             62,
-            54,
             70,
-            69
+            69,
+            57
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
@@ -8527,40 +8563,40 @@
         "prefer_evidence_layout": "paragraph",
         "prefer_table_chunks": false
       },
-      "page_hit": 0,
-      "failure_type": "FP2_MISSED_TOP_RANK",
-      "failure_stage": "retrieval",
+      "page_hit": 1,
+      "failure_type": "HIT",
+      "failure_stage": "none",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001"
+            "Grampian-2023-2024:p0028_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26
+            28
           ],
-          "page_recall_at_k": 0.0,
-          "page_precision_at_k": 0.0,
-          "page_mrr_at_k": 0.0,
-          "chunk_hit_at_k": 0.0,
-          "chunk_precision_at_k": 0.0,
-          "chunk_mrr_at_k": 0.0,
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 1.0,
+          "page_mrr_at_k": 1.0,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 1.0,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "missed_top_ranked",
+          "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001",
-            "Grampian-2023-2024:p0028_000",
-            "Grampian-2023-2024:p0028_001"
+            "Grampian-2023-2024:p0028_001",
+            "Grampian-2023-2024:p0027_000",
+            "Grampian-2023-2024:p0026_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -8568,19 +8604,20 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26,
-            28
+            28,
+            27,
+            26
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_precision_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            0,
             1,
-            1
+            0,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -8590,11 +8627,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001",
-            "Grampian-2023-2024:p0028_000",
             "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:p0064_001"
+            "Grampian-2023-2024:p0026_004",
+            "Grampian-2023-2024:p0064_002",
+            "Grampian-2023-2024:p0014_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -8604,21 +8641,22 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26,
             28,
             27,
-            64
+            26,
+            64,
+            14
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
-          "page_mrr_at_k": 0.5,
+          "page_precision_at_k": 0.2,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
+            1,
             0,
-            1,
-            1,
+            0,
             0,
             0
           ],
@@ -8630,16 +8668,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0026_001",
-            "Grampian-2023-2024:p0028_000",
             "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0027_000",
-            "Grampian-2023-2024:p0064_001",
-            "Grampian-2023-2024:p0026_000",
+            "Grampian-2023-2024:p0026_004",
+            "Grampian-2023-2024:p0064_002",
             "Grampian-2023-2024:p0014_000",
             "Grampian-2023-2024:p0027_002",
             "Grampian-2023-2024:p0004_000",
-            "Grampian-2023-2024:p0004_001"
+            "Grampian-2023-2024:p0004_001",
+            "Grampian-2023-2024:p0109_002",
+            "Grampian-2023-2024:p0036_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -8654,23 +8692,25 @@
             "Grampian-2023-2024"
           ],
           "retrieved_pages_ranked": [
-            26,
             28,
             27,
+            26,
             64,
             14,
-            4
+            4,
+            109,
+            36
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.16666666666666666,
-          "page_mrr_at_k": 0.5,
+          "page_precision_at_k": 0.125,
+          "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_precision_at_k": 0.1,
+          "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
+            1,
             0,
-            1,
-            1,
+            0,
             0,
             0,
             0,
@@ -8740,8 +8780,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0028_001",
-            "Grampian-2023-2024:p0033_001",
-            "Grampian-2023-2024:p0030_001"
+            "Grampian-2023-2024:p0030_002",
+            "Grampian-2023-2024:p0033_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -8750,8 +8790,8 @@
           ],
           "retrieved_pages_ranked": [
             28,
-            33,
-            30
+            30,
+            33
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
@@ -8773,10 +8813,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0028_001",
+            "Grampian-2023-2024:p0030_002",
             "Grampian-2023-2024:p0033_001",
-            "Grampian-2023-2024:p0030_001",
-            "Grampian-2023-2024:p0027_002",
-            "Grampian-2023-2024:p0059_001"
+            "Grampian-2023-2024:p0059_002",
+            "Grampian-2023-2024:p0026_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -8787,10 +8827,10 @@
           ],
           "retrieved_pages_ranked": [
             28,
-            33,
             30,
-            27,
-            59
+            33,
+            59,
+            26
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.2,
@@ -8814,15 +8854,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0028_001",
+            "Grampian-2023-2024:p0030_002",
             "Grampian-2023-2024:p0033_001",
-            "Grampian-2023-2024:p0030_001",
+            "Grampian-2023-2024:p0059_002",
+            "Grampian-2023-2024:p0026_004",
             "Grampian-2023-2024:p0027_002",
-            "Grampian-2023-2024:p0059_001",
             "Grampian-2023-2024:p0049_001",
             "Grampian-2023-2024:p0065_001",
             "Grampian-2023-2024:p0062_001",
-            "Grampian-2023-2024:p0043_001",
-            "Grampian-2023-2024:p0085_001"
+            "Grampian-2023-2024:p0043_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -8838,15 +8878,15 @@
           ],
           "retrieved_pages_ranked": [
             28,
-            33,
             30,
-            27,
+            33,
             59,
+            26,
+            27,
             49,
             65,
             62,
-            43,
-            85
+            43
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.1,
@@ -8901,7 +8941,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0028_001"
+            "Grampian-2023-2024:p0028_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -8926,8 +8966,8 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0028_002",
+            "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0102_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -8958,11 +8998,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0028_002",
+            "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0102_000",
             "Grampian-2023-2024:p0004_000",
-            "Grampian-2023-2024:p0102_001"
+            "Grampian-2023-2024:p0064_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -8974,10 +9014,11 @@
           "retrieved_pages_ranked": [
             28,
             102,
-            4
+            4,
+            64
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
+          "page_precision_at_k": 0.25,
           "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
@@ -8997,16 +9038,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0028_002",
+            "Grampian-2023-2024:p0028_001",
             "Grampian-2023-2024:p0102_000",
             "Grampian-2023-2024:p0004_000",
+            "Grampian-2023-2024:p0064_003",
             "Grampian-2023-2024:p0102_001",
-            "Grampian-2023-2024:p0078_000",
-            "Grampian-2023-2024:p0031_002",
+            "Grampian-2023-2024:p0031_003",
             "Grampian-2023-2024:p0081_000",
-            "Grampian-2023-2024:p0064_002",
-            "Grampian-2023-2024:p0054_000"
+            "Grampian-2023-2024:p0054_000",
+            "Grampian-2023-2024:p0078_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -9024,11 +9065,11 @@
             28,
             102,
             4,
-            78,
+            64,
             31,
             81,
-            64,
-            54
+            54,
+            78
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
@@ -9110,7 +9151,7 @@
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0033_001",
             "Grampian-2023-2024:p0108_002",
-            "Grampian-2023-2024:p0131_002"
+            "Grampian-2023-2024:p0131_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -9143,9 +9184,9 @@
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0033_001",
             "Grampian-2023-2024:p0108_002",
-            "Grampian-2023-2024:p0131_002",
+            "Grampian-2023-2024:p0131_001",
             "Grampian-2023-2024:p0145_002",
-            "Grampian-2023-2024:p0109_002"
+            "Grampian-2023-2024:p0131_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -9158,11 +9199,10 @@
             33,
             108,
             131,
-            145,
-            109
+            145
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.2,
+          "page_precision_at_k": 0.25,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
@@ -9184,14 +9224,14 @@
           "retrieved_chunk_ids": [
             "Grampian-2023-2024:p0033_001",
             "Grampian-2023-2024:p0108_002",
-            "Grampian-2023-2024:p0131_002",
+            "Grampian-2023-2024:p0131_001",
             "Grampian-2023-2024:p0145_002",
+            "Grampian-2023-2024:p0131_002",
             "Grampian-2023-2024:p0109_002",
-            "Grampian-2023-2024:p0084_001",
             "Grampian-2023-2024:p0029_001",
-            "Grampian-2023-2024:p0131_003",
+            "Grampian-2023-2024:p0084_001",
             "Grampian-2023-2024:p0033_002",
-            "Grampian-2023-2024:p0088_000"
+            "Grampian-2023-2024:p0151_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -9211,9 +9251,9 @@
             131,
             145,
             109,
-            84,
             29,
-            88
+            84,
+            151
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
@@ -9268,7 +9308,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0031_002"
+            "Grampian-2023-2024:p0031_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024"
@@ -9293,9 +9333,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0031_002",
+            "Grampian-2023-2024:p0031_003",
             "Grampian-2023-2024:p0004_001",
-            "Grampian-2023-2024:p0023_000"
+            "Grampian-2023-2024:p0054_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -9305,7 +9345,7 @@
           "retrieved_pages_ranked": [
             31,
             4,
-            23
+            54
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
@@ -9326,11 +9366,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0031_002",
+            "Grampian-2023-2024:p0031_003",
             "Grampian-2023-2024:p0004_001",
+            "Grampian-2023-2024:p0054_000",
             "Grampian-2023-2024:p0023_000",
-            "Grampian-2023-2024:p0031_001",
-            "Grampian-2023-2024:p0054_000"
+            "Grampian-2023-2024:p0004_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -9342,20 +9382,20 @@
           "retrieved_pages_ranked": [
             31,
             4,
-            23,
-            54
+            54,
+            23
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
             0,
-            1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -9366,16 +9406,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2023-2024:p0031_002",
+            "Grampian-2023-2024:p0031_003",
             "Grampian-2023-2024:p0004_001",
-            "Grampian-2023-2024:p0023_000",
-            "Grampian-2023-2024:p0031_001",
             "Grampian-2023-2024:p0054_000",
+            "Grampian-2023-2024:p0023_000",
             "Grampian-2023-2024:p0004_000",
             "Grampian-2023-2024:p0049_001",
             "Grampian-2023-2024:p0020_000",
+            "Grampian-2023-2024:p0117_001",
             "Grampian-2023-2024:p0154_002",
-            "Grampian-2023-2024:p0117_001"
+            "Grampian-2023-2024:p0026_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2023-2024",
@@ -9392,24 +9432,25 @@
           "retrieved_pages_ranked": [
             31,
             4,
-            23,
             54,
+            23,
             49,
             20,
+            117,
             154,
-            117
+            26
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
+          "page_precision_at_k": 0.1111111111111111,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
+          "chunk_precision_at_k": 0.1,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
             0,
-            1,
+            0,
             0,
             0,
             0,

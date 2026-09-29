@@ -1,17 +1,17 @@
 {
   "run_info": {
-    "run_utc": "2026-06-06T14:23:42+00:00",
-    "data_dir": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/Grampian-2021-2022",
+    "run_utc": "2026-09-29T23:27:51+00:00",
+    "data_dir": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2021-2022",
     "method": "hybrid_rrf_dense_bm25",
     "runtime": {
       "python_executable": "/opt/anaconda3/envs/rag-pipeline/bin/python",
       "python_version": "3.11.15",
-      "platform": "macOS-26.5.1-arm64-arm-64bit",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
       "system": "Darwin",
       "machine": "arm64",
-      "cwd": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project",
-      "conda_prefix": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv",
-      "conda_default_env": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv",
+      "cwd": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation",
+      "conda_prefix": "/opt/anaconda3/envs/rag-pipeline",
+      "conda_default_env": "rag-pipeline",
       "virtual_env": null,
       "dependency_report": {
         "modules": {
@@ -96,11 +96,11 @@
         "commands": {
           "gs": {
             "available": true,
-            "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv/bin/gs"
+            "path": "/opt/anaconda3/envs/rag-pipeline/bin/gs"
           },
           "pdftoppm": {
             "available": true,
-            "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/.venv/bin/pdftoppm"
+            "path": "/opt/anaconda3/envs/rag-pipeline/bin/pdftoppm"
           },
           "tesseract": {
             "available": true,
@@ -154,6 +154,7 @@
     "bm25_weight": 2.0,
     "enable_lexical_rerank": true,
     "enable_subsection_boost": false,
+    "oracle_labels_in_ranking": false,
     "enable_cross_encoder_rerank": false,
     "cross_encoder_model": null,
     "cross_encoder_topn": 50,
@@ -169,35 +170,42 @@
       10
     ],
     "num_queries": 50,
-    "num_chunks_indexed": 373,
+    "num_chunks_indexed": 384,
     "pipeline_settings": {
-      "source_metrics_path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/Grampian-2021-2022/metrics.json",
+      "source_metrics_path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2021-2022/metrics.json",
       "source_metrics_exists": true,
       "doc_id": "Grampian-2021-2022",
       "corpus_id": "Grampian-2021-2022",
       "report_year": "2021-2022",
-      "preprocess_run_utc": null,
-      "preprocess_git_commit_short": null,
-      "embedding_model_preprocess": null,
+      "preprocess_run_utc": "2026-06-16T09:42:36+00:00",
+      "preprocess_git_commit_short": "3e729e9",
+      "embedding_model_preprocess": "sentence-transformers/all-MiniLM-L6-v2",
       "chunk_size_tokens": 224,
       "chunk_overlap_tokens": 56,
-      "segment_aware_chunking": null,
-      "whole_doc_markdown_mode": null,
-      "markdown_header_carry_forward": null,
-      "markdown_table_injection": null,
+      "segment_aware_chunking": true,
+      "whole_doc_markdown_mode": false,
+      "markdown_header_carry_forward": true,
+      "markdown_table_injection": true,
       "primary_extractor": "pymupdf",
       "min_chunk_words": 20
     },
     "eval_set": {
-      "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/RAG_Pipeline_Project/data_processed/Grampian-2021-2022/eval_set.json",
+      "path": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/data_processed/Grampian-2021-2022/eval_set.json",
       "sha1": "8b2877eb59c7ee758802761e2fe4952fa1c159f9",
       "size_bytes": 35999,
-      "modified_utc": "2026-03-17T00:52:36+00:00",
+      "modified_utc": "2026-06-16T08:45:22+00:00",
       "query_count": 50,
       "meta_dataset_name": "Grampian-2021-2022 Retrieval Gold Set",
       "meta_doc_id": "Grampian-2021-2022",
       "meta_version": null
-    }
+    },
+    "artifact_sha256": {
+      "faiss.index": "929e4f0ca1d5aebc8524a645ca656032b815e5e44e36f6e0729df7a75bd7f71c",
+      "chunk_meta.parquet": "9629b81c87a63bff68cc6f1970e81631f4df551c77031235534bebea0e0ef279",
+      "chunks.parquet": "4b5bd83f62daadb6066ecefd9fb70890a71e71f9332dd19cf979cf69500847e0",
+      "eval_set.json": "3c44d3c05f46822f4ca701fbaaec14e3a476300be9917ddbdcb1c424cffcce7c"
+    },
+    "verified_manifest": "/Users/djimra/MSc Data Science Jan 2025/Thesis documents/EvidenceRAG-Evaluation/results/frozen/gold_eval_artifacts_manifest.json"
   },
   "results": [
     {
@@ -221,40 +229,40 @@
         "prefer_evidence_layout": "table",
         "prefer_table_chunks": true
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002"
+            "Grampian-2021-2022:p0022_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21
+            22
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0021_001"
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:p0027_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -262,19 +270,20 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
+            22,
             21,
-            22
+            27
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
             0,
-            1
+            1,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -284,9 +293,9 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0021_001",
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:p0027_000",
             "Grampian-2021-2022:p0061_002",
             "Grampian-2021-2022:p0012_000"
           ],
@@ -298,21 +307,22 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21,
             22,
+            21,
+            27,
             61,
             12
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.2,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
             0,
             1,
+            0,
             0,
             0
           ],
@@ -324,16 +334,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0021_001",
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:p0027_000",
             "Grampian-2021-2022:p0061_002",
             "Grampian-2021-2022:p0012_000",
-            "Grampian-2021-2022:p0027_000",
+            "Grampian-2021-2022:p0117_000",
+            "Grampian-2021-2022:p0020_001",
             "Grampian-2021-2022:p0044_000",
-            "Grampian-2021-2022:p0020_000",
             "Grampian-2021-2022:p0007_000",
-            "Grampian-2021-2022:p0020_001"
+            "Grampian-2021-2022:p0058_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -348,25 +358,27 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21,
             22,
+            21,
+            27,
             61,
             12,
-            27,
-            44,
+            117,
             20,
-            7
+            44,
+            7,
+            58
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.1,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.1,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
             0,
             1,
+            0,
             0,
             0,
             0,
@@ -404,40 +416,40 @@
         "prefer_evidence_layout": "table",
         "prefer_table_chunks": true
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002"
+            "Grampian-2021-2022:p0022_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21
+            22
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0022_000"
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:p0022_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -445,17 +457,17 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21,
-            22
+            22,
+            21
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
+            0,
             1,
             0
           ],
@@ -467,11 +479,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0022_000",
+            "Grampian-2021-2022:p0022_001",
             "Grampian-2021-2022:p0021_000",
-            "Grampian-2021-2022:p0004_000"
+            "Grampian-2021-2022:p0022_002",
+            "Grampian-2021-2022:p0011_001",
+            "Grampian-2021-2022:table_p0113"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -481,21 +493,22 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21,
             22,
-            4
+            21,
+            11,
+            113
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.25,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
-            1,
             0,
             1,
+            0,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -506,16 +519,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0022_000",
+            "Grampian-2021-2022:p0022_001",
             "Grampian-2021-2022:p0021_000",
-            "Grampian-2021-2022:p0004_000",
+            "Grampian-2021-2022:p0022_002",
             "Grampian-2021-2022:p0011_001",
             "Grampian-2021-2022:table_p0113",
+            "Grampian-2021-2022:p0004_000",
+            "Grampian-2021-2022:p0015_000",
             "Grampian-2021-2022:p0012_000",
             "Grampian-2021-2022:p0069_000",
-            "Grampian-2021-2022:p0015_000"
+            "Grampian-2021-2022:p0081_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -530,26 +543,27 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21,
             22,
-            4,
+            21,
             11,
             113,
+            4,
+            15,
             12,
             69,
-            15
+            81
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.1111111111111111,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.1,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
-            1,
             0,
             1,
+            0,
+            0,
             0,
             0,
             0,
@@ -586,28 +600,61 @@
         "prefer_evidence_layout": "table",
         "prefer_table_chunks": true
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001"
+            "Grampian-2021-2022:p0022_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21
+            22
+          ],
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
+          "chunk_hit_flags": [
+            0
+          ],
+          "table_chunk_hit_at_k": 0.0,
+          "failure_stage": "missed_top_ranked",
+          "leakage_count_top_k": 0,
+          "leakage_doc_ids_top_k": [],
+          "leakage_rate_top_k": 0.0
+        },
+        "3": {
+          "retrieved_chunk_ids": [
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:table_p0113"
+          ],
+          "retrieved_doc_ids_top_k": [
+            "Grampian-2021-2022",
+            "Grampian-2021-2022",
+            "Grampian-2021-2022"
+          ],
+          "retrieved_pages_ranked": [
+            22,
+            21,
+            113
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1
+            0,
+            1,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -615,44 +662,13 @@
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
-        "3": {
-          "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:table_p0021"
-          ],
-          "retrieved_doc_ids_top_k": [
-            "Grampian-2021-2022",
-            "Grampian-2021-2022",
-            "Grampian-2021-2022"
-          ],
-          "retrieved_pages_ranked": [
-            21
-          ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
-          "chunk_hit_flags": [
-            1,
-            1,
-            1
-          ],
-          "table_chunk_hit_at_k": 1.0,
-          "failure_stage": "hit",
-          "leakage_count_top_k": 0,
-          "leakage_doc_ids_top_k": [],
-          "leakage_rate_top_k": 0.0
-        },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:table_p0021",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0021_000"
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:table_p0113",
+            "Grampian-2021-2022:p0097_001",
+            "Grampian-2021-2022:p0025_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -662,23 +678,26 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
+            22,
             21,
-            22
+            113,
+            97,
+            25
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.2,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.8,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
-            1,
+            0,
             1,
             0,
-            1
+            0,
+            0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -686,16 +705,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:table_p0021",
-            "Grampian-2021-2022:p0022_000",
+            "Grampian-2021-2022:p0022_001",
             "Grampian-2021-2022:p0021_000",
             "Grampian-2021-2022:table_p0113",
             "Grampian-2021-2022:p0097_001",
-            "Grampian-2021-2022:p0025_000",
+            "Grampian-2021-2022:p0025_001",
             "Grampian-2021-2022:p0011_001",
-            "Grampian-2021-2022:p0012_000"
+            "Grampian-2021-2022:p0012_000",
+            "Grampian-2021-2022:p0122_000",
+            "Grampian-2021-2022:p0038_001",
+            "Grampian-2021-2022:p0018_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -710,33 +729,36 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21,
             22,
+            21,
             113,
             97,
             25,
             11,
-            12
+            12,
+            122,
+            38,
+            18
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.1,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.1,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
-            1,
-            1,
             0,
             1,
+            0,
+            0,
+            0,
             0,
             0,
             0,
             0,
             0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -771,7 +793,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001"
+            "Grampian-2021-2022:p0021_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -796,9 +818,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0022_000"
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0028_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -807,17 +829,18 @@
           ],
           "retrieved_pages_ranked": [
             21,
-            22
+            22,
+            28
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -828,11 +851,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0082_000",
-            "Grampian-2021-2022:p0021_000"
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0028_000",
+            "Grampian-2021-2022:p0027_000",
+            "Grampian-2021-2022:p0011_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -844,20 +867,22 @@
           "retrieved_pages_ranked": [
             21,
             22,
-            82
+            28,
+            27,
+            11
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
+          "page_precision_at_k": 0.2,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
             0,
             0,
-            1
+            0,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -867,16 +892,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0082_000",
             "Grampian-2021-2022:p0021_000",
-            "Grampian-2021-2022:table_p0021",
+            "Grampian-2021-2022:p0022_001",
             "Grampian-2021-2022:p0028_000",
             "Grampian-2021-2022:p0027_000",
+            "Grampian-2021-2022:p0011_002",
+            "Grampian-2021-2022:p0043_003",
+            "Grampian-2021-2022:p0114_001",
             "Grampian-2021-2022:p0044_000",
-            "Grampian-2021-2022:p0043_003"
+            "Grampian-2021-2022:table_p0088",
+            "Grampian-2021-2022:p0097_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -893,31 +918,34 @@
           "retrieved_pages_ranked": [
             21,
             22,
-            82,
             28,
             27,
+            11,
+            43,
+            114,
             44,
-            43
+            88,
+            97
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
+          "page_precision_at_k": 0.1,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.1,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
             0,
             0,
-            1,
-            1,
+            0,
+            0,
+            0,
             0,
             0,
             0,
             0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -946,40 +974,40 @@
         "prefer_evidence_layout": "table",
         "prefer_table_chunks": true
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001"
+            "Grampian-2021-2022:p0022_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21
+            22
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0022_000"
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:table_p0113"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -987,17 +1015,18 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
+            22,
             21,
-            22
+            113
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
+            0,
             1,
             0
           ],
@@ -1009,11 +1038,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:table_p0021",
-            "Grampian-2021-2022:p0021_000"
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:table_p0113",
+            "Grampian-2021-2022:p0097_001",
+            "Grampian-2021-2022:p0083_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -1023,23 +1052,26 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
+            22,
             21,
-            22
+            113,
+            97,
+            83
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.2,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.8,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
-            1,
             0,
             1,
-            1
+            0,
+            0,
+            0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -1047,16 +1079,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:table_p0021",
+            "Grampian-2021-2022:p0022_001",
             "Grampian-2021-2022:p0021_000",
             "Grampian-2021-2022:table_p0113",
             "Grampian-2021-2022:p0097_001",
             "Grampian-2021-2022:p0083_000",
-            "Grampian-2021-2022:p0025_000",
-            "Grampian-2021-2022:table_p0134"
+            "Grampian-2021-2022:p0025_001",
+            "Grampian-2021-2022:table_p0134",
+            "Grampian-2021-2022:p0081_001",
+            "Grampian-2021-2022:p0082_002",
+            "Grampian-2021-2022:table_p0072"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -1071,33 +1103,36 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21,
             22,
+            21,
             113,
             97,
             83,
             25,
-            134
+            134,
+            81,
+            82,
+            72
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.1,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.1,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
-            1,
             0,
             1,
-            1,
+            0,
+            0,
+            0,
             0,
             0,
             0,
             0,
             0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -1126,28 +1161,61 @@
         "prefer_evidence_layout": "table",
         "prefer_table_chunks": true
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001"
+            "Grampian-2021-2022:p0022_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21
+            22
+          ],
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
+          "chunk_hit_flags": [
+            0
+          ],
+          "table_chunk_hit_at_k": 0.0,
+          "failure_stage": "missed_top_ranked",
+          "leakage_count_top_k": 0,
+          "leakage_doc_ids_top_k": [],
+          "leakage_rate_top_k": 0.0
+        },
+        "3": {
+          "retrieved_chunk_ids": [
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:table_p0113"
+          ],
+          "retrieved_doc_ids_top_k": [
+            "Grampian-2021-2022",
+            "Grampian-2021-2022",
+            "Grampian-2021-2022"
+          ],
+          "retrieved_pages_ranked": [
+            22,
+            21,
+            113
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1
+            0,
+            1,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -1155,44 +1223,13 @@
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
-        "3": {
-          "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:table_p0021",
-            "Grampian-2021-2022:p0021_002"
-          ],
-          "retrieved_doc_ids_top_k": [
-            "Grampian-2021-2022",
-            "Grampian-2021-2022",
-            "Grampian-2021-2022"
-          ],
-          "retrieved_pages_ranked": [
-            21
-          ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
-          "chunk_hit_flags": [
-            1,
-            1,
-            1
-          ],
-          "table_chunk_hit_at_k": 1.0,
-          "failure_stage": "hit",
-          "leakage_count_top_k": 0,
-          "leakage_doc_ids_top_k": [],
-          "leakage_rate_top_k": 0.0
-        },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:table_p0021",
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0021_000"
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:table_p0113",
+            "Grampian-2021-2022:table_p0115",
+            "Grampian-2021-2022:p0097_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -1202,23 +1239,26 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
+            22,
             21,
-            22
+            113,
+            115,
+            97
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.2,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.8,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
-            1,
+            0,
             1,
             0,
-            1
+            0,
+            0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -1226,16 +1266,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:table_p0021",
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0022_000",
+            "Grampian-2021-2022:p0022_001",
             "Grampian-2021-2022:p0021_000",
             "Grampian-2021-2022:table_p0113",
-            "Grampian-2021-2022:p0064_002",
             "Grampian-2021-2022:table_p0115",
             "Grampian-2021-2022:p0097_001",
-            "Grampian-2021-2022:p0025_000"
+            "Grampian-2021-2022:p0064_004",
+            "Grampian-2021-2022:p0019_002",
+            "Grampian-2021-2022:p0081_000",
+            "Grampian-2021-2022:p0025_001",
+            "Grampian-2021-2022:p0114_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -1250,33 +1290,36 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21,
             22,
+            21,
             113,
-            64,
             115,
             97,
-            25
+            64,
+            19,
+            81,
+            25,
+            114
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.1,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.1,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
-            1,
-            1,
             0,
             1,
+            0,
+            0,
+            0,
             0,
             0,
             0,
             0,
             0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -1305,40 +1348,40 @@
         "prefer_evidence_layout": "paragraph",
         "prefer_table_chunks": false
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002"
+            "Grampian-2021-2022:p0022_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21
+            22
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0022_000"
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:table_p0113",
+            "Grampian-2021-2022:p0135_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -1346,33 +1389,34 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21,
-            22
+            22,
+            113,
+            135
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1,
-            1,
+            0,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0022_000",
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:table_p0113",
             "Grampian-2021-2022:p0135_002",
-            "Grampian-2021-2022:table_p0113"
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:p0014_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -1382,22 +1426,23 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21,
             22,
+            113,
             135,
-            113
+            21,
+            14
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.2,
+          "page_mrr_at_k": 0.25,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.25,
           "chunk_hit_flags": [
-            1,
-            1,
             0,
             0,
+            0,
+            1,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -1408,16 +1453,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0135_002",
+            "Grampian-2021-2022:p0022_001",
             "Grampian-2021-2022:table_p0113",
+            "Grampian-2021-2022:p0135_002",
             "Grampian-2021-2022:p0021_000",
-            "Grampian-2021-2022:p0019_000",
-            "Grampian-2021-2022:p0024_000",
-            "Grampian-2021-2022:table_p0021",
-            "Grampian-2021-2022:p0025_000"
+            "Grampian-2021-2022:p0014_002",
+            "Grampian-2021-2022:p0019_001",
+            "Grampian-2021-2022:p0022_002",
+            "Grampian-2021-2022:p0037_002",
+            "Grampian-2021-2022:p0043_000",
+            "Grampian-2021-2022:p0014_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -1432,33 +1477,34 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21,
             22,
-            135,
             113,
+            135,
+            21,
+            14,
             19,
-            24,
-            25
+            37,
+            43
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.125,
+          "page_mrr_at_k": 0.25,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.1,
+          "chunk_mrr_at_k": 0.25,
           "chunk_hit_flags": [
-            1,
-            1,
             0,
             0,
             0,
             1,
             0,
             0,
-            1,
+            0,
+            0,
+            0,
             0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -1493,7 +1539,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002"
+            "Grampian-2021-2022:p0021_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -1518,9 +1564,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002",
+            "Grampian-2021-2022:p0021_000",
             "Grampian-2021-2022:p0027_001",
-            "Grampian-2021-2022:p0025_000"
+            "Grampian-2021-2022:p0025_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -1551,11 +1597,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002",
+            "Grampian-2021-2022:p0021_000",
             "Grampian-2021-2022:p0027_001",
-            "Grampian-2021-2022:p0025_000",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0020_000"
+            "Grampian-2021-2022:p0025_001",
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0027_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -1568,11 +1614,10 @@
             21,
             27,
             25,
-            22,
-            20
+            22
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.2,
+          "page_precision_at_k": 0.25,
           "page_mrr_at_k": 0.25,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
@@ -1592,15 +1637,15 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002",
+            "Grampian-2021-2022:p0021_000",
             "Grampian-2021-2022:p0027_001",
-            "Grampian-2021-2022:p0025_000",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0020_000",
+            "Grampian-2021-2022:p0025_001",
+            "Grampian-2021-2022:p0022_001",
             "Grampian-2021-2022:p0027_000",
-            "Grampian-2021-2022:p0036_000",
-            "Grampian-2021-2022:p0044_000",
+            "Grampian-2021-2022:p0117_000",
             "Grampian-2021-2022:p0020_001",
+            "Grampian-2021-2022:p0036_001",
+            "Grampian-2021-2022:p0044_000",
             "Grampian-2021-2022:p0004_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -1620,13 +1665,14 @@
             27,
             25,
             22,
+            117,
             20,
             36,
             44,
             4
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
+          "page_precision_at_k": 0.1111111111111111,
           "page_mrr_at_k": 0.25,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.1,
@@ -1672,40 +1718,40 @@
         "prefer_evidence_layout": "paragraph",
         "prefer_table_chunks": false
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000"
+            "Grampian-2021-2022:p0043_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            22
+            43
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000",
             "Grampian-2021-2022:p0043_003",
-            "Grampian-2021-2022:p0018_000"
+            "Grampian-2021-2022:p0018_001",
+            "Grampian-2021-2022:p0022_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -1713,20 +1759,20 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            22,
             43,
-            18
+            18,
+            22
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 1.0,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
-            1,
             0,
-            0
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -1736,11 +1782,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000",
             "Grampian-2021-2022:p0043_003",
-            "Grampian-2021-2022:p0018_000",
+            "Grampian-2021-2022:p0018_001",
+            "Grampian-2021-2022:p0022_002",
             "Grampian-2021-2022:p0041_000",
-            "Grampian-2021-2022:p0057_002"
+            "Grampian-2021-2022:table_p0088"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -1750,22 +1796,22 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            22,
             43,
             18,
+            22,
             41,
-            57
+            88
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.2,
-          "page_mrr_at_k": 1.0,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
+            0,
+            0,
             1,
-            0,
-            0,
             0,
             0
           ],
@@ -1777,16 +1823,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000",
             "Grampian-2021-2022:p0043_003",
-            "Grampian-2021-2022:p0018_000",
+            "Grampian-2021-2022:p0018_001",
+            "Grampian-2021-2022:p0022_002",
             "Grampian-2021-2022:p0041_000",
-            "Grampian-2021-2022:p0057_002",
-            "Grampian-2021-2022:table_p0090",
             "Grampian-2021-2022:table_p0088",
-            "Grampian-2021-2022:p0021_002",
+            "Grampian-2021-2022:table_p0090",
             "Grampian-2021-2022:p0027_000",
-            "Grampian-2021-2022:table_p0125"
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:p0139_002",
+            "Grampian-2021-2022:p0004_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -1801,27 +1847,27 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            22,
             43,
             18,
+            22,
             41,
-            57,
-            90,
             88,
-            21,
+            90,
             27,
-            125
+            21,
+            139,
+            4
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.1,
-          "page_mrr_at_k": 1.0,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.1,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
+            0,
+            0,
             1,
-            0,
-            0,
             0,
             0,
             0,
@@ -1891,8 +1937,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0028_000",
-            "Grampian-2021-2022:p0031_001",
-            "Grampian-2021-2022:p0027_000"
+            "Grampian-2021-2022:p0027_000",
+            "Grampian-2021-2022:p0061_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -1901,8 +1947,8 @@
           ],
           "retrieved_pages_ranked": [
             28,
-            31,
-            27
+            27,
+            61
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -1924,10 +1970,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0028_000",
-            "Grampian-2021-2022:p0031_001",
             "Grampian-2021-2022:p0027_000",
             "Grampian-2021-2022:p0061_002",
-            "Grampian-2021-2022:p0068_001"
+            "Grampian-2021-2022:p0068_001",
+            "Grampian-2021-2022:p0009_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -1938,10 +1984,10 @@
           ],
           "retrieved_pages_ranked": [
             28,
-            31,
             27,
             61,
-            68
+            68,
+            9
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -1965,15 +2011,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0028_000",
-            "Grampian-2021-2022:p0031_001",
             "Grampian-2021-2022:p0027_000",
             "Grampian-2021-2022:p0061_002",
             "Grampian-2021-2022:p0068_001",
-            "Grampian-2021-2022:p0057_002",
-            "Grampian-2021-2022:p0043_001",
             "Grampian-2021-2022:p0009_000",
+            "Grampian-2021-2022:p0043_001",
             "Grampian-2021-2022:p0043_003",
-            "Grampian-2021-2022:p0135_002"
+            "Grampian-2021-2022:p0135_002",
+            "Grampian-2021-2022:p0068_000",
+            "Grampian-2021-2022:p0021_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -1989,14 +2035,13 @@
           ],
           "retrieved_pages_ranked": [
             28,
-            31,
             27,
             61,
             68,
-            57,
-            43,
             9,
-            135
+            43,
+            135,
+            21
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -2045,40 +2090,40 @@
         "prefer_evidence_layout": "paragraph",
         "prefer_table_chunks": false
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000"
+            "Grampian-2021-2022:p0082_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            22
+            82
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0022_001",
-            "Grampian-2021-2022:p0125_000"
+            "Grampian-2021-2022:p0082_001",
+            "Grampian-2021-2022:p0022_002",
+            "Grampian-2021-2022:p0146_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -2086,17 +2131,18 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
+            82,
             22,
-            125
+            146
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
+            0,
             1,
             0
           ],
@@ -2108,11 +2154,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0022_001",
-            "Grampian-2021-2022:p0125_000",
-            "Grampian-2021-2022:p0082_000",
-            "Grampian-2021-2022:p0125_001"
+            "Grampian-2021-2022:p0082_001",
+            "Grampian-2021-2022:p0022_002",
+            "Grampian-2021-2022:p0146_000",
+            "Grampian-2021-2022:table_p0113",
+            "Grampian-2021-2022:p0082_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -2122,18 +2168,19 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
+            82,
             22,
-            125,
-            82
+            146,
+            113
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.25,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
+            0,
             1,
             0,
             0,
@@ -2147,16 +2194,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0022_001",
-            "Grampian-2021-2022:p0125_000",
-            "Grampian-2021-2022:p0082_000",
-            "Grampian-2021-2022:p0125_001",
+            "Grampian-2021-2022:p0082_001",
+            "Grampian-2021-2022:p0022_002",
             "Grampian-2021-2022:p0146_000",
             "Grampian-2021-2022:table_p0113",
+            "Grampian-2021-2022:p0082_002",
             "Grampian-2021-2022:p0012_002",
             "Grampian-2021-2022:p0135_003",
-            "Grampian-2021-2022:table_p0123"
+            "Grampian-2021-2022:p0125_000",
+            "Grampian-2021-2022:table_p0123",
+            "Grampian-2021-2022:p0028_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -2171,23 +2218,24 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            22,
-            125,
             82,
+            22,
             146,
             113,
             12,
             135,
-            123
+            125,
+            123,
+            28
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.1111111111111111,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.1,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
+            0,
             1,
             0,
             0,
@@ -2233,7 +2281,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000"
+            "Grampian-2021-2022:p0022_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -2258,9 +2306,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0022_001",
-            "Grampian-2021-2022:p0043_003"
+            "Grampian-2021-2022:p0022_002",
+            "Grampian-2021-2022:p0043_003",
+            "Grampian-2021-2022:p0082_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -2269,17 +2317,18 @@
           ],
           "retrieved_pages_ranked": [
             22,
-            43
+            43,
+            82
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -2290,11 +2339,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0022_002",
             "Grampian-2021-2022:p0043_003",
+            "Grampian-2021-2022:p0082_001",
             "Grampian-2021-2022:table_p0113",
-            "Grampian-2021-2022:p0125_000"
+            "Grampian-2021-2022:table_p0123"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -2306,18 +2355,19 @@
           "retrieved_pages_ranked": [
             22,
             43,
+            82,
             113,
-            125
+            123
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
+          "page_precision_at_k": 0.2,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0,
             0,
             0
@@ -2330,16 +2380,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0022_002",
             "Grampian-2021-2022:p0043_003",
+            "Grampian-2021-2022:p0082_001",
             "Grampian-2021-2022:table_p0113",
-            "Grampian-2021-2022:p0125_000",
             "Grampian-2021-2022:table_p0123",
-            "Grampian-2021-2022:p0082_000",
-            "Grampian-2021-2022:p0125_001",
             "Grampian-2021-2022:p0027_001",
-            "Grampian-2021-2022:p0027_000"
+            "Grampian-2021-2022:p0027_000",
+            "Grampian-2021-2022:table_p0071",
+            "Grampian-2021-2022:table_p0115",
+            "Grampian-2021-2022:table_p0090"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -2356,21 +2406,23 @@
           "retrieved_pages_ranked": [
             22,
             43,
-            113,
-            125,
-            123,
             82,
-            27
+            113,
+            123,
+            27,
+            71,
+            115,
+            90
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
+          "page_precision_at_k": 0.1111111111111111,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
+          "chunk_precision_at_k": 0.1,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0,
             0,
             0,
@@ -2415,7 +2467,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000"
+            "Grampian-2021-2022:p0022_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -2440,46 +2492,11 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0022_001",
-            "Grampian-2021-2022:p0022_003"
-          ],
-          "retrieved_doc_ids_top_k": [
-            "Grampian-2021-2022",
-            "Grampian-2021-2022",
-            "Grampian-2021-2022"
-          ],
-          "retrieved_pages_ranked": [
-            22
-          ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
-          "chunk_hit_flags": [
-            1,
-            1,
-            1
-          ],
-          "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
-          "leakage_count_top_k": 0,
-          "leakage_doc_ids_top_k": [],
-          "leakage_rate_top_k": 0.0
-        },
-        "5": {
-          "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0022_001",
-            "Grampian-2021-2022:p0022_003",
+            "Grampian-2021-2022:p0022_002",
             "Grampian-2021-2022:p0083_001",
-            "Grampian-2021-2022:p0025_000"
+            "Grampian-2021-2022:p0025_001"
           ],
           "retrieved_doc_ids_top_k": [
-            "Grampian-2021-2022",
-            "Grampian-2021-2022",
             "Grampian-2021-2022",
             "Grampian-2021-2022",
             "Grampian-2021-2022"
@@ -2493,11 +2510,9 @@
           "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
-            1,
-            1,
             1,
             0,
             0
@@ -2508,18 +2523,58 @@
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
+        "5": {
+          "retrieved_chunk_ids": [
+            "Grampian-2021-2022:p0022_002",
+            "Grampian-2021-2022:p0083_001",
+            "Grampian-2021-2022:p0025_001",
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:p0022_001"
+          ],
+          "retrieved_doc_ids_top_k": [
+            "Grampian-2021-2022",
+            "Grampian-2021-2022",
+            "Grampian-2021-2022",
+            "Grampian-2021-2022",
+            "Grampian-2021-2022"
+          ],
+          "retrieved_pages_ranked": [
+            22,
+            83,
+            25,
+            21
+          ],
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 0.25,
+          "page_mrr_at_k": 1.0,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 0.4,
+          "chunk_mrr_at_k": 1.0,
+          "chunk_hit_flags": [
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "table_chunk_hit_at_k": 0.0,
+          "failure_stage": "hit",
+          "leakage_count_top_k": 0,
+          "leakage_doc_ids_top_k": [],
+          "leakage_rate_top_k": 0.0
+        },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0022_001",
-            "Grampian-2021-2022:p0022_003",
+            "Grampian-2021-2022:p0022_002",
             "Grampian-2021-2022:p0083_001",
-            "Grampian-2021-2022:p0025_000",
-            "Grampian-2021-2022:p0125_001",
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0125_000",
-            "Grampian-2021-2022:p0019_002",
-            "Grampian-2021-2022:p0140_001"
+            "Grampian-2021-2022:p0025_001",
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0140_001",
+            "Grampian-2021-2022:p0020_002",
+            "Grampian-2021-2022:p0027_000",
+            "Grampian-2021-2022:p0019_004",
+            "Grampian-2021-2022:p0082_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -2537,23 +2592,25 @@
             22,
             83,
             25,
-            125,
             21,
+            140,
+            20,
+            27,
             19,
-            140
+            82
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
+          "page_precision_at_k": 0.1111111111111111,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
-            1,
             0,
             0,
+            0,
+            1,
             0,
             0,
             0,
@@ -2595,7 +2652,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002"
+            "Grampian-2021-2022:p0019_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -2620,9 +2677,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002",
-            "Grampian-2021-2022:p0140_000",
-            "Grampian-2021-2022:p0006_001"
+            "Grampian-2021-2022:p0019_004",
+            "Grampian-2021-2022:p0006_001",
+            "Grampian-2021-2022:p0140_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -2631,8 +2688,8 @@
           ],
           "retrieved_pages_ranked": [
             19,
-            140,
-            6
+            6,
+            140
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
@@ -2653,11 +2710,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002",
-            "Grampian-2021-2022:p0140_000",
+            "Grampian-2021-2022:p0019_004",
             "Grampian-2021-2022:p0006_001",
-            "Grampian-2021-2022:p0019_001",
-            "Grampian-2021-2022:p0019_003"
+            "Grampian-2021-2022:p0140_000",
+            "Grampian-2021-2022:p0019_002",
+            "Grampian-2021-2022:p0023_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -2668,21 +2725,22 @@
           ],
           "retrieved_pages_ranked": [
             19,
+            6,
             140,
-            6
+            23
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
+          "page_precision_at_k": 0.25,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6,
+          "chunk_precision_at_k": 0.4,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
             0,
             1,
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -2692,16 +2750,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002",
-            "Grampian-2021-2022:p0140_000",
+            "Grampian-2021-2022:p0019_004",
             "Grampian-2021-2022:p0006_001",
-            "Grampian-2021-2022:p0019_001",
-            "Grampian-2021-2022:p0019_003",
+            "Grampian-2021-2022:p0140_000",
+            "Grampian-2021-2022:p0019_002",
+            "Grampian-2021-2022:p0023_004",
             "Grampian-2021-2022:p0041_000",
-            "Grampian-2021-2022:p0023_003",
             "Grampian-2021-2022:p0146_000",
-            "Grampian-2021-2022:p0036_000",
-            "Grampian-2021-2022:p0017_001"
+            "Grampian-2021-2022:p0036_001",
+            "Grampian-2021-2022:p0025_001",
+            "Grampian-2021-2022:p0146_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -2717,26 +2775,26 @@
           ],
           "retrieved_pages_ranked": [
             19,
-            140,
             6,
-            41,
+            140,
             23,
+            41,
             146,
             36,
-            17
+            25
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
             0,
             1,
-            1,
+            0,
             0,
             0,
             0,
@@ -2778,7 +2836,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002"
+            "Grampian-2021-2022:p0019_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -2803,7 +2861,7 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002",
+            "Grampian-2021-2022:p0019_004",
             "Grampian-2021-2022:p0019_003",
             "Grampian-2021-2022:p0140_000"
           ],
@@ -2835,11 +2893,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002",
+            "Grampian-2021-2022:p0019_004",
             "Grampian-2021-2022:p0019_003",
             "Grampian-2021-2022:p0140_000",
             "Grampian-2021-2022:p0140_001",
-            "Grampian-2021-2022:p0020_000"
+            "Grampian-2021-2022:p0020_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -2874,15 +2932,15 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002",
+            "Grampian-2021-2022:p0019_004",
             "Grampian-2021-2022:p0019_003",
             "Grampian-2021-2022:p0140_000",
             "Grampian-2021-2022:p0140_001",
-            "Grampian-2021-2022:p0020_000",
+            "Grampian-2021-2022:p0020_002",
             "Grampian-2021-2022:p0020_001",
             "Grampian-2021-2022:p0146_001",
-            "Grampian-2021-2022:p0017_001",
             "Grampian-2021-2022:p0146_000",
+            "Grampian-2021-2022:table_p0088",
             "Grampian-2021-2022:table_p0090"
           ],
           "retrieved_doc_ids_top_k": [
@@ -2902,7 +2960,7 @@
             140,
             20,
             146,
-            17,
+            88,
             90
           ],
           "page_recall_at_k": 1.0,
@@ -2958,7 +3016,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0020_000"
+            "Grampian-2021-2022:p0020_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -2983,9 +3041,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0020_000",
             "Grampian-2021-2022:p0020_001",
-            "Grampian-2021-2022:p0017_002"
+            "Grampian-2021-2022:p0020_002",
+            "Grampian-2021-2022:p0019_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -2994,7 +3052,7 @@
           ],
           "retrieved_pages_ranked": [
             20,
-            17
+            19
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
@@ -3015,11 +3073,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0020_000",
             "Grampian-2021-2022:p0020_001",
-            "Grampian-2021-2022:p0017_002",
+            "Grampian-2021-2022:p0020_002",
+            "Grampian-2021-2022:p0019_004",
             "Grampian-2021-2022:p0146_000",
-            "Grampian-2021-2022:p0019_002"
+            "Grampian-2021-2022:p0146_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -3030,12 +3088,11 @@
           ],
           "retrieved_pages_ranked": [
             20,
-            17,
-            146,
-            19
+            19,
+            146
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.4,
@@ -3055,16 +3112,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0020_000",
             "Grampian-2021-2022:p0020_001",
-            "Grampian-2021-2022:p0017_002",
-            "Grampian-2021-2022:p0146_000",
-            "Grampian-2021-2022:p0019_002",
-            "Grampian-2021-2022:p0146_001",
-            "Grampian-2021-2022:p0017_001",
-            "Grampian-2021-2022:p0140_000",
             "Grampian-2021-2022:p0020_002",
-            "Grampian-2021-2022:p0019_003"
+            "Grampian-2021-2022:p0019_004",
+            "Grampian-2021-2022:p0146_000",
+            "Grampian-2021-2022:p0146_001",
+            "Grampian-2021-2022:p0140_000",
+            "Grampian-2021-2022:p0019_003",
+            "Grampian-2021-2022:table_p0090",
+            "Grampian-2021-2022:p0047_000",
+            "Grampian-2021-2022:p0006_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -3080,16 +3137,18 @@
           ],
           "retrieved_pages_ranked": [
             20,
-            17,
-            146,
             19,
-            140
+            146,
+            140,
+            90,
+            47,
+            6
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.2,
+          "page_precision_at_k": 0.14285714285714285,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
@@ -3100,7 +3159,7 @@
             0,
             0,
             0,
-            1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -3138,7 +3197,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0020_000"
+            "Grampian-2021-2022:p0020_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -3163,9 +3222,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0020_000",
             "Grampian-2021-2022:p0020_001",
-            "Grampian-2021-2022:p0019_003"
+            "Grampian-2021-2022:p0020_002",
+            "Grampian-2021-2022:p0019_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -3195,11 +3254,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0020_000",
             "Grampian-2021-2022:p0020_001",
+            "Grampian-2021-2022:p0020_002",
+            "Grampian-2021-2022:p0019_004",
             "Grampian-2021-2022:p0019_003",
-            "Grampian-2021-2022:p0019_002",
-            "Grampian-2021-2022:p0022_003"
+            "Grampian-2021-2022:p0022_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -3234,16 +3293,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0020_000",
             "Grampian-2021-2022:p0020_001",
+            "Grampian-2021-2022:p0020_002",
+            "Grampian-2021-2022:p0019_004",
             "Grampian-2021-2022:p0019_003",
+            "Grampian-2021-2022:p0022_004",
             "Grampian-2021-2022:p0019_002",
-            "Grampian-2021-2022:p0022_003",
-            "Grampian-2021-2022:p0019_001",
             "Grampian-2021-2022:p0140_000",
             "Grampian-2021-2022:p0140_001",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0019_000"
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0019_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -3316,7 +3375,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0020_001"
+            "Grampian-2021-2022:p0020_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -3341,9 +3400,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0020_001",
-            "Grampian-2021-2022:p0017_002",
-            "Grampian-2021-2022:p0020_002"
+            "Grampian-2021-2022:p0020_002",
+            "Grampian-2021-2022:p0019_004",
+            "Grampian-2021-2022:p0020_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -3352,7 +3411,7 @@
           ],
           "retrieved_pages_ranked": [
             20,
-            17
+            19
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
@@ -3373,11 +3432,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0020_001",
-            "Grampian-2021-2022:p0017_002",
             "Grampian-2021-2022:p0020_002",
-            "Grampian-2021-2022:p0020_000",
-            "Grampian-2021-2022:p0019_002"
+            "Grampian-2021-2022:p0019_004",
+            "Grampian-2021-2022:p0020_001",
+            "Grampian-2021-2022:p0146_001",
+            "Grampian-2021-2022:p0146_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -3388,20 +3447,20 @@
           ],
           "retrieved_pages_ranked": [
             20,
-            17,
-            19
+            19,
+            146
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6,
+          "chunk_precision_at_k": 0.4,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
             1,
-            1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -3412,16 +3471,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0020_001",
-            "Grampian-2021-2022:p0017_002",
             "Grampian-2021-2022:p0020_002",
-            "Grampian-2021-2022:p0020_000",
-            "Grampian-2021-2022:p0019_002",
+            "Grampian-2021-2022:p0019_004",
+            "Grampian-2021-2022:p0020_001",
             "Grampian-2021-2022:p0146_001",
             "Grampian-2021-2022:p0146_000",
-            "Grampian-2021-2022:p0017_001",
             "Grampian-2021-2022:p0140_000",
-            "Grampian-2021-2022:p0019_003"
+            "Grampian-2021-2022:p0019_003",
+            "Grampian-2021-2022:p0006_001",
+            "Grampian-2021-2022:table_p0090",
+            "Grampian-2021-2022:p0122_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -3437,22 +3496,24 @@
           ],
           "retrieved_pages_ranked": [
             20,
-            17,
             19,
             146,
-            140
+            140,
+            6,
+            90,
+            122
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.2,
+          "page_precision_at_k": 0.14285714285714285,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
             1,
-            1,
+            0,
             0,
             0,
             0,
@@ -3495,7 +3556,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0020_001"
+            "Grampian-2021-2022:p0020_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -3520,9 +3581,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
+            "Grampian-2021-2022:p0020_002",
             "Grampian-2021-2022:p0020_001",
-            "Grampian-2021-2022:p0019_003",
-            "Grampian-2021-2022:p0020_000"
+            "Grampian-2021-2022:p0019_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -3541,8 +3602,8 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            0,
-            1
+            1,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -3552,11 +3613,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
+            "Grampian-2021-2022:p0020_002",
             "Grampian-2021-2022:p0020_001",
+            "Grampian-2021-2022:p0019_004",
             "Grampian-2021-2022:p0019_003",
-            "Grampian-2021-2022:p0020_000",
-            "Grampian-2021-2022:p0019_002",
-            "Grampian-2021-2022:p0022_003"
+            "Grampian-2021-2022:p0022_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -3578,8 +3639,8 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            0,
             1,
+            0,
             0,
             0
           ],
@@ -3591,16 +3652,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
+            "Grampian-2021-2022:p0020_002",
             "Grampian-2021-2022:p0020_001",
+            "Grampian-2021-2022:p0019_004",
             "Grampian-2021-2022:p0019_003",
-            "Grampian-2021-2022:p0020_000",
+            "Grampian-2021-2022:p0022_004",
             "Grampian-2021-2022:p0019_002",
-            "Grampian-2021-2022:p0022_003",
-            "Grampian-2021-2022:p0019_001",
             "Grampian-2021-2022:p0140_000",
             "Grampian-2021-2022:p0140_001",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0019_000"
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0019_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -3628,8 +3689,8 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            0,
             1,
+            0,
             0,
             0,
             0,
@@ -3673,7 +3734,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002"
+            "Grampian-2021-2022:p0019_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -3698,9 +3759,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002",
-            "Grampian-2021-2022:p0020_001",
-            "Grampian-2021-2022:p0020_000"
+            "Grampian-2021-2022:p0019_004",
+            "Grampian-2021-2022:p0020_002",
+            "Grampian-2021-2022:p0020_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -3730,11 +3791,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002",
+            "Grampian-2021-2022:p0019_004",
+            "Grampian-2021-2022:p0020_002",
             "Grampian-2021-2022:p0020_001",
-            "Grampian-2021-2022:p0020_000",
             "Grampian-2021-2022:p0019_003",
-            "Grampian-2021-2022:p0024_000"
+            "Grampian-2021-2022:p0024_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -3769,16 +3830,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002",
-            "Grampian-2021-2022:p0020_001",
-            "Grampian-2021-2022:p0020_000",
-            "Grampian-2021-2022:p0019_003",
-            "Grampian-2021-2022:p0024_000",
-            "Grampian-2021-2022:p0017_001",
+            "Grampian-2021-2022:p0019_004",
             "Grampian-2021-2022:p0020_002",
-            "Grampian-2021-2022:p0022_002",
-            "Grampian-2021-2022:table_p0071",
-            "Grampian-2021-2022:p0140_000"
+            "Grampian-2021-2022:p0020_001",
+            "Grampian-2021-2022:p0019_003",
+            "Grampian-2021-2022:p0024_001",
+            "Grampian-2021-2022:p0022_004",
+            "Grampian-2021-2022:p0140_000",
+            "Grampian-2021-2022:p0080_000",
+            "Grampian-2021-2022:p0061_002",
+            "Grampian-2021-2022:p0043_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -3796,13 +3857,14 @@
             19,
             20,
             24,
-            17,
             22,
-            71,
-            140
+            140,
+            80,
+            61,
+            43
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
+          "page_precision_at_k": 0.125,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
@@ -3880,8 +3942,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0012_002",
-            "Grampian-2021-2022:p0033_000",
-            "Grampian-2021-2022:p0012_001"
+            "Grampian-2021-2022:p0033_001",
+            "Grampian-2021-2022:p0031_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -3890,18 +3952,19 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            33
+            33,
+            31
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -3912,10 +3975,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0012_002",
-            "Grampian-2021-2022:p0033_000",
-            "Grampian-2021-2022:p0012_001",
-            "Grampian-2021-2022:p0013_000",
-            "Grampian-2021-2022:p0031_000"
+            "Grampian-2021-2022:p0033_001",
+            "Grampian-2021-2022:p0031_001",
+            "Grampian-2021-2022:p0012_003",
+            "Grampian-2021-2022:p0140_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -3927,8 +3990,8 @@
           "retrieved_pages_ranked": [
             12,
             33,
-            13,
-            31
+            31,
+            140
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -3939,8 +4002,8 @@
           "chunk_hit_flags": [
             1,
             0,
-            1,
             0,
+            1,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -3952,15 +4015,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0012_002",
-            "Grampian-2021-2022:p0033_000",
-            "Grampian-2021-2022:p0012_001",
-            "Grampian-2021-2022:p0013_000",
-            "Grampian-2021-2022:p0031_000",
+            "Grampian-2021-2022:p0033_001",
+            "Grampian-2021-2022:p0031_001",
+            "Grampian-2021-2022:p0012_003",
             "Grampian-2021-2022:p0140_002",
-            "Grampian-2021-2022:p0051_000",
-            "Grampian-2021-2022:p0038_001",
-            "Grampian-2021-2022:p0017_002",
-            "Grampian-2021-2022:p0049_000"
+            "Grampian-2021-2022:p0013_001",
+            "Grampian-2021-2022:p0038_002",
+            "Grampian-2021-2022:p0049_000",
+            "Grampian-2021-2022:p0057_003",
+            "Grampian-2021-2022:p0143_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -3977,13 +4040,13 @@
           "retrieved_pages_ranked": [
             12,
             33,
-            13,
             31,
             140,
-            51,
+            13,
             38,
-            17,
-            49
+            49,
+            57,
+            143
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.1111111111111111,
@@ -3994,8 +4057,8 @@
           "chunk_hit_flags": [
             1,
             0,
-            1,
             0,
+            1,
             0,
             0,
             0,
@@ -4064,8 +4127,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0012_002",
-            "Grampian-2021-2022:p0012_001",
-            "Grampian-2021-2022:p0013_000"
+            "Grampian-2021-2022:p0096_000",
+            "Grampian-2021-2022:p0012_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -4074,7 +4137,7 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            13
+            96
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
@@ -4084,8 +4147,8 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
-            0
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -4096,10 +4159,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0012_002",
-            "Grampian-2021-2022:p0012_001",
-            "Grampian-2021-2022:p0013_000",
             "Grampian-2021-2022:p0096_000",
-            "Grampian-2021-2022:p0140_002"
+            "Grampian-2021-2022:p0012_003",
+            "Grampian-2021-2022:p0140_002",
+            "Grampian-2021-2022:p0013_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -4110,9 +4173,9 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            13,
             96,
-            140
+            140,
+            13
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -4122,8 +4185,8 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
             0,
+            1,
             0,
             0
           ],
@@ -4136,15 +4199,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0012_002",
-            "Grampian-2021-2022:p0012_001",
-            "Grampian-2021-2022:p0013_000",
             "Grampian-2021-2022:p0096_000",
+            "Grampian-2021-2022:p0012_003",
             "Grampian-2021-2022:p0140_002",
-            "Grampian-2021-2022:p0031_000",
-            "Grampian-2021-2022:p0032_000",
-            "Grampian-2021-2022:p0125_000",
-            "Grampian-2021-2022:p0033_000",
-            "Grampian-2021-2022:p0096_001"
+            "Grampian-2021-2022:p0013_001",
+            "Grampian-2021-2022:p0031_001",
+            "Grampian-2021-2022:p0033_001",
+            "Grampian-2021-2022:p0032_001",
+            "Grampian-2021-2022:p0049_000",
+            "Grampian-2021-2022:p0082_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -4160,24 +4223,25 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            13,
             96,
             140,
+            13,
             31,
+            33,
             32,
-            125,
-            33
+            49,
+            82
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
+          "page_precision_at_k": 0.1111111111111111,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
             0,
+            1,
             0,
             0,
             0,
@@ -4247,8 +4311,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0012_002",
-            "Grampian-2021-2022:p0012_001",
-            "Grampian-2021-2022:p0032_000"
+            "Grampian-2021-2022:p0012_003",
+            "Grampian-2021-2022:p0032_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -4279,10 +4343,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0012_002",
-            "Grampian-2021-2022:p0012_001",
-            "Grampian-2021-2022:p0032_000",
-            "Grampian-2021-2022:p0013_000",
-            "Grampian-2021-2022:p0033_000"
+            "Grampian-2021-2022:p0012_003",
+            "Grampian-2021-2022:p0032_001",
+            "Grampian-2021-2022:p0033_001",
+            "Grampian-2021-2022:p0013_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -4294,8 +4358,8 @@
           "retrieved_pages_ranked": [
             12,
             32,
-            13,
-            33
+            33,
+            13
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -4319,15 +4383,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0012_002",
-            "Grampian-2021-2022:p0012_001",
-            "Grampian-2021-2022:p0032_000",
-            "Grampian-2021-2022:p0013_000",
-            "Grampian-2021-2022:p0033_000",
-            "Grampian-2021-2022:p0125_000",
-            "Grampian-2021-2022:p0138_002",
-            "Grampian-2021-2022:p0125_001",
+            "Grampian-2021-2022:p0012_003",
+            "Grampian-2021-2022:p0032_001",
+            "Grampian-2021-2022:p0033_001",
+            "Grampian-2021-2022:p0013_001",
             "Grampian-2021-2022:p0140_002",
-            "Grampian-2021-2022:p0031_000"
+            "Grampian-2021-2022:p0125_000",
+            "Grampian-2021-2022:p0031_001",
+            "Grampian-2021-2022:p0029_002",
+            "Grampian-2021-2022:p0029_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -4344,12 +4408,12 @@
           "retrieved_pages_ranked": [
             12,
             32,
-            13,
             33,
-            125,
-            138,
+            13,
             140,
-            31
+            125,
+            31,
+            29
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
@@ -4430,8 +4494,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0012_002",
-            "Grampian-2021-2022:p0012_001",
-            "Grampian-2021-2022:p0013_000"
+            "Grampian-2021-2022:p0012_003",
+            "Grampian-2021-2022:p0032_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -4440,7 +4504,7 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            13
+            32
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
@@ -4462,10 +4526,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0012_002",
-            "Grampian-2021-2022:p0012_001",
-            "Grampian-2021-2022:p0013_000",
-            "Grampian-2021-2022:p0032_000",
-            "Grampian-2021-2022:p0138_002"
+            "Grampian-2021-2022:p0012_003",
+            "Grampian-2021-2022:p0032_001",
+            "Grampian-2021-2022:p0033_001",
+            "Grampian-2021-2022:p0013_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -4476,9 +4540,9 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            13,
             32,
-            138
+            33,
+            13
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -4502,15 +4566,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0012_002",
-            "Grampian-2021-2022:p0012_001",
-            "Grampian-2021-2022:p0013_000",
-            "Grampian-2021-2022:p0032_000",
-            "Grampian-2021-2022:p0138_002",
-            "Grampian-2021-2022:p0033_000",
-            "Grampian-2021-2022:p0125_000",
-            "Grampian-2021-2022:p0125_001",
+            "Grampian-2021-2022:p0012_003",
+            "Grampian-2021-2022:p0032_001",
+            "Grampian-2021-2022:p0033_001",
+            "Grampian-2021-2022:p0013_001",
             "Grampian-2021-2022:p0140_002",
-            "Grampian-2021-2022:p0029_002"
+            "Grampian-2021-2022:p0125_000",
+            "Grampian-2021-2022:p0029_002",
+            "Grampian-2021-2022:p0029_003",
+            "Grampian-2021-2022:p0031_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -4526,13 +4590,13 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            13,
             32,
-            138,
             33,
-            125,
+            13,
             140,
-            29
+            125,
+            29,
+            31
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.125,
@@ -4613,8 +4677,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0012_002",
-            "Grampian-2021-2022:p0017_002",
-            "Grampian-2021-2022:p0012_001"
+            "Grampian-2021-2022:p0032_001",
+            "Grampian-2021-2022:p0033_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -4623,18 +4687,19 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            17
+            32,
+            33
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -4645,10 +4710,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0012_002",
-            "Grampian-2021-2022:p0017_002",
-            "Grampian-2021-2022:p0012_001",
-            "Grampian-2021-2022:p0032_000",
-            "Grampian-2021-2022:p0033_000"
+            "Grampian-2021-2022:p0032_001",
+            "Grampian-2021-2022:p0033_001",
+            "Grampian-2021-2022:p0122_000",
+            "Grampian-2021-2022:p0042_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -4659,20 +4724,21 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            17,
             32,
-            33
+            33,
+            122,
+            42
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
+          "page_precision_at_k": 0.2,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
-            1,
+            0,
             0,
             0
           ],
@@ -4685,15 +4751,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0012_002",
-            "Grampian-2021-2022:p0017_002",
-            "Grampian-2021-2022:p0012_001",
-            "Grampian-2021-2022:p0032_000",
-            "Grampian-2021-2022:p0033_000",
-            "Grampian-2021-2022:p0013_000",
+            "Grampian-2021-2022:p0032_001",
+            "Grampian-2021-2022:p0033_001",
+            "Grampian-2021-2022:p0122_000",
             "Grampian-2021-2022:p0042_002",
+            "Grampian-2021-2022:p0082_002",
+            "Grampian-2021-2022:p0082_001",
             "Grampian-2021-2022:p0096_000",
-            "Grampian-2021-2022:p0017_003",
-            "Grampian-2021-2022:p0125_000"
+            "Grampian-2021-2022:p0052_003",
+            "Grampian-2021-2022:p0024_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -4709,24 +4775,25 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            17,
             32,
             33,
-            13,
+            122,
             42,
+            82,
             96,
-            125
+            52,
+            24
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
+          "page_precision_at_k": 0.1111111111111111,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.2,
+          "chunk_precision_at_k": 0.1,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
-            1,
+            0,
             0,
             0,
             0,
@@ -4872,11 +4939,11 @@
             "Grampian-2021-2022:p0044_000",
             "Grampian-2021-2022:p0015_000",
             "Grampian-2021-2022:p0051_001",
-            "Grampian-2021-2022:p0018_000",
+            "Grampian-2021-2022:p0018_001",
             "Grampian-2021-2022:p0016_001",
             "Grampian-2021-2022:p0004_000",
             "Grampian-2021-2022:p0011_001",
-            "Grampian-2021-2022:p0057_002"
+            "Grampian-2021-2022:p0063_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -4899,7 +4966,7 @@
             16,
             4,
             11,
-            57
+            63
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.1111111111111111,
@@ -4981,7 +5048,7 @@
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0016_001",
             "Grampian-2021-2022:p0005_000",
-            "Grampian-2021-2022:p0057_002"
+            "Grampian-2021-2022:p0009_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -4991,7 +5058,7 @@
           "retrieved_pages_ranked": [
             16,
             5,
-            57
+            9
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
@@ -5014,8 +5081,8 @@
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0016_001",
             "Grampian-2021-2022:p0005_000",
-            "Grampian-2021-2022:p0057_002",
             "Grampian-2021-2022:p0009_002",
+            "Grampian-2021-2022:p0058_001",
             "Grampian-2021-2022:p0015_001"
           ],
           "retrieved_doc_ids_top_k": [
@@ -5028,8 +5095,8 @@
           "retrieved_pages_ranked": [
             16,
             5,
-            57,
             9,
+            58,
             15
           ],
           "page_recall_at_k": 1.0,
@@ -5055,13 +5122,13 @@
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0016_001",
             "Grampian-2021-2022:p0005_000",
-            "Grampian-2021-2022:p0057_002",
             "Grampian-2021-2022:p0009_002",
+            "Grampian-2021-2022:p0058_001",
             "Grampian-2021-2022:p0015_001",
-            "Grampian-2021-2022:p0058_000",
-            "Grampian-2021-2022:p0015_000",
+            "Grampian-2021-2022:p0057_004",
+            "Grampian-2021-2022:p0021_000",
             "Grampian-2021-2022:p0009_001",
-            "Grampian-2021-2022:p0005_001",
+            "Grampian-2021-2022:p0015_000",
             "Grampian-2021-2022:p0016_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -5079,13 +5146,14 @@
           "retrieved_pages_ranked": [
             16,
             5,
-            57,
             9,
+            58,
             15,
-            58
+            57,
+            21
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.16666666666666666,
+          "page_precision_at_k": 0.14285714285714285,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
@@ -5137,7 +5205,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0057_002"
+            "Grampian-2021-2022:p0057_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -5162,7 +5230,7 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0057_002",
+            "Grampian-2021-2022:p0057_004",
             "Grampian-2021-2022:p0015_000",
             "Grampian-2021-2022:p0080_002"
           ],
@@ -5195,11 +5263,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0057_002",
+            "Grampian-2021-2022:p0057_004",
             "Grampian-2021-2022:p0015_000",
             "Grampian-2021-2022:p0080_002",
-            "Grampian-2021-2022:p0016_000",
-            "Grampian-2021-2022:p0009_002"
+            "Grampian-2021-2022:p0009_002",
+            "Grampian-2021-2022:p0016_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -5212,21 +5280,21 @@
             57,
             15,
             80,
-            16,
-            9
+            9,
+            16
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.2,
-          "page_mrr_at_k": 0.25,
+          "page_mrr_at_k": 0.2,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 0.25,
+          "chunk_mrr_at_k": 0.2,
           "chunk_hit_flags": [
             0,
             0,
             0,
-            1,
-            0
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -5236,16 +5304,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0057_002",
+            "Grampian-2021-2022:p0057_004",
             "Grampian-2021-2022:p0015_000",
             "Grampian-2021-2022:p0080_002",
-            "Grampian-2021-2022:p0016_000",
             "Grampian-2021-2022:p0009_002",
-            "Grampian-2021-2022:p0016_001",
+            "Grampian-2021-2022:p0016_000",
             "Grampian-2021-2022:p0015_001",
+            "Grampian-2021-2022:p0016_001",
             "Grampian-2021-2022:p0007_001",
             "Grampian-2021-2022:p0005_001",
-            "Grampian-2021-2022:p0057_003"
+            "Grampian-2021-2022:p0007_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -5263,25 +5331,25 @@
             57,
             15,
             80,
-            16,
             9,
+            16,
             7,
             5
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.14285714285714285,
-          "page_mrr_at_k": 0.25,
+          "page_mrr_at_k": 0.2,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 0.25,
+          "chunk_mrr_at_k": 0.2,
           "chunk_hit_flags": [
             0,
             0,
             0,
-            1,
             0,
             1,
             0,
+            1,
             0,
             0,
             0
@@ -5315,40 +5383,40 @@
         "prefer_evidence_layout": "paragraph",
         "prefer_table_chunks": false
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_000"
+            "Grampian-2021-2022:p0022_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21
+            22
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_000",
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0022_000"
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0025_001",
+            "Grampian-2021-2022:p0021_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -5356,19 +5424,20 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21,
-            22
+            22,
+            25,
+            21
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
-            1,
-            1,
-            0
+            0,
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -5378,11 +5447,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0025_001",
             "Grampian-2021-2022:p0021_000",
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0025_000",
-            "Grampian-2021-2022:p0021_002"
+            "Grampian-2021-2022:p0027_000",
+            "Grampian-2021-2022:p0044_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -5392,22 +5461,24 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21,
             22,
-            25
+            25,
+            21,
+            27,
+            44
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.2,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
-            1,
-            1,
             0,
             0,
-            1
+            1,
+            0,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -5417,16 +5488,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0025_001",
             "Grampian-2021-2022:p0021_000",
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0025_000",
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0044_000",
             "Grampian-2021-2022:p0027_000",
+            "Grampian-2021-2022:p0044_000",
             "Grampian-2021-2022:p0146_000",
             "Grampian-2021-2022:p0028_001",
-            "Grampian-2021-2022:p0028_000"
+            "Grampian-2021-2022:p0026_001",
+            "Grampian-2021-2022:p0028_000",
+            "Grampian-2021-2022:p0135_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -5441,26 +5512,28 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21,
             22,
             25,
-            44,
+            21,
             27,
+            44,
             146,
-            28
+            28,
+            26,
+            135
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.1111111111111111,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.1,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
-            1,
-            1,
             0,
             0,
             1,
+            0,
+            0,
             0,
             0,
             0,
@@ -5496,28 +5569,61 @@
         "prefer_evidence_layout": "table",
         "prefer_table_chunks": true
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001"
+            "Grampian-2021-2022:p0022_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21
+            22
+          ],
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
+          "chunk_hit_flags": [
+            0
+          ],
+          "table_chunk_hit_at_k": 0.0,
+          "failure_stage": "missed_top_ranked",
+          "leakage_count_top_k": 0,
+          "leakage_doc_ids_top_k": [],
+          "leakage_rate_top_k": 0.0
+        },
+        "3": {
+          "retrieved_chunk_ids": [
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:table_p0113"
+          ],
+          "retrieved_doc_ids_top_k": [
+            "Grampian-2021-2022",
+            "Grampian-2021-2022",
+            "Grampian-2021-2022"
+          ],
+          "retrieved_pages_ranked": [
+            22,
+            21,
+            113
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1
+            0,
+            1,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -5525,44 +5631,13 @@
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
-        "3": {
-          "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:table_p0021",
-            "Grampian-2021-2022:p0021_002"
-          ],
-          "retrieved_doc_ids_top_k": [
-            "Grampian-2021-2022",
-            "Grampian-2021-2022",
-            "Grampian-2021-2022"
-          ],
-          "retrieved_pages_ranked": [
-            21
-          ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
-          "chunk_hit_flags": [
-            1,
-            1,
-            1
-          ],
-          "table_chunk_hit_at_k": 1.0,
-          "failure_stage": "hit",
-          "leakage_count_top_k": 0,
-          "leakage_doc_ids_top_k": [],
-          "leakage_rate_top_k": 0.0
-        },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:table_p0021",
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0021_000"
+            "Grampian-2021-2022:p0022_001",
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:table_p0113",
+            "Grampian-2021-2022:p0097_001",
+            "Grampian-2021-2022:p0025_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -5572,23 +5647,26 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
+            22,
             21,
-            22
+            113,
+            97,
+            25
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.2,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.8,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
-            1,
+            0,
             1,
             0,
-            1
+            0,
+            0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -5596,16 +5674,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:table_p0021",
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0022_000",
+            "Grampian-2021-2022:p0022_001",
             "Grampian-2021-2022:p0021_000",
-            "Grampian-2021-2022:p0097_001",
             "Grampian-2021-2022:table_p0113",
-            "Grampian-2021-2022:p0025_000",
-            "Grampian-2021-2022:p0037_001",
-            "Grampian-2021-2022:p0011_001"
+            "Grampian-2021-2022:p0097_001",
+            "Grampian-2021-2022:p0025_001",
+            "Grampian-2021-2022:p0037_002",
+            "Grampian-2021-2022:p0011_001",
+            "Grampian-2021-2022:p0081_001",
+            "Grampian-2021-2022:p0083_000",
+            "Grampian-2021-2022:p0135_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -5620,33 +5698,36 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21,
             22,
-            97,
+            21,
             113,
+            97,
             25,
             37,
-            11
+            11,
+            81,
+            83,
+            135
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
-          "page_mrr_at_k": 1.0,
+          "page_precision_at_k": 0.1,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 1.0,
+          "chunk_precision_at_k": 0.1,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            1,
-            1,
-            1,
             0,
             1,
+            0,
+            0,
+            0,
             0,
             0,
             0,
             0,
             0
           ],
-          "table_chunk_hit_at_k": 1.0,
+          "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
@@ -5681,7 +5762,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0018_000"
+            "Grampian-2021-2022:p0018_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -5706,9 +5787,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0018_000",
-            "Grampian-2021-2022:p0021_000",
-            "Grampian-2021-2022:p0081_000"
+            "Grampian-2021-2022:p0018_001",
+            "Grampian-2021-2022:p0081_000",
+            "Grampian-2021-2022:p0015_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -5717,8 +5798,8 @@
           ],
           "retrieved_pages_ranked": [
             18,
-            21,
-            81
+            81,
+            15
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -5739,11 +5820,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0018_000",
-            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:p0018_001",
             "Grampian-2021-2022:p0081_000",
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0015_000"
+            "Grampian-2021-2022:p0015_000",
+            "Grampian-2021-2022:p0114_001",
+            "Grampian-2021-2022:p0025_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -5754,41 +5835,42 @@
           ],
           "retrieved_pages_ranked": [
             18,
-            21,
             81,
-            15
+            15,
+            114,
+            25
           ],
-          "page_recall_at_k": 0.0,
-          "page_precision_at_k": 0.0,
-          "page_mrr_at_k": 0.0,
-          "chunk_hit_at_k": 0.0,
-          "chunk_precision_at_k": 0.0,
-          "chunk_mrr_at_k": 0.0,
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 0.2,
+          "page_mrr_at_k": 0.2,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.2,
           "chunk_hit_flags": [
             0,
             0,
             0,
             0,
-            0
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "missed_top_ranked",
+          "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0018_000",
-            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:p0018_001",
             "Grampian-2021-2022:p0081_000",
-            "Grampian-2021-2022:p0021_001",
             "Grampian-2021-2022:p0015_000",
             "Grampian-2021-2022:p0114_001",
-            "Grampian-2021-2022:p0082_000",
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0025_000",
-            "Grampian-2021-2022:p0007_000"
+            "Grampian-2021-2022:p0025_001",
+            "Grampian-2021-2022:p0117_000",
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:p0009_000",
+            "Grampian-2021-2022:p0007_000",
+            "Grampian-2021-2022:p0028_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -5804,30 +5886,32 @@
           ],
           "retrieved_pages_ranked": [
             18,
-            21,
             81,
             15,
             114,
-            82,
             25,
-            7
+            117,
+            21,
+            9,
+            7,
+            28
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
-          "page_mrr_at_k": 0.14285714285714285,
+          "page_precision_at_k": 0.1,
+          "page_mrr_at_k": 0.2,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.1,
-          "chunk_mrr_at_k": 0.1111111111111111,
+          "chunk_mrr_at_k": 0.2,
           "chunk_hit_flags": [
             0,
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
             1,
+            0,
+            0,
+            0,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -5865,7 +5949,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0025_000"
+            "Grampian-2021-2022:p0025_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -5890,9 +5974,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0025_000",
+            "Grampian-2021-2022:p0025_001",
             "Grampian-2021-2022:table_p0132",
-            "Grampian-2021-2022:p0025_001"
+            "Grampian-2021-2022:p0122_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -5901,18 +5985,19 @@
           ],
           "retrieved_pages_ranked": [
             25,
-            132
+            132,
+            122
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -5922,11 +6007,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0025_000",
-            "Grampian-2021-2022:table_p0132",
             "Grampian-2021-2022:p0025_001",
-            "Grampian-2021-2022:p0013_000",
-            "Grampian-2021-2022:p0082_000"
+            "Grampian-2021-2022:table_p0132",
+            "Grampian-2021-2022:p0122_000",
+            "Grampian-2021-2022:p0082_002",
+            "Grampian-2021-2022:p0082_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -5938,19 +6023,19 @@
           "retrieved_pages_ranked": [
             25,
             132,
-            13,
+            122,
             82
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
+          "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             0,
-            1,
+            0,
             0,
             0
           ],
@@ -5962,16 +6047,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0025_000",
-            "Grampian-2021-2022:table_p0132",
             "Grampian-2021-2022:p0025_001",
-            "Grampian-2021-2022:p0013_000",
-            "Grampian-2021-2022:p0082_000",
+            "Grampian-2021-2022:table_p0132",
+            "Grampian-2021-2022:p0122_000",
+            "Grampian-2021-2022:p0082_002",
+            "Grampian-2021-2022:p0082_001",
             "Grampian-2021-2022:p0006_000",
             "Grampian-2021-2022:p0006_001",
-            "Grampian-2021-2022:p0032_001",
-            "Grampian-2021-2022:p0064_000",
-            "Grampian-2021-2022:p0032_000"
+            "Grampian-2021-2022:p0013_001",
+            "Grampian-2021-2022:p0025_002",
+            "Grampian-2021-2022:p0064_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -5988,10 +6073,10 @@
           "retrieved_pages_ranked": [
             25,
             132,
-            13,
+            122,
             82,
             6,
-            32,
+            13,
             64
           ],
           "page_recall_at_k": 1.0,
@@ -6003,13 +6088,13 @@
           "chunk_hit_flags": [
             1,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -6047,7 +6132,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0025_000"
+            "Grampian-2021-2022:p0025_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -6072,9 +6157,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0025_000",
             "Grampian-2021-2022:p0025_001",
-            "Grampian-2021-2022:p0068_001"
+            "Grampian-2021-2022:p0025_002",
+            "Grampian-2021-2022:p0082_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -6083,7 +6168,7 @@
           ],
           "retrieved_pages_ranked": [
             25,
-            68
+            82
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.5,
@@ -6104,11 +6189,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0025_000",
             "Grampian-2021-2022:p0025_001",
-            "Grampian-2021-2022:p0068_001",
-            "Grampian-2021-2022:p0082_000",
-            "Grampian-2021-2022:p0011_000"
+            "Grampian-2021-2022:p0025_002",
+            "Grampian-2021-2022:p0082_002",
+            "Grampian-2021-2022:p0082_001",
+            "Grampian-2021-2022:p0068_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -6119,12 +6204,11 @@
           ],
           "retrieved_pages_ranked": [
             25,
-            68,
             82,
-            11
+            68
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.4,
@@ -6144,16 +6228,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0025_000",
             "Grampian-2021-2022:p0025_001",
+            "Grampian-2021-2022:p0025_002",
+            "Grampian-2021-2022:p0082_002",
+            "Grampian-2021-2022:p0082_001",
             "Grampian-2021-2022:p0068_001",
-            "Grampian-2021-2022:p0082_000",
+            "Grampian-2021-2022:p0022_001",
             "Grampian-2021-2022:p0011_000",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0138_003",
             "Grampian-2021-2022:p0100_000",
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0034_002"
+            "Grampian-2021-2022:p0034_003",
+            "Grampian-2021-2022:p0019_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -6169,17 +6253,16 @@
           ],
           "retrieved_pages_ranked": [
             25,
-            68,
             82,
-            11,
+            68,
             22,
-            138,
+            11,
             100,
-            21,
-            34
+            34,
+            19
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.1111111111111111,
+          "page_precision_at_k": 0.125,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
@@ -6231,13 +6314,13 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002"
+            "Grampian-2021-2022:p0025_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            21
+            25
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -6256,9 +6339,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0025_000"
+            "Grampian-2021-2022:p0025_001",
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:p0022_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -6266,20 +6349,20 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
+            25,
             21,
-            22,
-            25
+            22
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 0.5,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
             0,
-            1,
-            0
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -6289,11 +6372,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0025_000",
-            "Grampian-2021-2022:p0022_002",
-            "Grampian-2021-2022:p0022_001"
+            "Grampian-2021-2022:p0025_001",
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:p0022_004",
+            "Grampian-2021-2022:p0022_003",
+            "Grampian-2021-2022:p0076_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -6303,22 +6386,23 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
+            25,
             21,
             22,
-            25
+            76
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 0.5,
+          "page_precision_at_k": 0.25,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_precision_at_k": 0.4,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
             0,
-            1,
             0,
             1,
-            1
+            1,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -6328,16 +6412,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0021_002",
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0025_000",
-            "Grampian-2021-2022:p0022_002",
-            "Grampian-2021-2022:p0022_001",
-            "Grampian-2021-2022:p0076_001",
-            "Grampian-2021-2022:p0020_000",
-            "Grampian-2021-2022:p0023_001",
+            "Grampian-2021-2022:p0025_001",
+            "Grampian-2021-2022:p0021_000",
+            "Grampian-2021-2022:p0022_004",
             "Grampian-2021-2022:p0022_003",
-            "Grampian-2021-2022:p0020_001"
+            "Grampian-2021-2022:p0076_001",
+            "Grampian-2021-2022:p0023_001",
+            "Grampian-2021-2022:p0020_001",
+            "Grampian-2021-2022:p0023_002",
+            "Grampian-2021-2022:p0027_000",
+            "Grampian-2021-2022:p0022_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -6352,30 +6436,31 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
+            25,
             21,
             22,
-            25,
             76,
+            23,
             20,
-            23
+            27
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.16666666666666666,
-          "page_mrr_at_k": 0.5,
+          "page_precision_at_k": 0.14285714285714285,
+          "page_mrr_at_k": 0.3333333333333333,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 0.5,
+          "chunk_precision_at_k": 0.3,
+          "chunk_mrr_at_k": 0.3333333333333333,
           "chunk_hit_flags": [
             0,
-            1,
             0,
             1,
             1,
             0,
             0,
             0,
-            1,
-            0
+            0,
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -6412,7 +6497,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0037_001"
+            "Grampian-2021-2022:p0037_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -6437,9 +6522,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0037_001",
+            "Grampian-2021-2022:p0037_003",
             "Grampian-2021-2022:p0037_002",
-            "Grampian-2021-2022:p0054_000"
+            "Grampian-2021-2022:p0054_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -6469,11 +6554,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0037_001",
+            "Grampian-2021-2022:p0037_003",
             "Grampian-2021-2022:p0037_002",
-            "Grampian-2021-2022:p0054_000",
-            "Grampian-2021-2022:p0038_001",
-            "Grampian-2021-2022:p0057_001"
+            "Grampian-2021-2022:p0054_001",
+            "Grampian-2021-2022:p0038_002",
+            "Grampian-2021-2022:p0010_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -6486,7 +6571,7 @@
             37,
             54,
             38,
-            57
+            10
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -6509,16 +6594,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0037_001",
+            "Grampian-2021-2022:p0037_003",
             "Grampian-2021-2022:p0037_002",
-            "Grampian-2021-2022:p0054_000",
+            "Grampian-2021-2022:p0054_001",
+            "Grampian-2021-2022:p0038_002",
+            "Grampian-2021-2022:p0010_001",
             "Grampian-2021-2022:p0038_001",
             "Grampian-2021-2022:p0057_001",
-            "Grampian-2021-2022:p0010_001",
-            "Grampian-2021-2022:p0038_000",
-            "Grampian-2021-2022:p0057_000",
-            "Grampian-2021-2022:p0060_002",
-            "Grampian-2021-2022:p0053_000"
+            "Grampian-2021-2022:p0053_001",
+            "Grampian-2021-2022:p0057_002",
+            "Grampian-2021-2022:p0057_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -6536,13 +6621,12 @@
             37,
             54,
             38,
-            57,
             10,
-            60,
+            57,
             53
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.14285714285714285,
+          "page_precision_at_k": 0.16666666666666666,
           "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.1,
@@ -6594,13 +6678,13 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002"
+            "Grampian-2021-2022:p0080_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            19
+            80
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -6619,9 +6703,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002",
-            "Grampian-2021-2022:p0022_003",
-            "Grampian-2021-2022:p0080_000"
+            "Grampian-2021-2022:p0080_000",
+            "Grampian-2021-2022:p0117_000",
+            "Grampian-2021-2022:p0019_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -6629,9 +6713,9 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            19,
-            22,
-            80
+            80,
+            117,
+            19
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -6652,10 +6736,10 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002",
-            "Grampian-2021-2022:p0022_003",
             "Grampian-2021-2022:p0080_000",
-            "Grampian-2021-2022:table_p0071",
+            "Grampian-2021-2022:p0117_000",
+            "Grampian-2021-2022:p0019_003",
+            "Grampian-2021-2022:p0135_000",
             "Grampian-2021-2022:p0076_001"
           ],
           "retrieved_doc_ids_top_k": [
@@ -6666,10 +6750,10 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            19,
-            22,
             80,
-            71,
+            117,
+            19,
+            135,
             76
           ],
           "page_recall_at_k": 0.0,
@@ -6693,16 +6777,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002",
-            "Grampian-2021-2022:p0022_003",
             "Grampian-2021-2022:p0080_000",
-            "Grampian-2021-2022:table_p0071",
-            "Grampian-2021-2022:p0076_001",
-            "Grampian-2021-2022:table_p0125",
-            "Grampian-2021-2022:p0012_002",
+            "Grampian-2021-2022:p0117_000",
+            "Grampian-2021-2022:p0019_003",
             "Grampian-2021-2022:p0135_000",
+            "Grampian-2021-2022:p0076_001",
             "Grampian-2021-2022:p0027_001",
-            "Grampian-2021-2022:p0017_002"
+            "Grampian-2021-2022:p0012_002",
+            "Grampian-2021-2022:p0080_001",
+            "Grampian-2021-2022:p0083_000",
+            "Grampian-2021-2022:table_p0071"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -6717,16 +6801,15 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            19,
-            22,
             80,
-            71,
-            76,
-            125,
-            12,
+            117,
+            19,
             135,
+            76,
             27,
-            17
+            12,
+            83,
+            71
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -6781,7 +6864,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002"
+            "Grampian-2021-2022:p0019_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -6806,9 +6889,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002",
-            "Grampian-2021-2022:p0022_003",
-            "Grampian-2021-2022:p0023_000"
+            "Grampian-2021-2022:p0019_003",
+            "Grampian-2021-2022:p0023_001",
+            "Grampian-2021-2022:p0076_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -6817,19 +6900,19 @@
           ],
           "retrieved_pages_ranked": [
             19,
-            22,
-            23
+            23,
+            76
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
             0,
-            0,
-            1
+            1,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -6839,11 +6922,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002",
-            "Grampian-2021-2022:p0022_003",
-            "Grampian-2021-2022:p0023_000",
+            "Grampian-2021-2022:p0019_003",
+            "Grampian-2021-2022:p0023_001",
             "Grampian-2021-2022:p0076_001",
-            "Grampian-2021-2022:p0023_001"
+            "Grampian-2021-2022:p0023_002",
+            "Grampian-2021-2022:table_p0071"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -6854,22 +6937,22 @@
           ],
           "retrieved_pages_ranked": [
             19,
-            22,
             23,
-            76
+            76,
+            71
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
-          "page_mrr_at_k": 0.3333333333333333,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
-            0,
             0,
             1,
             0,
-            1
+            1,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -6879,16 +6962,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002",
-            "Grampian-2021-2022:p0022_003",
-            "Grampian-2021-2022:p0023_000",
-            "Grampian-2021-2022:p0076_001",
+            "Grampian-2021-2022:p0019_003",
             "Grampian-2021-2022:p0023_001",
+            "Grampian-2021-2022:p0076_001",
+            "Grampian-2021-2022:p0023_002",
             "Grampian-2021-2022:table_p0071",
+            "Grampian-2021-2022:p0117_000",
             "Grampian-2021-2022:table_p0078",
-            "Grampian-2021-2022:table_p0116",
+            "Grampian-2021-2022:p0019_002",
             "Grampian-2021-2022:p0080_000",
-            "Grampian-2021-2022:p0135_000"
+            "Grampian-2021-2022:table_p0116"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -6904,27 +6987,26 @@
           ],
           "retrieved_pages_ranked": [
             19,
-            22,
             23,
             76,
             71,
+            117,
             78,
-            116,
             80,
-            135
+            116
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.1111111111111111,
-          "page_mrr_at_k": 0.3333333333333333,
+          "page_precision_at_k": 0.125,
+          "page_mrr_at_k": 0.5,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
-          "chunk_mrr_at_k": 0.3333333333333333,
+          "chunk_mrr_at_k": 0.5,
           "chunk_hit_flags": [
             0,
-            0,
             1,
             0,
             1,
+            0,
             0,
             0,
             0,
@@ -6966,13 +7048,13 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_003"
+            "Grampian-2021-2022:p0024_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            22
+            24
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -6991,9 +7073,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_003",
-            "Grampian-2021-2022:p0017_001",
-            "Grampian-2021-2022:p0024_000"
+            "Grampian-2021-2022:p0024_001",
+            "Grampian-2021-2022:p0020_002",
+            "Grampian-2021-2022:p0020_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -7001,9 +7083,8 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            22,
-            17,
-            24
+            24,
+            20
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -7024,11 +7105,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_003",
-            "Grampian-2021-2022:p0017_001",
-            "Grampian-2021-2022:p0024_000",
-            "Grampian-2021-2022:p0017_002",
-            "Grampian-2021-2022:p0019_002"
+            "Grampian-2021-2022:p0024_001",
+            "Grampian-2021-2022:p0020_002",
+            "Grampian-2021-2022:p0020_001",
+            "Grampian-2021-2022:p0019_004",
+            "Grampian-2021-2022:p0023_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -7038,42 +7119,42 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            22,
-            17,
             24,
-            19
+            20,
+            19,
+            23
           ],
-          "page_recall_at_k": 0.0,
-          "page_precision_at_k": 0.0,
-          "page_mrr_at_k": 0.0,
-          "chunk_hit_at_k": 0.0,
-          "chunk_precision_at_k": 0.0,
-          "chunk_mrr_at_k": 0.0,
+          "page_recall_at_k": 1.0,
+          "page_precision_at_k": 0.25,
+          "page_mrr_at_k": 0.25,
+          "chunk_hit_at_k": 1.0,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.2,
           "chunk_hit_flags": [
             0,
             0,
             0,
             0,
-            0
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "missed_top_ranked",
+          "failure_stage": "hit",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_003",
-            "Grampian-2021-2022:p0017_001",
-            "Grampian-2021-2022:p0024_000",
-            "Grampian-2021-2022:p0017_002",
-            "Grampian-2021-2022:p0019_002",
+            "Grampian-2021-2022:p0024_001",
+            "Grampian-2021-2022:p0020_002",
             "Grampian-2021-2022:p0020_001",
-            "Grampian-2021-2022:p0023_000",
-            "Grampian-2021-2022:p0020_000",
+            "Grampian-2021-2022:p0019_004",
+            "Grampian-2021-2022:p0023_001",
             "Grampian-2021-2022:p0019_003",
-            "Grampian-2021-2022:p0020_002"
+            "Grampian-2021-2022:p0018_002",
+            "Grampian-2021-2022:p0023_004",
+            "Grampian-2021-2022:p0025_001",
+            "Grampian-2021-2022:p0117_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -7088,28 +7169,29 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            22,
-            17,
             24,
-            19,
             20,
-            23
+            19,
+            23,
+            18,
+            25,
+            117
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.16666666666666666,
-          "page_mrr_at_k": 0.16666666666666666,
+          "page_precision_at_k": 0.14285714285714285,
+          "page_mrr_at_k": 0.25,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.1,
-          "chunk_mrr_at_k": 0.14285714285714285,
+          "chunk_precision_at_k": 0.2,
+          "chunk_mrr_at_k": 0.2,
           "chunk_hit_flags": [
-            0,
-            0,
             0,
             0,
             0,
             0,
             1,
             0,
+            0,
+            1,
             0,
             0
           ],
@@ -7174,8 +7256,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0016_000",
-            "Grampian-2021-2022:p0032_000",
-            "Grampian-2021-2022:p0029_000"
+            "Grampian-2021-2022:p0032_001",
+            "Grampian-2021-2022:p0019_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -7185,7 +7267,7 @@
           "retrieved_pages_ranked": [
             16,
             32,
-            29
+            19
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
@@ -7207,10 +7289,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0016_000",
-            "Grampian-2021-2022:p0032_000",
+            "Grampian-2021-2022:p0032_001",
+            "Grampian-2021-2022:p0019_004",
             "Grampian-2021-2022:p0029_000",
-            "Grampian-2021-2022:p0146_001",
-            "Grampian-2021-2022:p0019_002"
+            "Grampian-2021-2022:p0146_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -7222,9 +7304,9 @@
           "retrieved_pages_ranked": [
             16,
             32,
+            19,
             29,
-            146,
-            19
+            146
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.2,
@@ -7248,15 +7330,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0016_000",
-            "Grampian-2021-2022:p0032_000",
+            "Grampian-2021-2022:p0032_001",
+            "Grampian-2021-2022:p0019_004",
             "Grampian-2021-2022:p0029_000",
             "Grampian-2021-2022:p0146_001",
-            "Grampian-2021-2022:p0019_002",
-            "Grampian-2021-2022:table_p0091",
             "Grampian-2021-2022:p0140_000",
-            "Grampian-2021-2022:table_p0089",
+            "Grampian-2021-2022:table_p0091",
             "Grampian-2021-2022:table_p0090",
-            "Grampian-2021-2022:p0074_000"
+            "Grampian-2021-2022:table_p0089",
+            "Grampian-2021-2022:table_p0088"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -7273,14 +7355,14 @@
           "retrieved_pages_ranked": [
             16,
             32,
+            19,
             29,
             146,
-            19,
-            91,
             140,
-            89,
+            91,
             90,
-            74
+            89,
+            88
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.1,
@@ -7361,8 +7443,8 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0012_002",
-            "Grampian-2021-2022:p0012_001",
-            "Grampian-2021-2022:p0031_000"
+            "Grampian-2021-2022:p0031_001",
+            "Grampian-2021-2022:p0143_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -7371,17 +7453,18 @@
           ],
           "retrieved_pages_ranked": [
             12,
-            31
+            31,
+            143
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.5,
+          "page_precision_at_k": 0.3333333333333333,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.6666666666666666,
+          "chunk_precision_at_k": 0.3333333333333333,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
+            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -7393,10 +7476,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0012_002",
-            "Grampian-2021-2022:p0012_001",
-            "Grampian-2021-2022:p0031_000",
+            "Grampian-2021-2022:p0031_001",
             "Grampian-2021-2022:p0143_000",
-            "Grampian-2021-2022:p0096_000"
+            "Grampian-2021-2022:p0012_003",
+            "Grampian-2021-2022:p0052_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -7409,7 +7492,7 @@
             12,
             31,
             143,
-            96
+            52
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -7419,9 +7502,9 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
+            0,
+            0,
             1,
-            0,
-            0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
@@ -7433,15 +7516,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0012_002",
-            "Grampian-2021-2022:p0012_001",
-            "Grampian-2021-2022:p0031_000",
+            "Grampian-2021-2022:p0031_001",
             "Grampian-2021-2022:p0143_000",
+            "Grampian-2021-2022:p0012_003",
+            "Grampian-2021-2022:p0052_003",
             "Grampian-2021-2022:p0096_000",
-            "Grampian-2021-2022:p0013_000",
-            "Grampian-2021-2022:p0033_000",
-            "Grampian-2021-2022:p0032_000",
-            "Grampian-2021-2022:p0052_002",
-            "Grampian-2021-2022:p0112_002"
+            "Grampian-2021-2022:p0112_002",
+            "Grampian-2021-2022:p0013_001",
+            "Grampian-2021-2022:p0043_000",
+            "Grampian-2021-2022:p0135_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -7459,12 +7542,12 @@
             12,
             31,
             143,
-            96,
-            13,
-            33,
-            32,
             52,
-            112
+            96,
+            112,
+            13,
+            43,
+            135
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.1111111111111111,
@@ -7474,9 +7557,9 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
+            0,
+            0,
             1,
-            0,
-            0,
             0,
             0,
             0,
@@ -7519,7 +7602,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0031_000"
+            "Grampian-2021-2022:p0031_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -7544,9 +7627,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0031_000",
             "Grampian-2021-2022:p0031_001",
-            "Grampian-2021-2022:p0053_000"
+            "Grampian-2021-2022:p0053_001",
+            "Grampian-2021-2022:p0031_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -7565,8 +7648,8 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
-            0
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -7576,11 +7659,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0031_000",
             "Grampian-2021-2022:p0031_001",
-            "Grampian-2021-2022:p0053_000",
-            "Grampian-2021-2022:p0061_002",
-            "Grampian-2021-2022:p0037_001"
+            "Grampian-2021-2022:p0053_001",
+            "Grampian-2021-2022:p0031_002",
+            "Grampian-2021-2022:p0007_000",
+            "Grampian-2021-2022:p0061_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -7592,8 +7675,8 @@
           "retrieved_pages_ranked": [
             31,
             53,
-            61,
-            37
+            7,
+            61
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.25,
@@ -7603,8 +7686,8 @@
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
             0,
+            1,
             0,
             0
           ],
@@ -7616,16 +7699,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0031_000",
             "Grampian-2021-2022:p0031_001",
-            "Grampian-2021-2022:p0053_000",
-            "Grampian-2021-2022:p0061_002",
-            "Grampian-2021-2022:p0037_001",
+            "Grampian-2021-2022:p0053_001",
+            "Grampian-2021-2022:p0031_002",
             "Grampian-2021-2022:p0007_000",
-            "Grampian-2021-2022:p0051_001",
-            "Grampian-2021-2022:p0019_000",
+            "Grampian-2021-2022:p0061_002",
+            "Grampian-2021-2022:p0037_002",
+            "Grampian-2021-2022:p0019_001",
             "Grampian-2021-2022:p0009_000",
-            "Grampian-2021-2022:p0030_000"
+            "Grampian-2021-2022:p0037_003",
+            "Grampian-2021-2022:p0038_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -7642,24 +7725,23 @@
           "retrieved_pages_ranked": [
             31,
             53,
+            7,
             61,
             37,
-            7,
-            51,
             19,
             9,
-            30
+            38
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.1111111111111111,
+          "page_precision_at_k": 0.125,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
-            1,
             0,
+            1,
             0,
             0,
             0,
@@ -7703,7 +7785,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0025_000"
+            "Grampian-2021-2022:p0025_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -7728,9 +7810,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0025_000",
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0081_000"
+            "Grampian-2021-2022:p0025_001",
+            "Grampian-2021-2022:p0081_000",
+            "Grampian-2021-2022:p0018_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -7739,8 +7821,8 @@
           ],
           "retrieved_pages_ranked": [
             25,
-            21,
-            81
+            81,
+            18
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
@@ -7761,11 +7843,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0025_000",
-            "Grampian-2021-2022:p0021_001",
+            "Grampian-2021-2022:p0025_001",
             "Grampian-2021-2022:p0081_000",
-            "Grampian-2021-2022:p0021_000",
-            "Grampian-2021-2022:p0018_000"
+            "Grampian-2021-2022:p0018_001",
+            "Grampian-2021-2022:p0050_001",
+            "Grampian-2021-2022:p0036_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -7776,12 +7858,13 @@
           ],
           "retrieved_pages_ranked": [
             25,
-            21,
             81,
-            18
+            18,
+            50,
+            36
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
+          "page_precision_at_k": 0.2,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.2,
@@ -7801,16 +7884,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0025_000",
-            "Grampian-2021-2022:p0021_001",
+            "Grampian-2021-2022:p0025_001",
             "Grampian-2021-2022:p0081_000",
-            "Grampian-2021-2022:p0021_000",
-            "Grampian-2021-2022:p0018_000",
+            "Grampian-2021-2022:p0018_001",
             "Grampian-2021-2022:p0050_001",
-            "Grampian-2021-2022:p0036_000",
+            "Grampian-2021-2022:p0036_001",
+            "Grampian-2021-2022:p0064_004",
             "Grampian-2021-2022:p0006_000",
-            "Grampian-2021-2022:p0064_002",
-            "Grampian-2021-2022:p0006_001"
+            "Grampian-2021-2022:p0083_000",
+            "Grampian-2021-2022:table_p0115",
+            "Grampian-2021-2022:p0050_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -7826,16 +7909,17 @@
           ],
           "retrieved_pages_ranked": [
             25,
-            21,
             81,
             18,
             50,
             36,
+            64,
             6,
-            64
+            83,
+            115
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.125,
+          "page_precision_at_k": 0.1111111111111111,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.1,
@@ -7887,7 +7971,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0023_000"
+            "Grampian-2021-2022:p0023_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -7912,8 +7996,8 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0023_000",
-            "Grampian-2021-2022:p0022_000",
+            "Grampian-2021-2022:p0023_001",
+            "Grampian-2021-2022:p0117_000",
             "Grampian-2021-2022:table_p0115"
           ],
           "retrieved_doc_ids_top_k": [
@@ -7923,7 +8007,7 @@
           ],
           "retrieved_pages_ranked": [
             23,
-            22,
+            117,
             115
           ],
           "page_recall_at_k": 1.0,
@@ -7945,11 +8029,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0023_000",
-            "Grampian-2021-2022:p0022_000",
+            "Grampian-2021-2022:p0023_001",
+            "Grampian-2021-2022:p0117_000",
             "Grampian-2021-2022:table_p0115",
             "Grampian-2021-2022:table_p0092",
-            "Grampian-2021-2022:p0017_002"
+            "Grampian-2021-2022:p0022_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -7960,10 +8044,10 @@
           ],
           "retrieved_pages_ranked": [
             23,
-            22,
+            117,
             115,
             92,
-            17
+            22
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.2,
@@ -7986,16 +8070,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0023_000",
-            "Grampian-2021-2022:p0022_000",
+            "Grampian-2021-2022:p0023_001",
+            "Grampian-2021-2022:p0117_000",
             "Grampian-2021-2022:table_p0115",
             "Grampian-2021-2022:table_p0092",
-            "Grampian-2021-2022:p0017_002",
-            "Grampian-2021-2022:p0022_003",
-            "Grampian-2021-2022:p0066_001",
-            "Grampian-2021-2022:p0019_002",
+            "Grampian-2021-2022:p0022_002",
+            "Grampian-2021-2022:p0066_002",
+            "Grampian-2021-2022:p0067_001",
             "Grampian-2021-2022:p0042_002",
-            "Grampian-2021-2022:p0065_000"
+            "Grampian-2021-2022:p0032_001",
+            "Grampian-2021-2022:p0012_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -8011,17 +8095,18 @@
           ],
           "retrieved_pages_ranked": [
             23,
-            22,
+            117,
             115,
             92,
-            17,
+            22,
             66,
-            19,
+            67,
             42,
-            65
+            32,
+            12
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.1111111111111111,
+          "page_precision_at_k": 0.1,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
           "chunk_precision_at_k": 0.1,
@@ -8073,7 +8158,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000"
+            "Grampian-2021-2022:p0022_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -8098,9 +8183,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0022_001",
-            "Grampian-2021-2022:p0022_002"
+            "Grampian-2021-2022:p0022_002",
+            "Grampian-2021-2022:p0022_003",
+            "Grampian-2021-2022:p0022_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -8129,11 +8214,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0022_001",
             "Grampian-2021-2022:p0022_002",
-            "Grampian-2021-2022:p0025_000",
-            "Grampian-2021-2022:p0031_001"
+            "Grampian-2021-2022:p0022_003",
+            "Grampian-2021-2022:p0022_004",
+            "Grampian-2021-2022:p0019_003",
+            "Grampian-2021-2022:p0043_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -8144,8 +8229,8 @@
           ],
           "retrieved_pages_ranked": [
             22,
-            25,
-            31
+            19,
+            43
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.3333333333333333,
@@ -8168,16 +8253,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0022_000",
-            "Grampian-2021-2022:p0022_001",
             "Grampian-2021-2022:p0022_002",
-            "Grampian-2021-2022:p0025_000",
-            "Grampian-2021-2022:p0031_001",
+            "Grampian-2021-2022:p0022_003",
+            "Grampian-2021-2022:p0022_004",
+            "Grampian-2021-2022:p0019_003",
             "Grampian-2021-2022:p0043_003",
-            "Grampian-2021-2022:p0031_000",
-            "Grampian-2021-2022:p0017_001",
-            "Grampian-2021-2022:p0053_000",
-            "Grampian-2021-2022:p0019_002"
+            "Grampian-2021-2022:p0025_001",
+            "Grampian-2021-2022:p0031_002",
+            "Grampian-2021-2022:p0031_001",
+            "Grampian-2021-2022:p0053_001",
+            "Grampian-2021-2022:p0028_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -8193,12 +8278,12 @@
           ],
           "retrieved_pages_ranked": [
             22,
+            19,
+            43,
             25,
             31,
-            43,
-            17,
             53,
-            19
+            28
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.14285714285714285,
@@ -8313,7 +8398,7 @@
             "Grampian-2021-2022:p0015_000",
             "Grampian-2021-2022:p0046_000",
             "Grampian-2021-2022:p0015_001",
-            "Grampian-2021-2022:p0057_002",
+            "Grampian-2021-2022:p0057_004",
             "Grampian-2021-2022:p0016_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -8353,7 +8438,7 @@
             "Grampian-2021-2022:p0015_000",
             "Grampian-2021-2022:p0046_000",
             "Grampian-2021-2022:p0015_001",
-            "Grampian-2021-2022:p0057_002",
+            "Grampian-2021-2022:p0057_004",
             "Grampian-2021-2022:p0016_000",
             "Grampian-2021-2022:p0009_001",
             "Grampian-2021-2022:p0005_000",
@@ -8435,7 +8520,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002"
+            "Grampian-2021-2022:p0019_004"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -8460,9 +8545,9 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002",
+            "Grampian-2021-2022:p0019_004",
             "Grampian-2021-2022:p0019_003",
-            "Grampian-2021-2022:p0019_001"
+            "Grampian-2021-2022:p0140_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -8470,18 +8555,19 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            19
+            19,
+            140
           ],
           "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
+          "page_precision_at_k": 0.5,
           "page_mrr_at_k": 1.0,
           "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
+          "chunk_precision_at_k": 0.6666666666666666,
           "chunk_mrr_at_k": 1.0,
           "chunk_hit_flags": [
             1,
             1,
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -8491,11 +8577,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002",
+            "Grampian-2021-2022:p0019_004",
             "Grampian-2021-2022:p0019_003",
-            "Grampian-2021-2022:p0019_001",
             "Grampian-2021-2022:p0140_001",
-            "Grampian-2021-2022:p0140_000"
+            "Grampian-2021-2022:p0140_000",
+            "Grampian-2021-2022:p0019_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -8517,9 +8603,9 @@
           "chunk_hit_flags": [
             1,
             1,
-            1,
             0,
-            0
+            0,
+            1
           ],
           "table_chunk_hit_at_k": 0.0,
           "failure_stage": "hit",
@@ -8529,16 +8615,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0019_002",
+            "Grampian-2021-2022:p0019_004",
             "Grampian-2021-2022:p0019_003",
-            "Grampian-2021-2022:p0019_001",
             "Grampian-2021-2022:p0140_001",
             "Grampian-2021-2022:p0140_000",
-            "Grampian-2021-2022:p0020_000",
+            "Grampian-2021-2022:p0019_002",
+            "Grampian-2021-2022:p0020_002",
             "Grampian-2021-2022:p0020_001",
             "Grampian-2021-2022:p0146_001",
-            "Grampian-2021-2022:p0017_002",
-            "Grampian-2021-2022:p0017_001"
+            "Grampian-2021-2022:table_p0090",
+            "Grampian-2021-2022:p0146_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -8557,7 +8643,7 @@
             140,
             20,
             146,
-            17
+            90
           ],
           "page_recall_at_k": 1.0,
           "page_precision_at_k": 0.2,
@@ -8568,9 +8654,9 @@
           "chunk_hit_flags": [
             1,
             1,
+            0,
+            0,
             1,
-            0,
-            0,
             0,
             0,
             0,
@@ -8606,40 +8692,40 @@
         "prefer_evidence_layout": "table",
         "prefer_table_chunks": true
       },
-      "page_hit": 1,
-      "failure_type": "HIT",
-      "failure_stage": "none",
+      "page_hit": 0,
+      "failure_type": "FP2_MISSED_TOP_RANK",
+      "failure_stage": "retrieval",
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0017_002"
+            "Grampian-2021-2022:p0122_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            17
+            122
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 1.0,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 1.0,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0017_002",
-            "Grampian-2021-2022:p0096_002",
-            "Grampian-2021-2022:p0146_000"
+            "Grampian-2021-2022:p0122_000",
+            "Grampian-2021-2022:p0146_000",
+            "Grampian-2021-2022:p0084_000"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -8647,34 +8733,34 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            17,
-            96,
-            146
+            122,
+            146,
+            84
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.3333333333333333,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3333333333333333,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1,
+            0,
             0,
             0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0017_002",
-            "Grampian-2021-2022:p0096_002",
+            "Grampian-2021-2022:p0122_000",
             "Grampian-2021-2022:p0146_000",
             "Grampian-2021-2022:p0084_000",
-            "Grampian-2021-2022:p0017_003"
+            "Grampian-2021-2022:p0146_001",
+            "Grampian-2021-2022:p0024_003"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -8684,42 +8770,42 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            17,
-            96,
+            122,
             146,
-            84
+            84,
+            24
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.25,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.4,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1,
             0,
             0,
             0,
-            1
+            0,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0017_002",
-            "Grampian-2021-2022:p0096_002",
+            "Grampian-2021-2022:p0122_000",
             "Grampian-2021-2022:p0146_000",
             "Grampian-2021-2022:p0084_000",
-            "Grampian-2021-2022:p0017_003",
-            "Grampian-2021-2022:p0122_000",
-            "Grampian-2021-2022:p0096_000",
             "Grampian-2021-2022:p0146_001",
-            "Grampian-2021-2022:p0144_001",
-            "Grampian-2021-2022:p0017_001"
+            "Grampian-2021-2022:p0024_003",
+            "Grampian-2021-2022:p0140_002",
+            "Grampian-2021-2022:p0096_000",
+            "Grampian-2021-2022:p0096_004",
+            "Grampian-2021-2022:p0049_000",
+            "Grampian-2021-2022:p0144_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -8734,33 +8820,35 @@
             "Grampian-2021-2022"
           ],
           "retrieved_pages_ranked": [
-            17,
-            96,
+            122,
             146,
             84,
-            122,
+            24,
+            140,
+            96,
+            49,
             144
           ],
-          "page_recall_at_k": 1.0,
-          "page_precision_at_k": 0.16666666666666666,
-          "page_mrr_at_k": 1.0,
-          "chunk_hit_at_k": 1.0,
-          "chunk_precision_at_k": 0.3,
-          "chunk_mrr_at_k": 1.0,
+          "page_recall_at_k": 0.0,
+          "page_precision_at_k": 0.0,
+          "page_mrr_at_k": 0.0,
+          "chunk_hit_at_k": 0.0,
+          "chunk_precision_at_k": 0.0,
+          "chunk_mrr_at_k": 0.0,
           "chunk_hit_flags": [
-            1,
-            0,
-            0,
-            0,
-            1,
             0,
             0,
             0,
             0,
-            1
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
           ],
           "table_chunk_hit_at_k": 0.0,
-          "failure_stage": "hit",
+          "failure_stage": "missed_top_ranked",
           "leakage_count_top_k": 0,
           "leakage_doc_ids_top_k": [],
           "leakage_rate_top_k": 0.0
@@ -8821,7 +8909,7 @@
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0007_001",
             "Grampian-2021-2022:p0028_000",
-            "Grampian-2021-2022:p0063_000"
+            "Grampian-2021-2022:p0063_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -8854,8 +8942,8 @@
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0007_001",
             "Grampian-2021-2022:p0028_000",
-            "Grampian-2021-2022:p0063_000",
-            "Grampian-2021-2022:p0067_002",
+            "Grampian-2021-2022:p0063_001",
+            "Grampian-2021-2022:p0041_000",
             "Grampian-2021-2022:p0004_000"
           ],
           "retrieved_doc_ids_top_k": [
@@ -8869,7 +8957,7 @@
             7,
             28,
             63,
-            67,
+            41,
             4
           ],
           "page_recall_at_k": 0.0,
@@ -8895,13 +8983,13 @@
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0007_001",
             "Grampian-2021-2022:p0028_000",
-            "Grampian-2021-2022:p0063_000",
-            "Grampian-2021-2022:p0067_002",
-            "Grampian-2021-2022:p0004_000",
+            "Grampian-2021-2022:p0063_001",
             "Grampian-2021-2022:p0041_000",
-            "Grampian-2021-2022:p0057_001",
+            "Grampian-2021-2022:p0004_000",
             "Grampian-2021-2022:p0044_000",
-            "Grampian-2021-2022:p0064_000",
+            "Grampian-2021-2022:p0064_001",
+            "Grampian-2021-2022:p0074_000",
+            "Grampian-2021-2022:p0046_000",
             "Grampian-2021-2022:p0135_002"
           ],
           "retrieved_doc_ids_top_k": [
@@ -8920,12 +9008,12 @@
             7,
             28,
             63,
-            67,
-            4,
             41,
-            57,
+            4,
             44,
             64,
+            74,
+            46,
             135
           ],
           "page_recall_at_k": 0.0,
@@ -8981,7 +9069,7 @@
       "per_k": {
         "1": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0018_001"
+            "Grampian-2021-2022:p0018_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022"
@@ -9006,7 +9094,7 @@
         },
         "3": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0018_001",
+            "Grampian-2021-2022:p0018_002",
             "Grampian-2021-2022:p0081_000",
             "Grampian-2021-2022:p0140_001"
           ],
@@ -9039,11 +9127,11 @@
         },
         "5": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0018_001",
+            "Grampian-2021-2022:p0018_002",
             "Grampian-2021-2022:p0081_000",
             "Grampian-2021-2022:p0140_001",
             "Grampian-2021-2022:p0135_000",
-            "Grampian-2021-2022:p0022_003"
+            "Grampian-2021-2022:p0114_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -9057,7 +9145,7 @@
             81,
             140,
             135,
-            22
+            114
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -9080,16 +9168,16 @@
         },
         "10": {
           "retrieved_chunk_ids": [
-            "Grampian-2021-2022:p0018_001",
+            "Grampian-2021-2022:p0018_002",
             "Grampian-2021-2022:p0081_000",
             "Grampian-2021-2022:p0140_001",
             "Grampian-2021-2022:p0135_000",
-            "Grampian-2021-2022:p0022_003",
-            "Grampian-2021-2022:p0021_001",
-            "Grampian-2021-2022:p0122_002",
-            "Grampian-2021-2022:p0143_000",
             "Grampian-2021-2022:p0114_001",
-            "Grampian-2021-2022:p0130_002"
+            "Grampian-2021-2022:p0130_002",
+            "Grampian-2021-2022:p0143_000",
+            "Grampian-2021-2022:p0122_001",
+            "Grampian-2021-2022:p0143_001",
+            "Grampian-2021-2022:p0143_002"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -9108,12 +9196,10 @@
             81,
             140,
             135,
-            22,
-            21,
-            122,
-            143,
             114,
-            130
+            130,
+            143,
+            122
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -9194,7 +9280,7 @@
         "3": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0027_000",
-            "Grampian-2021-2022:p0082_000",
+            "Grampian-2021-2022:p0080_000",
             "Grampian-2021-2022:p0027_001"
           ],
           "retrieved_doc_ids_top_k": [
@@ -9204,7 +9290,7 @@
           ],
           "retrieved_pages_ranked": [
             27,
-            82
+            80
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
@@ -9226,10 +9312,10 @@
         "5": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0027_000",
-            "Grampian-2021-2022:p0082_000",
-            "Grampian-2021-2022:p0027_001",
             "Grampian-2021-2022:p0080_000",
-            "Grampian-2021-2022:p0067_002"
+            "Grampian-2021-2022:p0027_001",
+            "Grampian-2021-2022:p0067_003",
+            "Grampian-2021-2022:p0080_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -9240,7 +9326,6 @@
           ],
           "retrieved_pages_ranked": [
             27,
-            82,
             80,
             67
           ],
@@ -9266,15 +9351,15 @@
         "10": {
           "retrieved_chunk_ids": [
             "Grampian-2021-2022:p0027_000",
-            "Grampian-2021-2022:p0082_000",
-            "Grampian-2021-2022:p0027_001",
             "Grampian-2021-2022:p0080_000",
-            "Grampian-2021-2022:p0067_002",
+            "Grampian-2021-2022:p0027_001",
+            "Grampian-2021-2022:p0067_003",
+            "Grampian-2021-2022:p0080_001",
             "Grampian-2021-2022:p0107_000",
             "Grampian-2021-2022:p0028_000",
-            "Grampian-2021-2022:p0080_001",
             "Grampian-2021-2022:p0106_000",
-            "Grampian-2021-2022:p0135_000"
+            "Grampian-2021-2022:p0135_000",
+            "Grampian-2021-2022:p0029_001"
           ],
           "retrieved_doc_ids_top_k": [
             "Grampian-2021-2022",
@@ -9290,13 +9375,13 @@
           ],
           "retrieved_pages_ranked": [
             27,
-            82,
             80,
             67,
             107,
             28,
             106,
-            135
+            135,
+            29
           ],
           "page_recall_at_k": 0.0,
           "page_precision_at_k": 0.0,
