@@ -104,6 +104,34 @@ def _file_sha1(path: Path) -> str:
     return h.hexdigest()
 
 
+def _file_sha256(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _artifact_hashes(paths: dict[str, Path]) -> dict[str, str]:
+    """SHA-256 of every retrieval input, so a result can be tied to the exact index it came from."""
+    return {name: _file_sha256(path) for name, path in paths.items()}
+
+
+def _verify_against_manifest(manifest_path: Path, doc_id: str, hashes: dict[str, str]) -> None:
+    """Raise if the artifacts differ from the frozen manifest entry for doc_id."""
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    entry = (manifest.get("documents") or {}).get(doc_id)
+    if entry is None:
+        raise ValueError(f"{doc_id} is not in frozen manifest {manifest_path}")
+    expected = entry.get("sha256") or {}
+    mismatched = sorted(name for name, digest in hashes.items() if expected.get(name) != digest)
+    if mismatched:
+        raise ValueError(
+            f"{doc_id}: artifacts differ from frozen manifest {manifest_path}: {', '.join(mismatched)}. "
+            "Re-run scripts/freeze_eval_artifacts.py --write only if the change is intended."
+        )
+
+
 def _safe_json(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {}
@@ -212,6 +240,21 @@ def parse_args() -> argparse.Namespace:
         type=float,
         default=float(_env_or_default("BM25_B", "0.75")),
         help="BM25 b parameter.",
+    )
+    parser.add_argument(
+        "--eval-set-path",
+        default="",
+        help="Override path for eval_set.json (default: <data-dir>/eval_set.json).",
+    )
+    parser.add_argument(
+        "--output-dir",
+        default="",
+        help="Write results/metrics/summary here instead of <data-dir>.",
+    )
+    parser.add_argument(
+        "--verify-manifest",
+        default="",
+        help="Frozen artifact manifest (JSON); abort if this document's artifacts do not match it.",
     )
     parser.add_argument(
         "--no-lexical-rerank",
@@ -472,7 +515,8 @@ def main() -> None:
     index_path = data_dir / "faiss.index"
     meta_path = data_dir / "chunk_meta.parquet"
     chunks_path = data_dir / "chunks.parquet"
-    eval_set_path = data_dir / "eval_set.json"
+    eval_set_path = Path(args.eval_set_path).resolve() if args.eval_set_path else data_dir / "eval_set.json"
+    output_dir = Path(args.output_dir).resolve() if args.output_dir else data_dir
     if not index_path.exists():
         raise FileNotFoundError(f"Missing file: {index_path}")
     if not meta_path.exists():
@@ -481,6 +525,17 @@ def main() -> None:
         raise FileNotFoundError(f"Missing file: {chunks_path}")
     if not eval_set_path.exists():
         raise FileNotFoundError(f"Missing file: {eval_set_path}")
+
+    artifact_hashes = _artifact_hashes(
+        {
+            "faiss.index": index_path,
+            "chunk_meta.parquet": meta_path,
+            "chunks.parquet": chunks_path,
+            "eval_set.json": eval_set_path,
+        }
+    )
+    if args.verify_manifest:
+        _verify_against_manifest(Path(args.verify_manifest), data_dir.name, artifact_hashes)
 
     meta = pd.read_parquet(meta_path)
     chunks = pd.read_parquet(chunks_path)
@@ -764,6 +819,8 @@ def main() -> None:
             "num_chunks_indexed": int(len(meta)),
             "pipeline_settings": _collect_pipeline_settings(data_dir),
             "eval_set": _collect_eval_set_info(eval_set_path, eval_obj, len(eval_items)),
+            "artifact_sha256": artifact_hashes,
+            "verified_manifest": (str(args.verify_manifest) if args.verify_manifest else None),
         },
         "metrics_by_k": {},
         "failure_counts_by_k": {},
@@ -808,9 +865,10 @@ def main() -> None:
         "answer_status_counts": {},
     }
 
-    results_json = data_dir / RESULTS_JSON.name
-    metrics_json = data_dir / METRICS_JSON.name
-    summary_csv = data_dir / SUMMARY_CSV.name
+    results_json = output_dir / RESULTS_JSON.name
+    metrics_json = output_dir / METRICS_JSON.name
+    summary_csv = output_dir / SUMMARY_CSV.name
+    output_dir.mkdir(parents=True, exist_ok=True)
     write_json(results_json, {"run_info": metrics["run_info"], "results": results})
     write_json(metrics_json, metrics)
     df_sum.to_csv(summary_csv, index=False)

@@ -25,17 +25,6 @@ def parse_args() -> argparse.Namespace:
         help="Directory containing faiss.index, chunk_meta.parquet, chunks.parquet, and eval_set.json.",
     )
     parser.add_argument(
-        "--scope",
-        choices=("doc", "global"),
-        default="doc",
-        help="Evaluate within the selected document only or against a global multi-document corpus.",
-    )
-    parser.add_argument(
-        "--corpus-root",
-        default="",
-        help="Optional multi-document corpus root for --scope=global.",
-    )
-    parser.add_argument(
         "--eval-set-path",
         default="",
         help="Optional override path for eval_set.json.",
@@ -44,6 +33,11 @@ def parse_args() -> argparse.Namespace:
         "--output-dir",
         default="",
         help="Optional output directory for evaluation artifacts.",
+    )
+    parser.add_argument(
+        "--verify-manifest",
+        default="",
+        help="Frozen artifact manifest; abort if the document's artifacts do not match it.",
     )
     parser.add_argument(
         "--model",
@@ -106,8 +100,6 @@ def main() -> None:
         str(repo_root / "scripts" / "retrieval_eval_hybrid.py"),
         "--data-dir",
         str(data_dir),
-        "--scope",
-        str(args.scope),
         "--model",
         str(args.model),
         "--k-list",
@@ -123,8 +115,8 @@ def main() -> None:
         "--bm25-b",
         str(float(args.bm25_b)),
     ]
-    if str(args.corpus_root).strip():
-        hybrid_cmd.extend(["--corpus-root", str(args.corpus_root)])
+    if str(args.verify_manifest).strip():
+        hybrid_cmd.extend(["--verify-manifest", str(args.verify_manifest)])
     if str(args.eval_set_path).strip():
         hybrid_cmd.extend(["--eval-set-path", str(args.eval_set_path)])
     if str(args.output_dir).strip():
