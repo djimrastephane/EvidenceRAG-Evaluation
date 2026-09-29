@@ -28,11 +28,16 @@ def hybrid_retrieve_legacy_style(
     bm25_weight: float,
     rrf_k: int,
     enable_lexical_rerank: bool = True,
-    enable_subsection_boost: bool = True,
+    enable_subsection_boost: bool = False,
     subsection_boost: float = 0.05,
-    cross_page_out_of_section_penalty: float = 0.08,
+    cross_page_out_of_section_penalty: float = 0.0,
 ) -> tuple[list[RetrievalHit], list[RetrievalHit], list[RetrievalHit]]:
-    """Produce dense, sparse, and fused chunk rankings for each query."""
+    """Produce dense, sparse, and fused chunk rankings for each query.
+
+    ``enable_subsection_boost`` and ``cross_page_out_of_section_penalty`` read the gold
+    ``expected_subsection`` / ``expected_section`` labels (oracle). They are off by default
+    and exist only for explicitly labelled oracle ablations.
+    """
     meta = pd.DataFrame([chunk.to_dict() for chunk in chunks])
     text_by_id = {chunk.chunk_id: chunk.text for chunk in chunks}
     rerank_cfg = RerankConfig(

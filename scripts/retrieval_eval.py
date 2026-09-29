@@ -146,7 +146,8 @@ NUMERIC_DENSITY_BOOST = float(os.getenv("NUMERIC_DENSITY_BOOST", "0.03"))
 SEGMENT_SEARCH_HIT_BOOST = float(os.getenv("SEGMENT_SEARCH_HIT_BOOST", "0.03"))
 MAX_ENTITY_MATCHES = int(os.getenv("MAX_ENTITY_MATCHES", "4"))
 ENABLE_LEXICAL_RERANK = os.getenv("ENABLE_LEXICAL_RERANK", "1") != "0"
-ENABLE_SUBSECTION_BOOST = os.getenv("ENABLE_SUBSECTION_BOOST", "1") != "0"
+# Oracle: reads the gold expected_subsection label. Opt-in only (labelled ablations).
+ENABLE_SUBSECTION_BOOST = os.getenv("ENABLE_SUBSECTION_BOOST", "0") == "1"
 
 RESULTS_JSON = DATA_DIR / "retrieval_results.json"
 METRICS_JSON = DATA_DIR / "retrieval_metrics.json"
@@ -536,9 +537,17 @@ def parse_args() -> argparse.Namespace:
         help="Disable lexical rerank boosts for pure dense retrieval.",
     )
     parser.add_argument(
+        "--oracle-subsection-boost",
+        action="store_true",
+        help=(
+            "ORACLE ABLATION ONLY: boost chunks matching the gold expected_subsection label. "
+            "Never use for reported system results. Also enabled by ENABLE_SUBSECTION_BOOST=1."
+        ),
+    )
+    parser.add_argument(
         "--no-subsection-boost",
         action="store_true",
-        help="Disable expected_subsection rerank boost.",
+        help="Force the oracle subsection boost off (the default), overriding ENABLE_SUBSECTION_BOOST=1.",
     )
     return parser.parse_args()
 
@@ -1080,7 +1089,9 @@ def main():
     max_k_search = min(max(MAX_K_SEARCH, max_k), len(meta))
     k_list = [k for k in K_LIST if 1 <= k <= max_k]
     enable_lexical_rerank = ENABLE_LEXICAL_RERANK and (not args.no_lexical_rerank)
-    enable_subsection_boost = ENABLE_SUBSECTION_BOOST and (not args.no_subsection_boost)
+    enable_subsection_boost = (ENABLE_SUBSECTION_BOOST or args.oracle_subsection_boost) and (not args.no_subsection_boost)
+    if enable_subsection_boost:
+        print("[warn] ORACLE subsection boost enabled: ranking uses gold expected_subsection labels.")
     if not k_list:
         raise ValueError("K_LIST has no valid values for the current index size.")
 
@@ -1106,6 +1117,7 @@ def main():
         "max_entity_matches": MAX_ENTITY_MATCHES,
         "enable_lexical_rerank": enable_lexical_rerank,
         "enable_subsection_boost": enable_subsection_boost,
+        "oracle_labels_in_ranking": bool(enable_subsection_boost),
         "max_k_search": max_k_search,
         "num_queries": len(eval_items),
         "num_chunks_indexed": int(len(meta)),

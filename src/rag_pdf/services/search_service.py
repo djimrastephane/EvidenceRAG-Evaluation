@@ -67,7 +67,6 @@ CROSS_ENCODER_MODEL_NAME = os.getenv("CROSS_ENCODER_MODEL_NAME", "models/bge-rer
 CROSS_ENCODER_TOPN = int(os.getenv("CROSS_ENCODER_TOPN", "50"))
 CROSS_ENCODER_WEIGHT = float(os.getenv("CROSS_ENCODER_WEIGHT", "0.2"))
 ENABLE_LEXICAL_RERANK = os.getenv("ENABLE_LEXICAL_RERANK", "1").strip().lower() in {"1", "true", "yes", "y", "on"}
-ENABLE_SUBSECTION_BOOST = os.getenv("ENABLE_SUBSECTION_BOOST", "1").strip().lower() in {"1", "true", "yes", "y", "on"}
 TABLE_CHUNK_BOOST = float(os.getenv("TABLE_CHUNK_BOOST", "0.08"))
 ENTITY_MATCH_BOOST = float(os.getenv("ENTITY_MATCH_BOOST", "0.04"))
 NUMERIC_DENSITY_BOOST = float(os.getenv("NUMERIC_DENSITY_BOOST", "0.03"))
@@ -81,12 +80,9 @@ TABLE_BOOST_ALLOWED_SECTION_PATTERNS: tuple[str, ...] = tuple(
     ).split(",")
     if p.strip()
 )
-SUBSECTION_BOOST = float(os.getenv("SUBSECTION_BOOST", "0.05"))
-CROSS_PAGE_OUT_OF_SECTION_PENALTY = float(os.getenv("CROSS_PAGE_OUT_OF_SECTION_PENALTY", "0.08"))
 ANSWER_GATE_ENABLED = os.getenv("ANSWER_GATE_ENABLED", "1").strip().lower() in {"1", "true", "yes", "y", "on"}
 ANSWER_GATE_WINDOW_CHARS = int(os.getenv("ANSWER_GATE_WINDOW_CHARS", "180"))
 ANSWER_GATE_MIN_SCORE = int(os.getenv("ANSWER_GATE_MIN_SCORE", "2"))
-ANSWER_EVAL_STRICT_PAGE = os.getenv("ANSWER_EVAL_STRICT_PAGE", "1").strip().lower() in {"1", "true", "yes", "y", "on"}
 ANSWER_PREFER_NON_TABLE = os.getenv("ANSWER_PREFER_NON_TABLE", "1").strip().lower() in {"1", "true", "yes", "y", "on"}
 ANCHOR_DISTANCE_GATE_ENABLED = os.getenv("ANCHOR_DISTANCE_GATE_ENABLED", "1").strip().lower() in {"1", "true", "yes", "y", "on"}
 ANCHOR_DISTANCE_MAX_CHARS = int(os.getenv("ANCHOR_DISTANCE_MAX_CHARS", "260"))
@@ -134,7 +130,6 @@ class SearchService:
             except Exception as exc:
                 logger.warning("Cross-encoder reranker disabled; failed to load model %s: %s", CROSS_ENCODER_MODEL_NAME, exc)
         self.lexical_rerank_enabled = bool(ENABLE_LEXICAL_RERANK)
-        self.subsection_boost_enabled = bool(ENABLE_SUBSECTION_BOOST)
         self.rerank_cfg = RerankConfig(
             table_chunk_boost=TABLE_CHUNK_BOOST,
             entity_match_boost=ENTITY_MATCH_BOOST,
@@ -853,6 +848,8 @@ class SearchService:
         answer_type: Optional[str] = None
         expected_section: str = ""
         expected_subsection: str = ""
+        # Gold eval labels are looked up for scoring and display only. They must never
+        # reach ranking, answer extraction or generation (that would be an oracle).
         if query_id:
             for item in loaded_doc.eval_items:
                 if str(item.get("query_id", "")).strip() == query_id:
@@ -875,11 +872,6 @@ class SearchService:
             chunk_text_by_id=chunk_text_by_id,
             rerank_cfg=self.rerank_cfg,
             enable_lexical_rerank=self.lexical_rerank_enabled,
-            expected_section=expected_section,
-            expected_subsection=expected_subsection,
-            enable_subsection_boost=self.subsection_boost_enabled,
-            subsection_boost=SUBSECTION_BOOST,
-            cross_page_out_of_section_penalty=CROSS_PAGE_OUT_OF_SECTION_PENALTY,
         )
         idx_list = fused_ranked[:k]
 
@@ -953,12 +945,12 @@ class SearchService:
             )
 
         hit_at_k = bool(expected_pages and any(p in expected_pages for p in retrieved_pages))
+        # Infer the answer type from the question; the gold answer_type is not a runtime input.
+        runtime_answer_type = "number" if self._should_use_numeric_generation_mode(question, None) else None
         predicted_answer, answer_source_chunk_id, answer_debug = self._predict_answer(
             question=question,
             results=results,
-            query_id=query_id,
-            expected_pages=expected_pages,
-            answer_type=answer_type,
+            answer_type=runtime_answer_type,
         )
         predicted_answer, predicted_answer_raw = self._normalize_runtime_answer(predicted_answer)
         if predicted_answer_raw is not None:
@@ -967,7 +959,7 @@ class SearchService:
         if include_generated_answer:
             numeric_pick = None
             numeric_debug: dict[str, Any] = {}
-            if str(answer_type or "").strip().lower() == "number":
+            if runtime_answer_type == "number":
                 numeric_pick, numeric_debug = pick_best_numeric_candidate(question=question, results=results)
 
             if numeric_pick is not None:
@@ -990,7 +982,7 @@ class SearchService:
                     "error": None,
                     "prompt_chars": 0,
                     "prompt_mode": "deterministic_numeric",
-                    "answer_type": str(answer_type or ""),
+                    "answer_type": str(runtime_answer_type or ""),
                     "citations_parsed": int(len(generated_citations)),
                     "citations_valid": int(len(generated_citations)),
                     "citations_rejected": 0,
@@ -1009,7 +1001,7 @@ class SearchService:
                     max_context_chars=max_context_chars,
                     max_chunk_chars=max_chunk_chars,
                     timeout_seconds=timeout_seconds,
-                    answer_type=answer_type,
+                    answer_type=runtime_answer_type,
                 )
                 parsed_answer, raw_citations_from_json, parse_mode = self._parse_generation_json_payload(
                     str(raw_generated_answer or "")
@@ -1099,9 +1091,7 @@ class SearchService:
                 "cross_encoder_topn": int(self.cross_encoder_topn),
                 "cross_encoder_weight": float(self.cross_encoder_weight),
                 "enable_lexical_rerank": bool(self.lexical_rerank_enabled),
-                "enable_subsection_boost": bool(self.subsection_boost_enabled),
-                "subsection_boost": float(SUBSECTION_BOOST),
-                "cross_page_out_of_section_penalty": float(CROSS_PAGE_OUT_OF_SECTION_PENALTY),
+                "oracle_labels_in_ranking": False,
                 "bm25_k1": 1.5,
                 "bm25_b": 0.75,
             },
@@ -1482,8 +1472,6 @@ class SearchService:
         self,
         question: str,
         results: list[dict[str, Any]],
-        query_id: Optional[str] = None,
-        expected_pages: Optional[list[int]] = None,
         answer_type: Optional[str] = None,
     ) -> tuple[Optional[str], Optional[str], dict[str, Any]]:
         """
@@ -1519,20 +1507,6 @@ class SearchService:
 
         base_order = list(results)
         ordering_notes: list[str] = []
-
-        if ANSWER_EVAL_STRICT_PAGE and query_id and expected_pages:
-            expected_set = set(int(x) for x in expected_pages)
-            on_expected = []
-            off_expected = []
-            for r in base_order:
-                rp = set(int(x) for x in (r.get("pages") or []) if str(x).isdigit())
-                if expected_set.intersection(rp):
-                    on_expected.append(r)
-                else:
-                    off_expected.append(r)
-            if on_expected:
-                base_order = on_expected + off_expected
-                ordering_notes.append("prefer_expected_pages")
 
         if ANSWER_PREFER_NON_TABLE:
             non_table = [r for r in base_order if not bool(r.get("is_table", False))]

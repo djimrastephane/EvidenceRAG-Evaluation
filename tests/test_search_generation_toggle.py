@@ -65,7 +65,6 @@ class SearchGenerationToggleTests(unittest.TestCase):
         svc.gen_timeout_seconds = 20.0
         svc.rerank_cfg = RerankConfig()
         svc.lexical_rerank_enabled = False
-        svc.subsection_boost_enabled = False
         svc._cache_sig = {}
         svc._global_cache_sig = {}
         svc._obs_lock = threading.Lock()
